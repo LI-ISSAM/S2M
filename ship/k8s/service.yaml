@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels: &labels
+    tier: $K8S_DEPLOYMENT_TIER
+    framework: $K8S_DEPLOYMENT_FRAMEWORK
+    app: $K8S_DEPLOYMENT_NAME
+  name: $K8S_DEPLOYMENT_NAME
+spec:
+  ports:
+  # Exposed using the default ClusterIP service type
+  - name: app-port
+    port: $K8S_DEPLOYMENT_PORT
+    targetPort: app-port
+    protocol: TCP
+  selector: *labels

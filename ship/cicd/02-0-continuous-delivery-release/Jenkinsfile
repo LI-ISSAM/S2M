@@ -1,0 +1,387 @@
+
+
+pipeline {
+
+ agent any
+
+ tools {nodejs "node"}
+ environment {
+  GIT_REPO_CREDENTIAL_ID = "ciuser-gitlab-creadentials"
+
+  GIT_REPO_URI = "https://vcs.dev.s2m.ma/itsp/itsp-front.git"
+  // #################################################
+  // Need to install pipeline-utility-steps plugin
+  DOCKER_FILE_PATH = "./ship/containerization"
+  ARRTIFACT_PATH = "./dist"
+  GIT_TAG_COMMIT = sh(script: 'git describe --tags --always', returnStdout: true).trim()
+  // #################################################
+  DOCKER_BUILD_PATH = "."
+  REGISTRY_ADDRESS = "container-registry.dev.s2m.ma/socle"
+  REGISTRY_CREDENTIALS_ID = "container-registry-user"
+  // yes | no
+  USE_DOCKER_IMAGE_TAG_SHA256 = "no"
+  PROJECT_NAME="nxp-template"
+  BUILD_RELEASE_VERSION="0.0.1"
+  DOCKER_IMAGE_NAME = "${env.PROJECT_NAME}"
+  DOCKER_IMAGE_TAG = "${env.BUILD_RELEASE_VERSION}-${env.BUILD_NUMBER}"
+  DOCKER_IMAGE_TAG_VERSION = "${env.BUILD_RELEASE_VERSION}"
+  DOCKER_IMAGE_NAME_TAG_VERSION = "${env.DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG_VERSION}"
+  DOCKER_IMAGE_NAME_TAG_LATEST = "${env.DOCKER_IMAGE_NAME}:latest"
+  DOCKER_IMAGE_URI_VERSION = "${env.REGISTRY_ADDRESS}/${env.DOCKER_IMAGE_NAME_TAG_VERSION}"
+  DOCKER_IMAGE_URI_LATEST = "${env.REGISTRY_ADDRESS}/${env.DOCKER_IMAGE_NAME_TAG_LATEST}"
+  REGISTRY_URI = "https://${env.REGISTRY_ADDRESS}"
+  // Generate REGISTRY_CREDENTIALS_USR and REGISTRY_CREDENTIALS_PSW
+  REGISTRY_CREDENTIALS = credentials("${env.REGISTRY_CREDENTIALS_ID}")
+  // #################################################
+  K8S_TOKEN_ID = "K8S_TOKEN_ID"
+  K8S_URI = "https://442EFD99300DFC0F8C3FD709B10CD40F.gr7.us-east-2.eks.amazonaws.com"
+  K8S_CONTEXT_NAME = "kubernetes-context"
+  K8S_CLUSTER_NAME = "kubernetes"
+  K8S_NAMESPACE = "itsp-qualif"
+  K8S_MANIFESTS_PATH = "./ship/k8s"
+  K8S_DEPLOYMENT_NAME = "${env.PROJECT_NAME}"
+  K8S_DEPLOYMENT_TIER = "front-end"
+  K8S_DEPLOYMENT_FRAMEWORK = "vuejs"
+  K8S_DEPLOYMENT_REPLICAS = 1
+  K8S_DEPLOYMENT_REVISION_HISTORY_LIMIT = 3
+  K8S_DEPLOYMENT_PORT = 8080
+  K8S_DEPLOYMENT_CONTEXT_PATH = "/"
+  K8S_DOCKER_IMAGE_SECRET_NAME = "itsp-frontend-image-puller"
+  K8S_DEPLOYMENT_MEM_REQ = "256Mi"
+  K8S_DEPLOYMENT_MEM_LIMIT = "256Mi"
+  K8S_DEPLOYMENT_CPU_REQ = "100m"
+  K8S_DEPLOYMENT_CPU_LIMIT = "850m"
+  K8S_APP_URI = "itsp-qualif.app.dev.s2m.ma"
+  ITSP_BACKEND_URL_INSTITUTION="https://institution-itsp-qualif.app.dev.s2m.ma/api/institution"
+  ITSP_BACKEND_URL_BIN="https://bin-itsp-qualif.app.dev.s2m.ma/api/bin"
+  NPM_TOKEN = credentials('token-npmrc')
+  TEST_REPO_PROJECT = "https://vcs.dev.s2m.ma/itsp/itsp-front-tests.git"
+ }
+
+ stages {
+
+   stage('Install dependencies') {
+    steps {
+      script {
+        try {
+        configFileProvider(
+            [configFile(fileId: 'npm-config-file', variable: 'NPM_SETTINGS')]) {
+                sh 'cp "$NPM_SETTINGS" .npmrc'
+                sh 'npm cache clean --force'
+                sh 'npm install'
+            }
+        } catch (err) {
+          addGitLabMRComment(comment: "Jenkins CI issue: Error while installing dependencies, please check the job build console: : ${env.BUILD_URL}console")
+          addGitLabMRComment(comment: err.getMessage())
+          throw err
+        }
+      }
+    }
+  }
+
+  stage('Clean and Build') {
+    steps {
+      script {
+        try {
+          sh 'echo compile'
+          sh 'rm -rf dist'
+          sh 'envsubst < .env > tmp'
+          sh 'mv -f tmp .env'
+          sh 'npm run build'
+        } catch (err) {
+          addGitLabMRComment(comment: "Jenkins CI issue: Error when compiling, please check the job build console: : ${env.BUILD_URL}console")
+          addGitLabMRComment(comment: err.getMessage())
+          throw err
+        }
+      }
+    }
+  }
+
+
+  stage('Docker Build & Push') {
+   steps {
+    script {
+     try {
+      sh 'echo "Docker Build & Push"'
+      /**/
+      // Build and push image with Jenkins' docker-plugin
+      withDockerRegistry([credentialsId: "$REGISTRY_CREDENTIALS_ID", url: "$REGISTRY_URI"]) {
+        def image = docker.build("$DOCKER_IMAGE_URI_VERSION", " --build-arg DOCKER_FILE_PATH=$DOCKER_FILE_PATH  -f $DOCKER_FILE_PATH/Dockerfile $DOCKER_BUILD_PATH")
+        if ("$USE_DOCKER_IMAGE_TAG_SHA256" == "yes") {
+        // Get sha256 URI
+        env.PUSHED_IMAGE_SHA256 = sh(returnStdout: true, script: '''docker push $DOCKER_IMAGE_URI_VERSION|grep sha256|awk {'print $3'}''').trim()
+        env.DOCKER_IMAGE_NAME_TAG_SH256 = "${DOCKER_IMAGE_NAME}@${PUSHED_IMAGE_SHA256}"
+        env.DOCKER_IMAGE_URI_SH256 = "${REGISTRY_ADDRESS}/${DOCKER_IMAGE_NAME_TAG_SH256}"
+        env.DOCKER_IMAGE_URI = "${DOCKER_IMAGE_URI_SH256}"
+        } else {
+        // Push if no sha256 wanted
+        image.push()
+        env.DOCKER_IMAGE_URI = "${DOCKER_IMAGE_URI_VERSION}"
+        }
+
+        // Push latest image tag
+        sh returnStdout: true, script: '''docker tag $DOCKER_IMAGE_URI_VERSION $DOCKER_IMAGE_URI_LATEST'''
+        sh returnStdout: true, script: '''docker push $DOCKER_IMAGE_URI_LATEST'''
+
+        // Clean build images
+        if (env.DOCKER_IMAGE_NAME) {
+        sh '''
+        docker images | grep "<none>" | awk {'print "docker rmi "$3'} | bash
+        docker images | grep "$DOCKER_IMAGE_NAME" | grep "$DOCKER_IMAGE_TAG_VERSION" | awk {'print "docker rmi "$1":"$2'} | bash
+        docker images | grep "$DOCKER_IMAGE_NAME" | grep latest | awk {'print "docker rmi "$1":"$2'} | bash
+        '''
+        }
+      }/**/
+    } catch (err) {
+        throw err
+    }
+   }
+   }
+  }
+
+  stage('Deploy to K8S: qualif Environement') {
+   steps {
+    sh 'echo Deploy to K8S: qualif Environement'
+    withKubeConfig([credentialsId: "$K8S_TOKEN_ID",
+     serverUrl: "$K8S_URI",
+     contextName: "$K8S_CONTEXT_NAME",
+     clusterName: "$K8S_CLUSTER_NAME",
+     namespace: "$K8S_NAMESPACE"
+    ]) {
+     script {
+      try {
+       //sh 'kubectl get serviceaccount'
+       sh 'kubectl create secret docker-registry $K8S_DOCKER_IMAGE_SECRET_NAME --docker-server=$REGISTRY_ADDRESS --docker-username=$REGISTRY_CREDENTIALS_USR --docker-password=$REGISTRY_CREDENTIALS_PSW||true 2>/dev/null'
+
+       // K8S manifests creation update
+       if ("$USE_DOCKER_IMAGE_TAG_SHA256" == "yes") {
+        sh 'echo true: $DOCKER_IMAGE_URI'
+        // The below command can be executed when using sha256
+        sh 'envsubst < $K8S_MANIFESTS_PATH/deployment.yaml|kubectl apply -f -'
+       } else {
+        sh 'echo false: $DOCKER_IMAGE_URI'
+        // The below command can be executed when not using sha256, this require imagePullPolicy: Always
+        env.IS_DEPLOYMENT_CHANGED = sh(returnStdout: true, script: '''envsubst < $K8S_MANIFESTS_PATH/deployment.yaml|kubectl apply -f -|awk {'print $2 '}''').trim()
+        env.CURRENT_IMAGE_IN_K8S = sh(returnStdout: true, script: '''kubectl get deploy/$K8S_DEPLOYMENT_NAME -o jsonpath="{..image}"|head -n 1''').trim()
+        // Force POD redeployment if not yet redeployed
+        if ("$IS_DEPLOYMENT_CHANGED" == "unchanged" && "$CURRENT_IMAGE_IN_K8S" == "$DOCKER_IMAGE_URI_VERSION") {
+         sh 'echo Restart $K8S_DEPLOYMENT_NAME'
+         sh 'kubectl rollout restart deployment $K8S_DEPLOYMENT_NAME'
+        } /**/
+       }
+
+       sh 'envsubst < $K8S_MANIFESTS_PATH/service.yaml|kubectl apply -f -'
+       sh 'envsubst < $K8S_MANIFESTS_PATH/ingress.yaml|kubectl apply -f -'
+      } catch (err) {
+        throw err
+      }
+     }
+    }
+   }
+  }
+
+  stage('Smoke Tests') {
+
+   steps {
+
+    script {
+
+     try {
+
+      sh 'echo Smoke Tests'
+
+      sh 'echo Rollback if issue'
+
+     } catch (err) {
+
+        addGitLabMRComment(comment: err.getMessage())
+
+        addGitLabMRComment(comment: "Jenkins CD (delivery) issue: Smoke Tests, please check the job build console: : ${env.BUILD_URL}console")
+
+        throw err
+
+     }
+
+    }
+
+   }
+
+  }
+
+stage('Pull test repo project') {
+    steps {
+      script {
+        try {
+            sh 'echo "Pull test repo project"'
+            sh """
+                git config user.email "${env.gitlabUserEmail}"
+                git config user.name "${env.gitlabUserName}"
+            """
+            dir('robot-test') {
+                checkout changelog: true, poll: true, scm: [
+                    $class: 'GitSCM',
+                    branches: [[name: "origin/master"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: "${env.GIT_REPO_CREDENTIAL_ID}",name: 'origin', url: "${env.TEST_REPO_PROJECT}"]]
+               ]
+            }
+        } catch (err) {
+          throw err
+        }
+      }
+    }
+  }
+
+
+
+  stage('Automated Tests Robot framework') {
+    steps {
+
+      script {
+        try {
+          sh """
+          echo "Automated Tests Robot framework"
+          cd robot-test/TestCases/Parameters
+          robot -d results manageInstitution.txt
+          """
+          publishHTML (target : [allowMissing: false,
+          alwaysLinkToLastBuild: true,
+          keepAll: true,
+          reportDir: 'robot-test/TestCases/Parameters/results/',
+          reportFiles: 'output.xml, log.html ,report.html',
+          reportName: 'reports',
+          reportTitles: 'output, log, report'])
+        } catch (err) {
+
+        //   addGitLabMRComment(comment: err.getMessage())
+
+        //   addGitLabMRComment(comment: "Jenkins CD (delivery) issue: User Acceptance Tests, please check the job build console: : ${env.BUILD_URL}console")
+
+          throw err
+
+        }
+      }
+
+    }
+
+  }
+
+
+
+  stage('User Acceptance Tests') {
+
+    steps {
+
+      script {
+
+        try {
+
+          sh 'echo User Acceptance Tests'
+
+        } catch (err) {
+
+          addGitLabMRComment(comment: err.getMessage())
+
+          addGitLabMRComment(comment: "Jenkins CD (delivery) issue: User Acceptance Tests, please check the job build console: : ${env.BUILD_URL}console")
+
+          throw err
+
+        }
+
+      }
+
+    }
+
+  }
+
+
+
+  stage('Security Tests: Dynamic OWASP Security Checks') {
+
+    steps {
+
+      script {
+
+        try {
+
+          sh 'echo Security Tests: Dynamic OWASP Security Checks'
+
+          //throw err
+
+        } catch (err) {
+
+          addGitLabMRComment(comment: err.getMessage())
+
+          addGitLabMRComment(comment: "Jenkins CD (delivery) issue: Security Tests: Dynamic OWASP Security Checks, please check the job build console: : ${env.BUILD_URL}console")
+
+          throw err
+
+        }
+
+      }
+
+    }
+
+  }
+
+
+
+  stage('Stress Tests') {
+
+    steps {
+
+      script {
+
+        try {
+
+          sh 'echo Stress Tests'
+
+        } catch (err) {
+
+          addGitLabMRComment(comment: err.getMessage())
+
+          addGitLabMRComment(comment: "Jenkins CD (delivery) issue: Stress Tests, please check the job build console: : ${env.BUILD_URL}console")
+
+          throw err
+
+        }
+
+      }
+
+    }
+
+  }
+
+
+
+  stage('Performance Tests') {
+
+    steps {
+
+      script {
+
+        try {
+
+          sh 'echo Performance Tests'
+
+        } catch (err) {
+
+          addGitLabMRComment(comment: err.getMessage())
+
+          addGitLabMRComment(comment: "Jenkins CD (delivery) issue: Performance Tests, please check the job build console: : ${env.BUILD_URL}console")
+
+          throw err
+
+        }
+
+      }
+
+    }
+
+  }
+
+  }
+
+  }
+

@@ -1,0 +1,36 @@
+{
+  "common": {
+    "search": "Rechercher",
+    "reset": "Réinitialiser"
+  },
+  "user-space" : {
+    "title": "Espace Utilisateur",
+    "table-headers" : {
+      "image" : "Image",
+      "firstName" : "Prénom",
+      "lastName" : "Nom",
+      "status" : "Statut",
+      "id" : "ID",
+      "actions": "Actions"
+    },
+    "add-button" : "Ajouter un utilisateur",
+    "update-button" : "Modifier un utilisateur",
+    "details-button" : "Détails d'un utilisateur"
+  },
+  "team-space" : {
+    "title": "Espace Equipe",
+    "table-headers" : {
+      "logo" : "Logo",
+      "name" : "Nom",
+      "pseudo" : "Pseudo",
+      "id" : "ID",
+      "actions": "Actions"
+    },
+    "add-button" : "Ajouter une equipe"
+
+  }
+}
+
+
+
+

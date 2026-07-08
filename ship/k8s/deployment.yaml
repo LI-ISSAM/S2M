@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &labels
+    tier: $K8S_DEPLOYMENT_TIER
+    framework: $K8S_DEPLOYMENT_FRAMEWORK
+    app: $K8S_DEPLOYMENT_NAME
+  name: $K8S_DEPLOYMENT_NAME
+spec:
+  replicas: $K8S_DEPLOYMENT_REPLICAS
+  revisionHistoryLimit: $K8S_DEPLOYMENT_REVISION_HISTORY_LIMIT
+  selector:
+    matchLabels: *labels
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      containers:
+      - name: $K8S_DEPLOYMENT_NAME
+        image: $DOCKER_IMAGE_URI
+        imagePullPolicy: Always
+        ports:
+        - containerPort: $K8S_DEPLOYMENT_PORT
+          name: app-port
+        resources:
+          requests:
+            memory: "$K8S_DEPLOYMENT_MEM_REQ"
+            cpu: "$K8S_DEPLOYMENT_CPU_REQ"
+          limits:
+            memory: "$K8S_DEPLOYMENT_MEM_LIMIT"
+            cpu: "$K8S_DEPLOYMENT_CPU_LIMIT"
+      imagePullSecrets:
+      - name: $K8S_DOCKER_IMAGE_SECRET_NAME

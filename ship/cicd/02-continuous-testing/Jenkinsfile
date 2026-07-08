@@ -1,0 +1,108 @@
+void deploy_micro_service() {
+
+	withEnv([
+		"PROJECT_NAME=itsp-front",
+		"DOCKER_BUILD_PATH='.'",
+		"USE_DOCKER_IMAGE_TAG_SHA256=no",
+
+		"REGISTRY_ADDRESS=container-registry.dev.s2m.ma/itsp",
+
+		"K8S_TOKEN_ID=K8S_TOKEN_ID",
+		"K8S_URI=https://442EFD99300DFC0F8C3FD709B10CD40F.gr7.us-east-2.eks.amazonaws.com",
+		"K8S_CONTEXT_NAME=kubernetes-context",
+		"K8S_CLUSTER_NAME=kubernetes",
+		"K8S_NAMESPACE=itsp-qualif",
+		"K8S_MANIFESTS_PATH=./ship/k8s",
+		"K8S_DEPLOYMENT_TIER=front-end",
+		"K8S_DEPLOYMENT_FRAMEWORK=vuejs",
+		"K8S_DEPLOYMENT_REPLICAS=1",
+		"K8S_DEPLOYMENT_REVISION_HISTORY_LIMIT=3",
+		"K8S_DEPLOYMENT_PORT=8080",
+		"K8S_DEPLOYMENT_CONTEXT_PATH=/",
+		"K8S_DOCKER_IMAGE_SECRET_NAME=itsp-frontend-image-puller",
+		"K8S_DEPLOYMENT_MEM_REQ=256Mi",
+		"K8S_DEPLOYMENT_MEM_LIMIT=256Mi",
+		"K8S_DEPLOYMENT_CPU_REQ=100m",
+		"K8S_DEPLOYMENT_CPU_LIMIT=850m",
+		"K8S_APP_URI=itsp-qualification.app.dev.s2m.ma",
+		"ITSP_BACKEND_URL_INSTITUTION=https://institution-istp-qualification.app.dev.s2m.ma/api/institution",
+		"ITSP_BACKEND_URL_BIN=https://bin-istp-qualification.app.dev.s2m.ma/api/bin",
+		"ITSP_PARAMETERS_URL=https://parameters-itsp-qualification.app.dev.s2m.ma/api/",
+		"ITSP_PROCESSING_URL=https://processing-itsp-qualification.app.dev.s2m.ma/api/",
+		"ITSP_TOKENINQUIRY_URL=https://tokeninquiry-itsp-qualification.app.dev.s2m.ma/api/",
+		"ITSP_ISSUERGATEWAY_URL=https://issuergateway-itsp-qualification.app.dev.s2m.ma/api/",
+		"ITSP_NOTIFICATION_URL=https://notifications-transvers-qualification.app.dev.s2m.ma/api/"
+	]) {
+	stage('Deploy mc-service to K8S qa. env.') {
+		env.DOCKER_IMAGE_NAME = env.PROJECT_NAME
+		env.DOCKER_IMAGE_TAG_VERSION = env.BUILD_RELEASE_VERSION
+		env.DOCKER_IMAGE_NAME_TAG_VERSION = "${env.DOCKER_IMAGE_NAME}:$env.DOCKER_IMAGE_TAG_VERSION"
+		env.DOCKER_IMAGE_NAME_TAG_LATEST = "${env.DOCKER_IMAGE_NAME}:latest"
+		env.DOCKER_IMAGE_URI_VERSION = "${env.REGISTRY_ADDRESS}/${env.DOCKER_IMAGE_NAME_TAG_VERSION}"
+		env.DOCKER_IMAGE_URI_LATEST = "${env.REGISTRY_ADDRESS}/${env.DOCKER_IMAGE_NAME_TAG_LATEST}"
+		env.DOCKER_IMAGE_URI = env.DOCKER_IMAGE_URI_VERSION
+
+		env.K8S_DEPLOYMENT_JAVA_OPTS = "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Xms${env.K8S_DEPLOYMENT_JAVA_XMS} -Xmx${env.K8S_DEPLOYMENT_JAVA_XMX}"
+		env.K8S_DEPLOYMENT_SPRINTBOOT_PORT = "--server.port=${env.K8S_DEPLOYMENT_PORT} --server.servlet.context-path=${env.K8S_DEPLOYMENT_CONTEXT_PATH}"
+
+		
+		env.REGISTRY_URI = "https://${env.REGISTRY_ADDRESS}"
+		
+		env.K8S_DEPLOYMENT_NAME = "itsp-front"
+
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'NEXUS_CREDS', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME']]) {
+			env.NEXUS_USR = env.USERNAME
+			env.NEXUS_PWD = env.PASSWORD
+ 		}
+
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'container-registry-user', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME']]) {
+			env.REGISTRY_CREDENTIALS_USER = env.USERNAME
+			env.REGISTRY_CREDENTIALS_PASSWORD = env.PASSWORD
+ 		}
+
+        
+		sh 'echo Deploy to K8S: Qualification Environement'
+		withKubeConfig([credentialsId: "$K8S_TOKEN_ID",
+			serverUrl: "$K8S_URI",
+			contextName: "$K8S_CONTEXT_NAME",
+			clusterName: "$K8S_CLUSTER_NAME",
+			namespace: "$K8S_NAMESPACE"
+		]) {
+		script {
+			try {
+				sh 'kubectl create secret docker-registry $K8S_DOCKER_IMAGE_SECRET_NAME --docker-server=$REGISTRY_ADDRESS --docker-username=$REGISTRY_CREDENTIALS_USER --docker-password=$REGISTRY_CREDENTIALS_PASSWORD||true 2>/dev/null'
+		
+				// K8S manifests creation update
+				if ("$USE_DOCKER_IMAGE_TAG_SHA256" == "yes") {
+					sh 'echo true: $DOCKER_IMAGE_URI'
+					// The below command can be executed when using sha256
+					sh 'envsubst < $K8S_MANIFESTS_PATH/deployment.yaml|kubectl apply -f -'
+				} else {
+					// The below command can be executed when not using sha256, this require imagePullPolicy: Always
+					//env.IS_DEPLOYMENT_CHANGED = sh(returnStdout: true, script: '''envsubst < $K8S_MANIFESTS_PATH/deployment.yaml|kubectl apply -f -|awk {'print $2 '}''').trim()
+					env.IS_DEPLOYMENT_CHANGED = 'test'
+					sh'envsubst < $K8S_MANIFESTS_PATH/deployment.yaml|kubectl apply -f -'
+		
+					env.CURRENT_IMAGE_IN_K8S = sh(returnStdout: true, script: '''kubectl get deploy/$K8S_DEPLOYMENT_NAME -o jsonpath="{..image}"|head -n 1''').trim()
+					// Force POD redeployment if not yet redeployed
+					if ("$IS_DEPLOYMENT_CHANGED" == "unchanged" && "$CURRENT_IMAGE_IN_K8S" == "$DOCKER_IMAGE_URI_VERSION") {
+						sh 'echo Restart $K8S_DEPLOYMENT_NAME'
+						sh 'kubectl rollout restart deployment $K8S_DEPLOYMENT_NAME'
+					} /**/
+				}
+		
+				sh 'envsubst < $K8S_MANIFESTS_PATH/service.yaml|kubectl apply -f -'
+				sh 'envsubst < $K8S_MANIFESTS_PATH/ingress.yaml|kubectl apply -f -'
+			} catch (err) {
+				throw err
+			}
+		}
+		} /**/
+        }
+	}
+
+}
+
+return [
+    deploy_micro_service: this.&deploy_micro_service
+]

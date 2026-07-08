@@ -1,0 +1,9 @@
+@Library('nxp_pipeline_lib') _
+frontend_post_merge_request {
+    projectname = 'nxp-ui-template'
+    nxpproduct = 'socle'
+    namespace = 'socle-integration'
+    environment = 'integration'
+    globalRepo = 'http://vcs-factory.s2m.ma:8080/infrastructure/product/socle.git'
+}
+

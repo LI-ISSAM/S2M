@@ -1,0 +1,3 @@
+@Library('nxp_pipeline_lib') _
+front_plugin_pre_code_review()
+

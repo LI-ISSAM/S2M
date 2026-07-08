@@ -1,0 +1,67 @@
+pipeline {
+
+ agent any
+
+ tools {
+   nodejs 'node'
+   }
+
+
+ environment {
+  GIT_TAG_COMMIT = sh(script: 'git describe --tags --always', returnStdout: true).trim()
+  PROJECT_NAME="nxp-template"
+  SONAR_TOKEN = credentials('s2m-sonar-token')
+  NPM_TOKEN = credentials('token-npmrc')
+ }
+ stages {
+    stage('Install dependencies') {
+      steps {
+        configFileProvider(
+            [configFile(fileId: 'npm-config-file', variable: 'NPM_SETTINGS')]) {
+                sh 'cp "$NPM_SETTINGS" .npmrc'
+                sh 'npm cache clean --force'
+                sh 'npm install'
+          }
+        }
+      }
+
+
+  stage('Clean and Build') {
+    steps {
+        sh 'npm run build'
+        sh 'echo compile'
+   }
+  }
+
+/*  stage("Code lint") {
+   steps {
+    sh 'npm run lint'
+    sh 'echo Code lint'
+   }
+   post {
+    always {
+     sh 'echo Archive Code lint'
+    }
+   }
+  }
+  */
+  stage('Code Quality') {
+    environment {
+       scannerHome = tool 'sonarscanscanner'
+       GIT_BRANCH= sh (returnStdout: true, script: "sed 's,/,-,' <<<${BRANCH_NAME} | tr -d '\n' ")
+    }
+    steps {
+      withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner \
+              -Dsonar.projectKey='${PROJECT_NAME}-${GIT_BRANCH}' \
+              -Dsonar.sources='src' \
+              -Dsonar.projectName='${PROJECT_NAME}-${GIT_BRANCH}' \
+              -Dsonar.coverage.exclusions='src/assets/**' \
+              -Dsonar.login='${SONAR_TOKEN}'"
+      }
+   }
+  }
+ }
+}
+
+
