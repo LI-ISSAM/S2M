@@ -1,15 +1,21 @@
 import axios from 'axios'
 
 export default {
-    getInstitutions(page = 1 , limit = 4) {
+    getInstitutions(page = 1 , limit = 4 , name = '') {
+
+        const params = {
+            _page : page,
+            _limit : limit
+        };
+
+        if(name){
+            params.name_like = name;
+        }
         return new Promise(
             (resolve, reject) => {
                 axios
                     .get(process.env.VUE_APP_INIT_BACKEND_URL+'institutions',{
-                        params : {
-                            _page : page,
-                            _limit : limit
-                        }
+                        params : params
                     })
                     .then(list => resolve(list)).catch(err => reject(err))
             })

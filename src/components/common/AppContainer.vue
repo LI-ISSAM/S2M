@@ -6,7 +6,7 @@
                    :pill="true"
                    :menu_items="menu_items" 
                    @change_lang="lang=$event"
-                   connectedUser="Salim BENZERAGAH"
+                   connectedUser="Litimi Issam"
     >
       <!-- :connectedUser="$keycloak.fullName" @signOut="$keycloak.logoutFn" -->
       <template #sidebar-header>

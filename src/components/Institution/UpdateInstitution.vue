@@ -6,19 +6,21 @@
   <nxp-main-container icon="edit" title="Update Institution" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
-                   color="#555"
+                   color="#17a2b8"
                    shape="tab"
                    subtitle=""
                    title=""
-                   colorSubmit="info"
+                   colorSubmit="primary"
+                   colorReset="warning"
+                   colorClose="danger"
                    :pill="true"
                    :buttonIcon="true"
-                   cancelButton
-                   resetButton
+                   cancelButton="close"
+                   :resetButton="true"
+                   :tabs="tabs"
                    @reset="onReset"
                    @cancel="$router.push('/institution')"
                    @complete="onComplete"
-                   :tabs="[{name: 'general', title: 'General', icon: 'ti ti-help'}, {name: 'contact', title: 'Contact', icon: 'ti ti-location-pin'}, {name: 'metadata', title: 'Metadata', icon: 'ti ti-settings'}]"
   >
     <template #general>
       <div class="row">
@@ -168,24 +170,110 @@
                      placeholder="Select Onboarding Date"
           />
         </b-col>
-        <b-col sm="6">
-          <nxp-input label="Tags"
-                     id="tags"
-                     v-model="institution.metadata.tags"
-                     :allow-empty="true"
-                     :close-on-select="false"
-                     :multiple="true"
-                     :taggable="true"
-                     placeholder="Add Tags (BNPL, Bank, Partner...)"
-                     :searchable="true"
-                     :show-labels="false"
-                     type="multiselect"
-          >
-          </nxp-input>
-        </b-col>
+    <b-col sm="6">
+  <nxp-input
+      label="Tags"
+      id="tags"
+      v-model="institution.metadata.tags"
+      type="multiselect"
+      :options="tagsOptions"
+      track-by="id"
+      label-key="label"
+      :allow-empty="true"
+      :close-on-select="false"
+      :multiple="true"
+      :taggable="true"
+      placeholder="Add Tags (BNPL, Bank, Partner...)"
+      :searchable="true"
+      :show-labels="false"
+  >
+  </nxp-input>
+</b-col>
       </b-row>
     </template>
+<template #recapitulatif>
+  <b-row>
+    <b-col sm="12" class="text-center mb-4">
+      <img v-if="institution.logo" :src="institution.logo" alt="logo" style="max-height:80px;" />
+    </b-col>
 
+    <b-col sm="12">
+      <h5><font-awesome-icon icon="user" class="mr-2"/>Informations générales</h5>
+      <hr>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Nom :</label>
+      <p>{{ institution.name || '-' }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Référence :</label>
+      <p>{{ institution.reference || '-' }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Type :</label>
+      <p>{{ getTypeLabel(institution.type) }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Statut :</label>
+      <p>{{ institution.status || '-' }}</p>
+    </b-col>
+
+    <b-col sm="12">
+      <h5><font-awesome-icon icon="users" class="mr-2"/>Contact</h5>
+      <hr>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Email :</label>
+      <p>{{ institution.contact.email || '-' }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Téléphone :</label>
+      <p>{{ institution.contact.phone || '-' }}</p>
+    </b-col>
+    <b-col sm="12">
+      <label class="font-weight-bold">Adresse :</label>
+      <p>{{ institution.contact.address || '-' }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Ville :</label>
+      <p>{{ institution.contact.city || '-' }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Pays :</label>
+      <p>{{ institution.contact.country || '-' }}</p>
+    </b-col>
+    <b-col sm="12">
+      <label class="font-weight-bold">Site web :</label>
+      <p>{{ institution.contact.website || '-' }}</p>
+    </b-col>
+
+    <b-col sm="12">
+      <h5><font-awesome-icon icon="cog" class="mr-2"/>Métadonnées</h5>
+      <hr>
+    </b-col>
+    <b-col sm="12">
+      <label class="font-weight-bold">Description :</label>
+      <p>{{ institution.metadata.description || '-' }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Date d'onboarding :</label>
+      <p>{{ institution.metadata.onboardingDate || '-' }}</p>
+    </b-col>
+    <b-col sm="6">
+      <label class="font-weight-bold">Tags :</label>
+      <p>
+        <b-badge
+            v-for="tag in institution.metadata.tags"
+            :key="tag.id"
+            variant="info"
+            class="mr-1">
+          {{ tag.label }}
+        </b-badge>
+        <span v-if="!institution.metadata.tags || institution.metadata.tags.length === 0">-</span>
+      </p>
+    </b-col>
+  </b-row>
+</template>
   </nxp-form-wizard>
   </nxp-main-container>
 </div>
@@ -231,6 +319,32 @@ export default {
   data(){
     return {
       institutionId : this.$route.query.institutionId,
+
+     tabs : [
+          {
+            name: 'general',
+            title: 'General',
+            icon: 'ti ti-help',
+            beforeChange: ()=>this.validateGeneral()
+          },
+          {
+            name: 'contact',
+            title: 'Contact',
+            icon: 'ti ti-location-pin',
+            beforeChange: ()=>this.validateContact()
+          },
+          {
+            name: 'metadata',
+            title: 'Metadata',
+            icon: 'ti ti-settings',
+            beforeChange:()=>this.validateMetadata()
+          },
+          {
+            name : 'recapitulatif',
+            title :'Recapitulatif',
+            icon : 'ti ti-clipboard'
+          }
+        ],
       types : [
         {id: '', label: 'Select Institution Type'},
         {id: 'BANK', label: 'Bank'},
@@ -244,6 +358,11 @@ export default {
         {id: 'SUSPENDED', label: 'SUSPENDED'},
         {id: 'ARCHIVED', label: 'ARCHIVED'}
       ],
+      tagsOptions : [
+  {id:'BNPL' , label:'BNPL'},
+  {id:'Bank' , label:'Bank'},
+  {id:'Partner' , label:'Partner'},
+],
       institution : {
         name : '',
         reference : '',
@@ -270,11 +389,21 @@ export default {
     this.getInstitution()
   },
   methods : {
-    getInstitution(){
-      InstitutionService.getInstitution(this.institutionId).then(response=>{
-        this.institution = response.data;
-      })
-    },
+getInstitution(){
+  InstitutionService.getInstitution(this.institutionId).then(response=>{
+    this.institution = response.data;
+
+    if (Array.isArray(this.institution.metadata.tags)) {
+      this.institution.metadata.tags = this.institution.metadata.tags.map(tag => {
+        if (typeof tag === 'string') {
+          const found = this.tagsOptions.find(opt => opt.id === tag);
+          return found || { id: tag, label: tag };
+        }
+        return tag;
+      });
+    }
+  })
+},
     onReset(){
       this.getInstitution()
     },
@@ -284,14 +413,67 @@ export default {
         NxpToast.toastError('Form Invalid')
         return;
       }
+       const payload = {
+    ...this.institution,
+    metadata: {
+      ...this.institution.metadata,
+      tags: this.institution.metadata.tags.map(tag =>
+        typeof tag === 'object' ? tag.id : tag
+      )
+    }
+  };
       // eslint-disable-next-line no-unused-vars
-      InstitutionService.updateInstitution(this.institution).then(response=>{
+      InstitutionService.updateInstitution(payload).then(response=>{
         NxpToast.toastSuccess('Institution Updated Successfully')
         this.$router.push('/institution')
       })
 
-    }
+    },
+    
+validateGeneral(){
+
+  this.$v.institution.name.$touch();
+  this.$v.institution.reference.$touch();
+  this.$v.institution.type.$touch();
+  this.$v.institution.status.$touch();
+
+  if (
+      this.$v.institution.name.$invalid ||
+      this.$v.institution.reference.$invalid ||
+      this.$v.institution.type.$invalid ||
+      this.$v.institution.status.$invalid
+  ) {
+
+      NxpToast.toastError("Veuillez remplir tous les champs obligatoires.");
+      return false;
   }
+
+  return true;
+},
+validateContact() {
+
+  this.$v.institution.contact.email.$touch();
+  this.$v.institution.contact.phone.$touch();
+
+  if (
+      this.$v.institution.contact.email.$invalid ||
+      this.$v.institution.contact.phone.$invalid
+  ) {
+
+      NxpToast.toastError("Veuillez remplir les informations de contact.");
+      return false;
+  }
+
+  return true;
+},
+ getTypeLabel(typeId){
+    const found = this.types.find(t => t.id === typeId);
+    return found ? found.label : '-';
+  },
+validateMetadata() {
+  return true;
+  }
+}
 }
 </script>
 

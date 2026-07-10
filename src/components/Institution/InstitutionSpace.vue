@@ -3,15 +3,40 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'institutions', to: '/institution'},{text:''}]"/>
 
-  <nxp-main-container icon="university" title="Institution Space">
+  <nxp-main-container icon="university"  title="Institution ">
 
     <div slot="add-button" class="my-1 mr-1">
 
-      <nxp-button outline="true" pill @click="$router.push('institution/add')">
-        <font-awesome-icon icon="plus" class="mr-1"/>Add Institution
+      <nxp-button 
+      pill @click="$router.push('institution/add')">
+        <font-awesome-icon icon="plus" class="mr-1"/>Ajouter un nouveau
       </nxp-button>
 
     </div>
+
+     <b-card bg-variant="light" class="mb-3">
+    <b-row class="align-items-end">
+      <b-col sm="8">
+        <nxp-input
+            label="Nom :"
+            v-model="filters.name"
+            id="search-name"
+            type="text"
+            placeholder="Entrez le nom de l'institution"
+            @keyup.enter="onSearch"
+        />
+      </b-col>
+      <b-col sm="4" class="d-flex justify-content-end">
+        <nxp-button color="danger" pill class="mr-2 pl-4 pr-4" @click="onResetFilters" type="reset" >
+          <font-awesome-icon   class="mr-1" />Réinitialiser
+        </nxp-button>
+        <nxp-button variant="info" pill @click="onSearch" class="pl-4 pr-4" type="search">
+          <font-awesome-icon class="mr-1" />Rechercher
+        </nxp-button>
+      </b-col>
+    </b-row>
+  </b-card>
+
 
     <nxp-table
         :fields="fields"
@@ -52,7 +77,10 @@ export default {
       perPage : 4,
       server_error : false,
       totalElements : 0,
-      currentPage : 1
+      currentPage : 1,
+      filters : {
+        name : ''
+      }
     }
   },
   mounted() {
@@ -165,12 +193,26 @@ export default {
         this.isLoading = true;
         InstitutionService.getInstitutions(
             this.currentPage,
-            this.perPage
+            this.perPage,
+            this.filters.name
         ).then(response=>{
         this.itemsList = response.data;
         this.totalElements = parseInt(response.headers['x-total-count']);
         this.isLoading = false
+      }).catch(()=>{
+        this.isLoading = false;
+        this.server_error = true; 
       })
+    },
+    onSearch(){
+      this.currentPage = 1;
+      this.onUpdateList();
+    },
+    onResetFilters(){
+      this.filters.name = '';
+      this.currentPage = 1;
+      this.onUpdateList();
+    
     }
   },
 
