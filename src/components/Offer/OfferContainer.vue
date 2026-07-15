@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "InstitutionContainer",
+  name: "OfferContainer",
 };
 </script>
 <style scoped></style>

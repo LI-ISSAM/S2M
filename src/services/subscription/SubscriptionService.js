@@ -1,32 +1,31 @@
 import axios from 'axios'
 
 export default {
-    getInstitutions(page = 1 , limit = 4 , name = '') {
+    getSubscriptions(page = 1 , limit = 4,email='' ) {
 
         const params = {
             _page : page,
             _limit : limit
         };
-
-        if(name){
-            params.name_like = name;
+        if(email){
+            params.email_like = email;
         }
+
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .get(process.env.VUE_APP_INIT_BACKEND_URL+'institutions',{
+                    .get(process.env.VUE_APP_INIT_BACKEND_URL+'subscriptions',{
                         params : params
                     })
-                    .then(list => resolve(list)).catch(err => 
-                    reject(err.response.data))
+                    .then(list => resolve(list)).catch(err => reject(err))
             })
     },
 
-    addInstitution(institution) {
+    addSubscription(subscription) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .post(process.env.VUE_APP_INIT_BACKEND_URL +'institutions', institution)
+                    .post(process.env.VUE_APP_INIT_BACKEND_URL +'subscriptions', subscription)
                     .then(response => resolve(response)).catch(err => {
                     reject(err.response.data);
                 })
@@ -34,34 +33,34 @@ export default {
             })
     },
 
-    getInstitution(institutionId) {
+    getSubscription(subscriptionId) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .get(process.env.VUE_APP_INIT_BACKEND_URL +'institutions'+'/' + institutionId)
+                    .get(process.env.VUE_APP_INIT_BACKEND_URL +'subscriptions'+'/' + subscriptionId)
                     .then(response => resolve(response)).catch(err => reject(err))
 
             })
     },
 
-    updateInstitution(institution) {
+    updateSubscription(subscription) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .put(process.env.VUE_APP_INIT_BACKEND_URL +'institutions/'+institution.id, institution)
-                    .then(response => resolve(response)).catch(err => 
+                    .put(process.env.VUE_APP_INIT_BACKEND_URL +'subscriptions/'+subscription.id, subscription)
+                    .then(response => resolve(response)).catch(err =>
                     reject(err.response.data))
 
             })
     },
 
-    deleteInstitution(id) {
+    deleteSubscription(id) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .delete(process.env.VUE_APP_INIT_BACKEND_URL +'institutions/'+ id)
-                    .then(resp => resolve(resp)).catch(err => 
-                    reject(err.response.data))
+                    .delete(process.env.VUE_APP_INIT_BACKEND_URL +'subscriptions/'+ id)
+                    .then(resp => resolve(resp)).catch(err =>
+                     reject(err.response.data))
             })
     }
 }

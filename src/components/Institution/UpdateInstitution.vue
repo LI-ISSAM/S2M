@@ -426,6 +426,9 @@ getInstitution(){
       InstitutionService.updateInstitution(payload).then(response=>{
         NxpToast.toastSuccess('Institution Updated Successfully')
         this.$router.push('/institution')
+      }).catch(er=>{
+        const message = er && er.message ? er.message : 'Error updating institution'
+        NxpToast.toastError(message)
       })
 
     },

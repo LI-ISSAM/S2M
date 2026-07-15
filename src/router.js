@@ -18,7 +18,27 @@ import InstitutionContainer from './components/Institution/InstitutionContainer.
 import InstitutionSpace from './components/Institution/InstitutionSpace.vue';
 import UpdateInstitution from './components/Institution/UpdateInstitution.vue';
 import InstitutionDetails from './components/Institution/InstitutionDetails.vue';
+import AddProgram from './components/Program/AddProgram.vue';
+import ProgramContainer from './components/Program/ProgramContainer.vue';
+import ProgramSpace from './components/Program/ProgramSpace.vue';
+import UpdateProgram from './components/Program/UpdateProgram.vue';
+import ProgramDetails from './components/Program/ProgramDetails.vue';
+import AddOffer from './components/Offer/AddOffer.vue';
+import OfferContainer from './components/Offer/OfferContainer.vue';
+import OfferSpace from './components/Offer/OfferSpace.vue';
+import UpdateOffer from './components/Offer/UpdateOffer.vue';
+import OfferDetails from './components/Offer/OfferDetails.vue';
+import CustomerDetails from './components/Customer/CustomerDetails.vue';
+import AddCustomer from './components/Customer/AddCustomer.vue';
+import CustomerContainer from './components/Customer/CustomerContainer.vue';
+import CustomerSpace from './components/Customer/CustomerSpace.vue';
+import UpdateCustomer from './components/Customer/UpdateCustomer.vue';
 
+import AddSubscription from './components/Subscription/AddSubscription.vue';
+import SubscriptionContainer from './components/Subscription/SubscriptionContainer.vue';
+import SubscriptionSpace from './components/Subscription/SubscriptionSpace.vue';
+import UpdateSubscription from './components/Subscription/UpdateSubscription.vue';
+import SubscriptionDetails from './components/Subscription/SubscriptionDetails.vue';
 
 
 Vue.use(Router);
@@ -108,6 +128,91 @@ const router = new Router({
 
       },
 
+      {
+        path:'/program',component: ProgramContainer,
+        meta : {
+            requiresAuth: true
+        },
+        children : [
+            {
+                path:'/',component: ProgramSpace
+            },
+            {
+                path:'add',component: AddProgram
+            },
+            {
+                path:'update',component:UpdateProgram
+            },
+            {
+                path:'details',component:ProgramDetails
+            }
+        ]
+
+
+      },
+
+      {
+        path:'/offer',component: OfferContainer,
+        meta : {
+            requiresAuth: true
+        },
+        children : [
+            {
+                path:'/',component: OfferSpace
+            },
+            {
+                path:'add',component: AddOffer
+            },
+            {
+                path:'update',component:UpdateOffer
+            },
+            {
+                path:'details',component:OfferDetails
+            }
+        ]
+
+
+      },
+      {
+  path:'/customer',component: CustomerContainer,
+  meta : {
+      requiresAuth: true
+  },
+  children : [
+      {
+          path:'/',component: CustomerSpace
+      },
+      {
+          path:'add',component: AddCustomer
+      },
+      {
+          path:'update',component:UpdateCustomer
+      },
+      {
+          path:'details',component:CustomerDetails
+      }
+  ]
+},
+{
+  path:'/subscription',component: SubscriptionContainer,
+  meta : {
+      requiresAuth: true
+  },
+  children : [
+      {
+          path:'/',component: SubscriptionSpace
+      },
+      {
+          path:'add',component: AddSubscription
+      },
+      {
+          path:'update',component:UpdateSubscription
+      },
+      {
+          path:'details',component:SubscriptionDetails
+      }
+  ]
+},
 
       {
           path: '/audit-trail', component: Audit,

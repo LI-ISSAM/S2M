@@ -1,14 +1,14 @@
 <template>
 <div>
 
-  <nxp-bread-crumb id="bread-crumb" :items="[{text: 'institutions', to: '/institution'},{text:''}]"/>
+  <nxp-bread-crumb id="bread-crumb" :items="[{text: 'programs', to: '/program'},{text:''}]"/>
 
-  <nxp-main-container icon="university"  title="Institution ">
+  <nxp-main-container icon="folder"  title="Program ">
 
     <div slot="add-button" class="my-1 mr-1">
 
       <nxp-button 
-      pill @click="$router.push('institution/add')">
+      pill @click="$router.push('program/add')">
         <font-awesome-icon icon="plus" class="mr-1"/>Ajouter un nouveau
       </nxp-button>
 
@@ -18,20 +18,20 @@
     <b-row class="align-items-end">
       <b-col sm="8">
         <nxp-input
-            label="Nom :"
+            :label="$t('common.search') + ' :'"
             v-model="filters.name"
             id="search-name"
             type="text"
-            placeholder="Entrez le nom de l'institution"
+            placeholder="Entrez le nom du programme"
             @keyup.enter="onSearch"
         />
       </b-col>
       <b-col sm="4" class="d-flex justify-content-end">
         <nxp-button color="danger" pill class="mr-2 pl-4 pr-4" @click="onResetFilters" type="reset" >
-          <font-awesome-icon   class="mr-1" />Réinitialiser
+          <font-awesome-icon   class="mr-1" />{{ $t('common.reset') }}
         </nxp-button>
         <nxp-button variant="info" pill @click="onSearch" class="pl-4 pr-4" type="search">
-          <font-awesome-icon class="mr-1" />Rechercher
+          <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
         </nxp-button>
       </b-col>
     </b-row>
@@ -60,6 +60,14 @@
           {{ data.value }}
         </b-badge>
       </template>
+      <template #cell(type)="data">
+        <b-badge :variant="getTypeBadge(data.value)">
+          {{ data.value }}
+        </b-badge>
+      </template>
+      <template #cell(institutionId)="data">
+        {{ getInstitutionName(data.value) }}
+      </template>
     </nxp-table>
   </nxp-main-container>
 </div>
@@ -67,9 +75,10 @@
 
 <script>
 import NxpToast from "vue-nxp-plugin/src/utils/NxpToast"
+import ProgramService from "@/services/program/ProgramService";
 import InstitutionService from "@/services/institution/InstitutionService";
 export default {
-  name: "InstitutionSpace",
+  name: "ProgramSpace",
   data(){
     return {
       isLoading : true,
@@ -80,10 +89,12 @@ export default {
       currentPage : 1,
       filters : {
         name : ''
-      }
+      },
+      institutionsMap : {}
     }
   },
   mounted() {
+    this.getInstitutions()
     this.onUpdateList()
   },
   computed :{
@@ -96,38 +107,33 @@ export default {
           selected: true
         },
         {
-          key: 'logo',
-          label: 'logo',
-          selected: true,
-          type: 'img'
-        },
-        {
           key: 'name',
-          label: 'name',
+          label: 'Name',
           sortable: true,
           selected: true
         },
         {
-          key: 'reference',
-          label: 'reference',
+          key: 'institutionId',
+          label: 'Institution',
+
           selected: true,
           sortable: true
         },
         {
           key: 'type',
-          label: 'type',
+          label: 'Type',
           selected: true,
           sortable: true
         },
         {
           key: 'status',
-          label: 'status',
+          label: 'Status',
           selected: true,
           sortable: true
         },
         {
           key: 'actions',
-          label: 'actions',
+          label: 'Actions',
           selected: true
         },
    
@@ -161,6 +167,16 @@ export default {
     }
   },
   methods : {
+    getInstitutions(){
+      InstitutionService.getInstitutions(1, 1000, '').then(response=>{
+        const map = {};
+        response.data.forEach(inst => { map[inst.id] = inst.name; });
+        this.institutionsMap = map;
+      })
+    },
+    getInstitutionName(institutionId){
+      return this.institutionsMap[institutionId] || institutionId;
+    },
     getBadge(status){
       switch (status){
         case 'ACTIVE' : return 'success'
@@ -170,54 +186,60 @@ export default {
         default : return 'light'
       }
     },
+    getTypeBadge(type){
+      switch (type){
+        case 'LEGENDE' : return 'warning'
+        case 'PREMIUM' : return 'info'
+        case 'STANDARD' : return 'secondary'
+        default : return 'light'
+      }
+    },
     showView($event){
-      let institution = $event.item;
+      let program = $event.item;
       let view = $event.view;
       switch (view){
         case 'detailsEvent' :
-          this.$router.push({ path: 'institution/details', query: { institutionId: institution.id} })
+          this.$router.push({ path: 'program/details', query: { programId: program.id} })
           break;
         case 'updateEvent' :
-          this.$router.push({ path: 'institution/update', query: { institutionId: institution.id} })
+          this.$router.push({ path: 'program/update', query: { programId: program.id} })
           break;
-    case 'deleteEvent' :
-          this.confirmDelete(institution)
+        case 'deleteEvent' :
+          this.confirmDelete(program)
           break;
       }
     },
-      
-    
-  confirmDelete(institution){
-  this.$bvModal.msgBoxConfirm(
-      `Voulez-vous vraiment supprimer l'institution "${institution.name}" ? Cette action est irréversible.`,
-      {
-        title: 'Confirmation de suppression',
-        size: 'sm',
+
+    confirmDelete(program) {
+      this.$bvModal.msgBoxConfirm('Are you sure you want to delete this program?', {
+        title: 'Confirm Deletion',
+        size: 'md',
+        buttonSize: 'md',
         okVariant: 'danger',
-        okTitle: 'Supprimer',
-        cancelTitle: 'Annuler',
+        okTitle: 'Yes',
+        cancelTitle: 'No',
         footerClass: 'p-2',
         hideHeaderClose: false,
         centered: true
-      }
-  ).then(confirmed => {
-    if (confirmed) {
-      InstitutionService.deleteInstitution(institution.id).then(()=> {
-        NxpToast.toastSuccess('Institution Deleted Successfully')
-        this.onUpdateList()
-      }).catch((err)=>{
-  const message = err && err.message ? err.message
-                : 'An error occurred while deleting the institution';
-            NxpToast.toastError(message);      })
-    }
-  }).catch(()=>{
-
-  })
-},
+      }).then(value => {
+        if (value) {
+          ProgramService.deleteProgram(program.id).then(() => {
+            NxpToast.toastSuccess('Program Deleted Successfully');
+            this.onUpdateList();
+          }).catch(err => {
+            const message = err && err.message ? err.message
+                : 'An error occurred while deleting the program';
+            NxpToast.toastError(message);
+          });
+        }
+      }).catch(err => {
+        console.error(err);
+      });
+    },
 
     onUpdateList(){
         this.isLoading = true;
-        InstitutionService.getInstitutions(
+        ProgramService.getPrograms(
             this.currentPage,
             this.perPage,
             this.filters.name

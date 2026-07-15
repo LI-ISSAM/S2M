@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default {
-    getInstitutions(page = 1 , limit = 4 , name = '') {
+    getPrograms(page = 1 , limit = 4 , name = '') {
 
         const params = {
             _page : page,
@@ -14,19 +14,18 @@ export default {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .get(process.env.VUE_APP_INIT_BACKEND_URL+'institutions',{
+                    .get(process.env.VUE_APP_INIT_BACKEND_URL+'programs',{
                         params : params
                     })
-                    .then(list => resolve(list)).catch(err => 
-                    reject(err.response.data))
+                    .then(list => resolve(list)).catch(err => reject(err))
             })
     },
 
-    addInstitution(institution) {
+    addProgram(program) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .post(process.env.VUE_APP_INIT_BACKEND_URL +'institutions', institution)
+                    .post(process.env.VUE_APP_INIT_BACKEND_URL +'programs', program)
                     .then(response => resolve(response)).catch(err => {
                     reject(err.response.data);
                 })
@@ -34,34 +33,34 @@ export default {
             })
     },
 
-    getInstitution(institutionId) {
+    getProgram(programId) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .get(process.env.VUE_APP_INIT_BACKEND_URL +'institutions'+'/' + institutionId)
+                    .get(process.env.VUE_APP_INIT_BACKEND_URL +'programs'+'/' + programId)
                     .then(response => resolve(response)).catch(err => reject(err))
 
             })
     },
 
-    updateInstitution(institution) {
+    updateProgram(program) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .put(process.env.VUE_APP_INIT_BACKEND_URL +'institutions/'+institution.id, institution)
+                    .put(process.env.VUE_APP_INIT_BACKEND_URL +'programs/'+program.id, program)
                     .then(response => resolve(response)).catch(err => 
                     reject(err.response.data))
 
             })
     },
 
-    deleteInstitution(id) {
+    deleteProgram(id) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .delete(process.env.VUE_APP_INIT_BACKEND_URL +'institutions/'+ id)
-                    .then(resp => resolve(resp)).catch(err => 
-                    reject(err.response.data))
+                    .delete(process.env.VUE_APP_INIT_BACKEND_URL +'programs/'+ id)
+                    .then(resp => resolve(resp)).catch(err =>
+                     reject(err.response.data))
             })
     }
 }

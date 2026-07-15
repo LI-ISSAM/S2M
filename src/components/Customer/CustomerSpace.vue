@@ -1,14 +1,14 @@
 <template>
 <div>
 
-  <nxp-bread-crumb id="bread-crumb" :items="[{text: 'institutions', to: '/institution'},{text:''}]"/>
+  <nxp-bread-crumb id="bread-crumb" :items="[{text: 'customers', to: '/customer'},{text:''}]"/>
 
-  <nxp-main-container icon="university"  title="Institution ">
+  <nxp-main-container icon="user-friends"  title="Customer ">
 
     <div slot="add-button" class="my-1 mr-1">
 
       <nxp-button 
-      pill @click="$router.push('institution/add')">
+      pill @click="$router.push('customer/add')">
         <font-awesome-icon icon="plus" class="mr-1"/>Ajouter un nouveau
       </nxp-button>
 
@@ -22,7 +22,7 @@
             v-model="filters.name"
             id="search-name"
             type="text"
-            placeholder="Entrez le nom de l'institution"
+            placeholder="Entrez le nom du client"
             @keyup.enter="onSearch"
         />
       </b-col>
@@ -55,8 +55,8 @@
         :displayedHeaders="true"
         :showHeadersWhenFilters="true">
       >
-      <template #cell(status)="data">
-        <b-badge :variant="getBadge(data.value)">
+      <template #cell(subBin)="data">
+        <b-badge variant="info">
           {{ data.value }}
         </b-badge>
       </template>
@@ -67,9 +67,9 @@
 
 <script>
 import NxpToast from "vue-nxp-plugin/src/utils/NxpToast"
-import InstitutionService from "@/services/institution/InstitutionService";
+import CustomerService from "@/services/customer/CustomerService";
 export default {
-  name: "InstitutionSpace",
+  name: "CustomerSpace",
   data(){
     return {
       isLoading : true,
@@ -96,38 +96,45 @@ export default {
           selected: true
         },
         {
-          key: 'logo',
-          label: 'logo',
+               key: 'photo',
+          label: 'photo',
           selected: true,
           type: 'img'
+
         },
         {
-          key: 'name',
-          label: 'name',
+          key: 'fullName',
+          label: 'Full Name',
           sortable: true,
           selected: true
         },
         {
-          key: 'reference',
-          label: 'reference',
+         key :'contact.email',
+         label:'Email',
+         sortable:true,
+         selected:true
+        },
+        {
+          key: 'age',
+          label: 'Age',
           selected: true,
           sortable: true
         },
         {
-          key: 'type',
-          label: 'type',
+          key: 'salary',
+          label: 'Salary',
           selected: true,
           sortable: true
         },
         {
-          key: 'status',
-          label: 'status',
+          key: 'subBin',
+          label: 'SubBin',
           selected: true,
           sortable: true
         },
         {
           key: 'actions',
-          label: 'actions',
+          label: 'Actions',
           selected: true
         },
    
@@ -161,63 +168,52 @@ export default {
     }
   },
   methods : {
-    getBadge(status){
-      switch (status){
-        case 'ACTIVE' : return 'success'
-        case 'PENDING' : return 'warning'
-        case 'SUSPENDED' : return 'danger'
-        case 'ARCHIVED' : return 'secondary'
-        default : return 'light'
-      }
-    },
     showView($event){
-      let institution = $event.item;
+      let customer = $event.item;
       let view = $event.view;
       switch (view){
         case 'detailsEvent' :
-          this.$router.push({ path: 'institution/details', query: { institutionId: institution.id} })
+          this.$router.push({ path: 'customer/details', query: { customerId: customer.id} })
           break;
         case 'updateEvent' :
-          this.$router.push({ path: 'institution/update', query: { institutionId: institution.id} })
+          this.$router.push({ path: 'customer/update', query: { customerId: customer.id} })
           break;
-    case 'deleteEvent' :
-          this.confirmDelete(institution)
+        case 'deleteEvent' :
+          this.confirmDelete(customer)
           break;
       }
     },
-      
-    
-  confirmDelete(institution){
-  this.$bvModal.msgBoxConfirm(
-      `Voulez-vous vraiment supprimer l'institution "${institution.name}" ? Cette action est irréversible.`,
-      {
-        title: 'Confirmation de suppression',
-        size: 'sm',
+
+    confirmDelete(customer) {
+      this.$bvModal.msgBoxConfirm('Are you sure you want to delete this customer?', {
+        title: 'Confirm Deletion',
+        size: 'md',
+        buttonSize: 'md',
         okVariant: 'danger',
-        okTitle: 'Supprimer',
-        cancelTitle: 'Annuler',
+        okTitle: 'Yes',
+        cancelTitle: 'No',
         footerClass: 'p-2',
         hideHeaderClose: false,
         centered: true
-      }
-  ).then(confirmed => {
-    if (confirmed) {
-      InstitutionService.deleteInstitution(institution.id).then(()=> {
-        NxpToast.toastSuccess('Institution Deleted Successfully')
-        this.onUpdateList()
-      }).catch((err)=>{
-  const message = err && err.message ? err.message
-                : 'An error occurred while deleting the institution';
-            NxpToast.toastError(message);      })
-    }
-  }).catch(()=>{
-
-  })
-},
+      }).then(value => {
+        if (value) {
+          CustomerService.deleteCustomer(customer.id).then(() => {
+            NxpToast.toastSuccess('Customer Deleted Successfully');
+            this.onUpdateList();
+          }).catch(err => {
+            const message = err && err.message ? err.message
+                : 'An error occurred while deleting the customer';
+            NxpToast.toastError(message);
+          });
+        }
+      }).catch(err => {
+        console.error(err);
+      });
+    },
 
     onUpdateList(){
         this.isLoading = true;
-        InstitutionService.getInstitutions(
+        CustomerService.getCustomers(
             this.currentPage,
             this.perPage,
             this.filters.name

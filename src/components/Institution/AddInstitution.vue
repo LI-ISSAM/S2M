@@ -406,6 +406,9 @@ export default {
       InstitutionService.addInstitution(payload).then(response=>{
         NxpToast.toastSuccess('Institution Added Successfully')
         this.$router.push('/institution')
+      }).catch(err=>{
+        const message = err && err.message ? err.message : 'Error adding institution'
+        NxpToast.toastError(message)
       })
 
     },

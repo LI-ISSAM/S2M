@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       menu_items: [
+        
         {
           href: '/home',
           title: 'Dashboard',
@@ -107,6 +108,78 @@ export default {
             }
           ]
         },
+       {
+  href:'',
+  title:'Customer',
+  icon:{
+    element:'font-awesome-icon',
+    class:'p-1 bg-info',
+    attributes:{
+      icon:'user'
+    }
+  },
+  child:[
+    {
+      href:'/customer',
+      title:'Customers',
+      icon :{
+          element:'font-awesome-icon',
+          class:"text-info bg-transparent",
+          attributes:{
+              icon:'user'
+      }
+    }
+    },
+    {
+      href:'/customer/add',
+      title:'Add Customer',
+      icon :{
+          element:'font-awesome-icon',
+          class:"text-info bg-transparent",
+          attributes:{
+              icon:'plus'
+      }
+    }
+  }
+  ]
+},
+{
+  href:'',
+  title:'Subscription',
+  icon:{
+    element:'font-awesome-icon',
+    class:'p-1 bg-info',
+    attributes:{
+      icon:'credit-card'
+    }
+  },
+  child:[
+    {
+      href:'/subscription',
+      title:'Subscriptions',
+      icon :{
+          element:'font-awesome-icon',
+          class:"text-info bg-transparent",
+          attributes:{
+              icon:'credit-card'
+      }
+    }
+    },
+    {
+      href:'/subscription/add',
+      title:'Add Subscription',
+      icon :{
+          element:'font-awesome-icon',
+          class:"text-info bg-transparent",
+          attributes:{
+              icon:'plus'
+      }
+    }
+  }
+  ]
+},
+        
+        
         {
           href:'',
           title:'Onboarding',
@@ -145,6 +218,82 @@ export default {
 
         },
         {
+          href:'',
+          title:'Program',
+          icon:{
+            element:'font-awesome-icon',
+            class:'p-1 bg-info',
+            attributes:{
+              icon:'list'
+            }
+          },
+          child:[
+            {
+              href:'/program',
+              title:'Programs',
+              icon :{
+                  element:'font-awesome-icon',
+                  class:"text-info bg-transparent",
+                  attributes:{
+                      icon:'list'
+              }
+            }
+            },
+            {
+              href:'/program/add',
+              title:'Add Program',
+              icon :{
+                  element:'font-awesome-icon',
+                  class:"text-info bg-transparent",
+                  attributes:{
+                      icon:'plus'
+              }
+            }
+          },
+        
+  ]
+        
+},
+          
+     {
+          href:'',
+          title:'Parametre',
+          icon:{
+            element:'font-awesome-icon',
+            class:'p-1 bg-info',
+            attributes:{
+              icon:'cogs'
+            }
+          },
+          child:[
+            {
+              href:'/offer',
+              title:'Offers',
+              icon :{
+                  element:'font-awesome-icon',
+                  class:"text-info bg-transparent",
+                  attributes:{
+                      icon:'university'
+              }
+            }
+            },
+            {
+              href:'/offer/add',
+              title:'Add Offer',
+              icon :{
+                  element:'font-awesome-icon',
+                  class:"text-info bg-transparent",
+                  attributes:{
+                      icon:'plus'
+              }
+            }
+          }
+          ]
+
+
+        },
+
+        {
           href: '/audit-trail',
           title: 'Audit Trail',
           icon: {
@@ -156,9 +305,13 @@ export default {
             // text: ''
           },
         },
+        
       ]
     }
   },
+
+
+
   methods :{
     changeLang(newLang){
       this.$store.commit('updateLocale',newLang)

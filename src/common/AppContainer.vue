@@ -82,7 +82,53 @@ export default {
               icon:'university'
             }
         }
+        },
+        {
+          href:'/program',
+          title:'Program Space',
+          icon:{
+            element:'font-awesome-icon',
+            class:'p-1 bg-info',
+            attributes:{
+              icon:'university'
+            }
         }
+      },
+          {
+          href:'/offer',
+          title:'Offer Space',
+          icon:{
+            element:'font-awesome-icon',
+            class:'p-1 bg-info',
+            attributes:{
+              icon:'cong'
+            }
+        }
+        },
+        {
+          href :'customer',
+          title :'Customer Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'user-friends'
+        }
+      }
+    },
+    {
+      href :'subscription',
+          title :'Subscription Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+  
+
       ]
     }
   },
