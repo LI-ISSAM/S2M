@@ -230,11 +230,19 @@
           />
         </b-col>
         <b-col sm="12">
-          <nxp-input label="MCC Code :"
+          <nxp-input label="MCC Code * :"
                      v-model="program.limit.mccCode"
                      id="mccCode"
-                     type="text"
-                     placeholder="Enter MCC Code"
+                     type="multiselect"
+                     :options="mccCodes"
+                     track-by="id"
+                     label-key="label"
+                     :multiple="false"
+                     :searchable="true"
+                     :close-on-select="true"
+                     :allow-empty="true"
+                     :show-labels="false"
+                     placeholder="Rechercher un code MCC (merchant)..."
           />
         </b-col>
       </b-row>
@@ -337,7 +345,7 @@
     </b-col>
     <b-col sm="12">
       <label class="font-weight-bold">Code MCC :</label>
-      <p>{{ program.limit.mccCode || '-' }}</p>
+      <p>{{ program.limit.mccCode ? program.limit.mccCode.label : '-' }}</p>
     </b-col>
   </b-row>
 </template>
@@ -351,6 +359,7 @@ import NxpToast from 'vue-nxp-plugin/src/utils/NxpToast'
 import {required, minValue, maxValue} from 'vuelidate/lib/validators'
 import ProgramService from "@/services/program/ProgramService";
 import InstitutionService from "@/services/institution/InstitutionService";
+import MerchantService from "@/services/merchant/MerchantService";
 
 export default {
   name: "UpdateProgram",
@@ -464,6 +473,7 @@ export default {
         {id: 'AMEX', label: 'American Express (Amex)'},
         {id: 'DISCOVER', label: 'Discover'}
       ],
+      mccCodes : [],
       program : {
         name : '',
         institutionId : null,
@@ -485,13 +495,13 @@ export default {
           maxTotalAmount : '',
           maxMonthlyInstallment : '',
           allowedChannels : [],
-          mccCode : ''
+          mccCode : null
         }
       }
     }
   },
   beforeMount() {
-    this.getInstitutions().then(()=>{
+    Promise.all([this.getInstitutions(), this.getMccCodes()]).then(()=>{
       this.getProgram()
     })
   },
@@ -500,6 +510,15 @@ export default {
       return InstitutionService.getInstitutions(1, 1000, '').then(response=>{
         const list = response.data.map(inst => ({ id: inst.id, label: inst.name }));
         this.institutions = [{id: '', label: 'Select Institution'}, ...list];
+      })
+    },
+    getMccCodes(){
+      return MerchantService.getMerchants(1, 1000, '').then(response=>{
+        const codes = response.data
+            .map(m => m.mccCode || null)
+            .filter(code => !!code);
+        const uniqueCodes = [...new Set(codes)];
+        this.mccCodes = uniqueCodes.map(code => ({ id: code, label: code }));
       })
     },
     getProgram(){
@@ -528,12 +547,17 @@ export default {
           this.program.limit.allowedChannels = [];
         }
 
-        // Convertit l'institutionId (string du backend) en objet {id, label} pour le multiselect
-   // Convertit l'institutionId (string ou number du backend) en objet {id, label} pour le multiselect
-if (this.program.institutionId && typeof this.program.institutionId !== 'object') {
-  const found = this.institutions.find(i => String(i.id) === String(this.program.institutionId));
-  this.program.institutionId = found || null;
-}
+        // Convertit le mccCode (string du backend) en objet {id, label} pour le multiselect
+        if (this.program.limit.mccCode && typeof this.program.limit.mccCode !== 'object') {
+          const foundMcc = this.mccCodes.find(c => String(c.id) === String(this.program.limit.mccCode));
+          this.program.limit.mccCode = foundMcc || { id: this.program.limit.mccCode, label: this.program.limit.mccCode };
+        }
+
+        // Convertit l'institutionId (string ou number du backend) en objet {id, label} pour le multiselect
+        if (this.program.institutionId && typeof this.program.institutionId !== 'object') {
+          const found = this.institutions.find(i => String(i.id) === String(this.program.institutionId));
+          this.program.institutionId = found || null;
+        }
       })
     },
     onReset(){
@@ -558,7 +582,8 @@ if (this.program.institutionId && typeof this.program.institutionId !== 'object'
           ...this.program.limit,
           allowedChannels: (this.program.limit.allowedChannels || []).map(ch =>
             typeof ch === 'object' ? ch.id : ch
-          )
+          ),
+          mccCode : this.program.limit.mccCode ? this.program.limit.mccCode.id : ''
         }
       };
       // eslint-disable-next-line no-unused-vars

@@ -139,6 +139,9 @@
              :close-on-select="false"
              :multiple="true"
              placeholder="Select Allowed SubBins"
+              :state="$v.program.eligibility.allowedSubBins.$error ? false : null"
+              :validation-msg="$v.program.eligibility.allowedSubBins.$error ? 'Please Select Allowed SubBins' : ''"
+              @blur="$v.program.eligibility.allowedSubBins.$touch()"
          />
        </b-col>
      </b-row>
@@ -193,6 +196,9 @@
                      id="maxAmountPerTransaction"
                      type="number"
                      placeholder="Enter Max Amount Per Transaction"
+                     :state = "$v.program.limit.maxAmountPerTransaction.$error ? false : null"
+                     :validation-msg="$v.program.limit.maxAmountPerTransaction.$error ? 'Max Amount Per Transaction is Invalid' : ''"
+                     @blur="$v.program.limit.maxAmountPerTransaction.$touch()"
           />
         </b-col>
         <b-col sm="6">
@@ -201,6 +207,9 @@
                      id="maxTotalAmount"
                      type="number"
                      placeholder="Enter Max Total Amount"
+                     :state = "$v.program.limit.maxTotalAmount.$error ? false : null"
+                     :validation-msg="$v.program.limit.maxTotalAmount.$error ? 'Max Total Amount is Invalid' : ''"
+                     @blur="$v.program.limit.maxTotalAmount.$touch()"
           />
         </b-col>
         <b-col sm="6">
@@ -209,6 +218,9 @@
                      id="maxMonthlyInstallment"
                      type="number"
                      placeholder="Enter Max Monthly Installment"
+                     :state = "$v.program.limit.maxMonthlyInstallment.$error ? false : null"
+                     :validation-msg="$v.program.limit.maxMonthlyInstallment.$error ? 'Max Monthly Installment is Invalid' : ''"
+                     @blur="$v.program.limit.maxMonthlyInstallment.$touch()"
           />
         </b-col>
         <b-col sm="6">
@@ -226,14 +238,28 @@
            :allow-empty="true"
            :show-labels="false"
            placeholder="Select Allowed Channels"
+            :state="$v.program.limit.allowedChannels.$error ? false : null"
+            :validation-msg="$v.program.limit.allowedChannels.$error ? 'Please Select Allowed Channels' : ''"
+            @blur="$v.program.limit.allowedChannels.$touch()"
            />
         </b-col>
         <b-col sm="12">
-          <nxp-input label="MCC Code :"
+          <nxp-input label="MCC Code * :"
                      v-model="program.limit.mccCode"
                      id="mccCode"
-                     type="text"
-                     placeholder="Enter MCC Code"
+                     type="multiselect"
+                     :options="mccCodes"
+                     track-by="id"
+                     label-key="label"
+                     :multiple="false"
+                     :searchable="true"
+                     :close-on-select="true"
+                     :allow-empty="true"
+                     :show-labels="false"
+                     placeholder="Rechercher un code MCC (merchant)..."
+                      :state="$v.program.limit.mccCode.$error ? false : null"
+                      :validation-msg="$v.program.limit.mccCode.$error ? 'Please Select a MCC Code' : ''"
+                      @blur="$v.program.limit.mccCode.$touch()"
           />
         </b-col>
       </b-row>
@@ -290,7 +316,7 @@
     </b-col>
 
     <b-col sm="12">
-      <h5><font-awesome-icon icon="coin" class="mr-2"/>Frais du programme</h5>
+      <h5><font-awesome-icon icon="edit" class="mr-2"/>Frais du programme</h5>
       <hr>
     </b-col>
     <b-col sm="4">
@@ -339,7 +365,7 @@
 </p>    </b-col>
     <b-col sm="12">
       <label class="font-weight-bold">Code MCC :</label>
-      <p>{{ program.limit.mccCode || '-' }}</p>
+      <p>{{ program.limit.mccCode ? program.limit.mccCode.label : '-' }}</p>
     </b-col>
   </b-row>
 </template>
@@ -354,6 +380,7 @@ import NxpToast from 'vue-nxp-plugin/src/utils/NxpToast'
 import {required, minValue, maxValue} from 'vuelidate/lib/validators'
 import ProgramService from "@/services/program/ProgramService";
 import InstitutionService from "@/services/institution/InstitutionService";
+import MerchantService from "@/services/merchant/MerchantService";
 
 export default {
   name: "AddProgram",
@@ -383,6 +410,9 @@ export default {
         minSalary : {
           required,
           minValue : minValue(0)
+        },
+        allowedSubBins : {
+          required
         }
       },
       fee : {
@@ -396,14 +426,28 @@ export default {
           required,
           minValue : minValue(0)
         },
+      },
         limit : {
-  maxAmountPerTransaction : '',
-  maxTotalAmount : '',
-  maxMonthlyInstallment : '',
-  allowedChannels : [],   // était allowedChannel : ''
-  mccCode : ''
+  maxAmountPerTransaction : {
+    required,
+    minValue : minValue(0)
+  },
+  maxTotalAmount : {
+    required,
+    minValue : minValue(0)
+  },
+  maxMonthlyInstallment : {
+    required,
+    minValue : minValue(0)
+  },
+  allowedChannels : {
+    required
+  } ,
+  mccCode : {
+      required,
+  }
 }
-      }
+      
 
     }
 
@@ -475,6 +519,7 @@ export default {
         {id: 'AMEX', label: 'American Express (Amex)'},
         {id: 'DISCOVER', label: 'Discover'}
       ],
+      mccCodes : [],
       program : {
         name : '',
         institutionId : null,
@@ -495,19 +540,29 @@ export default {
           maxAmountPerTransaction : '',
           maxTotalAmount : '',
           maxMonthlyInstallment : '',
-          allowedChannel : '',
-          mccCode : ''
+          allowedChannels : '',
+          mccCode : null
         }
       }
     }
   },
   mounted() {
     this.getInstitutions()
+    this.getMccCodes()
   },
   methods : {
     getInstitutions(){
       InstitutionService.getInstitutions(1, 1000, '').then(response=>{
         this.institutions = response.data.map(inst => ({ id: inst.id, label: inst.name }));
+      })
+    },
+    getMccCodes(){
+      return MerchantService.getMerchants(1, 1000, '').then(response=>{
+        const codes = response.data
+            .map(m => m.mccCode || null)
+            .filter(code => !!code);
+        const uniqueCodes = [...new Set(codes)];
+        this.mccCodes = uniqueCodes.map(code => ({ id: code, label: code }));
       })
     },
     onComplete(){
@@ -530,7 +585,8 @@ export default {
     ...this.program.limit,
     allowedChannels: (this.program.limit.allowedChannels || []).map(ch =>
         typeof ch === 'object' ? ch.id : ch
-    )
+    ),
+    mccCode : this.program.limit.mccCode ? this.program.limit.mccCode.id : ''
   }
 };
       // eslint-disable-next-line no-unused-vars
@@ -538,7 +594,7 @@ export default {
         NxpToast.toastSuccess('Program Added Successfully')
         this.$router.push('/program')
       }).catch(err=>{
-        const message = err & err.message ? err.message : 'Error adding program'
+        const message = err && err.message ? err.message : 'Error adding program';
         NxpToast.toastError(message)
       })
 
@@ -558,9 +614,8 @@ export default {
       this.program.limit.maxAmountPerTransaction = '';
       this.program.limit.maxTotalAmount = '';
       this.program.limit.maxMonthlyInstallment = '';
-      this.program.limit.allowedChannel = '';
-      this.program.limit.mccCode = '';
-      this.program.limit.allowedChannels = [];   
+      this.program.limit.allowedChannels = [];
+      this.program.limit.mccCode = null;
 
       this.$v.$reset();
     },
@@ -590,11 +645,13 @@ export default {
       this.$v.program.eligibility.minAge.$touch();
       this.$v.program.eligibility.maxAge.$touch();
       this.$v.program.eligibility.minSalary.$touch();
+      this.$v.program.eligibility.allowedSubBins.$touch();
 
       if (
           this.$v.program.eligibility.minAge.$invalid ||
           this.$v.program.eligibility.maxAge.$invalid ||
-          this.$v.program.eligibility.minSalary.$invalid
+          this.$v.program.eligibility.minSalary.$invalid||
+          this.$v.program.eligibility.allowedSubBins.$invalid
       ) {
         NxpToast.toastError("Veuillez remplir les critères d'éligibilité.");
         return false;
@@ -618,9 +675,26 @@ export default {
 
       return true;
     },
-    validateLimits(){
-      return true;
-    },
+ validateLimits() {
+  this.$v.program.limit.maxAmountPerTransaction.$touch();
+  this.$v.program.limit.maxTotalAmount.$touch();
+  this.$v.program.limit.maxMonthlyInstallment.$touch();
+  this.$v.program.limit.allowedChannels.$touch();
+  this.$v.program.limit.mccCode.$touch();
+
+  if (
+    this.$v.program.limit.maxAmountPerTransaction.$invalid ||
+    this.$v.program.limit.maxTotalAmount.$invalid ||
+    this.$v.program.limit.maxMonthlyInstallment.$invalid ||
+    this.$v.program.limit.allowedChannels.$invalid ||
+    this.$v.program.limit.mccCode.$invalid
+  ) {
+    NxpToast.toastError("Veuillez remplir les informations des limites.");
+    return false;
+  }
+
+  return true;
+}
   }
 }
 </script>

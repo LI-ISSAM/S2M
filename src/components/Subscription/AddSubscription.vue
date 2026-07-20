@@ -59,6 +59,9 @@
                      :allow-empty="true"
                      :show-labels="false"
                      placeholder="Rechercher par email..."
+                     :state="$v.subscription.customerEmail.$error ? false : null"
+                      :validation-msg="$v.subscription.customerEmail.$error ? 'Please Select a Customer Email' : ''"
+                      @blur="$v.subscription.customerEmail.$touch()"
           />
 
           <nxp-input class="col-6"
@@ -270,7 +273,11 @@ export default {
       },
       mode : {
         required
+      },
+      customerEmail : {
+        required
       }
+      
     }
 
   },
@@ -463,7 +470,6 @@ getCustomers(){
         const message = err && err.message ? err.message : 'Error adding subscription'
         NxpToast.toastError(message)
       })
-
     },
     onReset(){
       this.subscription.customerId = null;
@@ -484,11 +490,13 @@ getCustomers(){
       this.$v.subscription.programId.$touch();
       this.$v.subscription.subscriptionDate.$touch();
       this.$v.subscription.mode.$touch();
+      this.$v.subscription.customerEmail.$touch();
 
       if (
           this.$v.subscription.customerId.$invalid ||
           this.$v.subscription.programId.$invalid ||
           this.$v.subscription.subscriptionDate.$invalid ||
+          this.$v.subscription.customerEmail.$invalid ||
           this.$v.subscription.mode.$invalid
       ) {
         NxpToast.toastError("Veuillez remplir tous les champs obligatoires.");

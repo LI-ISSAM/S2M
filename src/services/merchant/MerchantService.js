@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default {
-    getInstitutions(page = 1 , limit = 4 , name = '',reference='') {
+    getMerchants(page = 1 , limit = 4 , name = '',reference ='') {
 
         const params = {
             _page : page,
@@ -17,19 +17,18 @@ export default {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .get(process.env.VUE_APP_INIT_BACKEND_URL+'institutions',{
+                    .get(process.env.VUE_APP_INIT_BACKEND_URL+'merchants',{
                         params : params
                     })
-                    .then(list => resolve(list)).catch(err => 
-                    reject(err.response.data))
+                    .then(list => resolve(list)).catch(err => reject(err))
             })
     },
 
-    addInstitution(institution) {
+    addMerchant(merchant) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .post(process.env.VUE_APP_INIT_BACKEND_URL +'institutions', institution)
+                    .post(process.env.VUE_APP_INIT_BACKEND_URL +'merchants', merchant)
                     .then(response => resolve(response)).catch(err => {
                     reject(err.response.data);
                 })
@@ -37,34 +36,33 @@ export default {
             })
     },
 
-    getInstitution(institutionId) {
+    getMerchant(merchantId) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .get(process.env.VUE_APP_INIT_BACKEND_URL +'institutions'+'/' + institutionId)
+                    .get(process.env.VUE_APP_INIT_BACKEND_URL +'merchants'+'/' + merchantId)
                     .then(response => resolve(response)).catch(err => reject(err))
 
             })
     },
 
-    updateInstitution(institution) {
+    updateMerchant(merchant) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .put(process.env.VUE_APP_INIT_BACKEND_URL +'institutions/'+institution.id, institution)
-                    .then(response => resolve(response)).catch(err => 
-                    reject(err.response.data))
+                    .put(process.env.VUE_APP_INIT_BACKEND_URL +'merchants/'+merchant.id, merchant)
+                    .then(response => resolve(response)).catch(err =>
+                     reject(err.response.data))
 
             })
     },
 
-    deleteInstitution(id) {
+    deleteMerchant(id) {
         return new Promise(
             (resolve, reject) => {
                 axios
-                    .delete(process.env.VUE_APP_INIT_BACKEND_URL +'institutions/'+ id)
-                    .then(resp => resolve(resp)).catch(err => 
-                    reject(err.response.data))
+                    .delete(process.env.VUE_APP_INIT_BACKEND_URL +'merchants/'+ id)
+                    .then(resp => resolve(resp)).catch(err => reject(err.response.data))
             })
     }
 }

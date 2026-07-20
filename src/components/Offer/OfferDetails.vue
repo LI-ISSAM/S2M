@@ -27,7 +27,7 @@
           <b-row>
             <b-col sm="12">
               <h5>
-                <font-awesome-icon icon="tags" class="mr-2" />Informations
+                <font-awesome-icon icon="list" class="mr-2" />Informations
                 générales
               </h5>
               <hr />
@@ -59,7 +59,7 @@
 
             <b-col sm="12">
               <h5>
-                <font-awesome-icon icon="coins" class="mr-2" />Frais de l'offre
+                <font-awesome-icon icon="edit" class="mr-2" />Frais de l'offre
               </h5>
               <hr />
             </b-col>
@@ -74,7 +74,7 @@
 
             <b-col sm="12">
               <h5>
-                <font-awesome-icon icon="sliders-h" class="mr-2" />Limites de
+                <font-awesome-icon icon="tachometer-alt" class="mr-2" />Limites de
                 transaction
               </h5>
               <hr />

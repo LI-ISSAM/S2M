@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default {
-    getCustomers(page = 1 , limit = 4 , name = '') {
+    getCustomers(page = 1 , limit = 4 , name = '',email='') {
 
         const params = {
             _page : page,
@@ -10,6 +10,9 @@ export default {
 
         if(name){
             params.name_like = name;
+        }
+        if(email){
+            params.email_like = email;
         }
         return new Promise(
             (resolve, reject) => {

@@ -16,16 +16,28 @@
 
      <b-card bg-variant="light" class="mb-3">
     <b-row class="align-items-end">
-      <b-col sm="8">
+      <b-col sm="3">
         <nxp-input
-            label="Nom :"
-            v-model="filters.name"
-            id="search-name"
-            type="text"
-            placeholder="Entrez le nom de l'institution"
-            @keyup.enter="onSearch"
+            label="Rechercher par :"
+            v-model="filters.field"
+            id="search-field"
+            type="select"
+            :options="searchFields"
+            valueField="id"
+            textField="label"
+            placeholder="Sélectionnez un champ"
         />
       </b-col>
+          <b-col sm="5">
+      <nxp-input
+          :label="filters.field === 'name' ? 'Nom :' : 'Reference :'"
+          v-model="filters.value"
+          id="search-value"
+          type="text"
+          :placeholder="filters.field === 'name' ? 'Entrez le nom de l\'institution' : 'Entrez la référence de l\'institution'"
+          @keyup.enter="onSearch"
+      />
+    </b-col>
       <b-col sm="4" class="d-flex justify-content-end">
         <nxp-button color="danger" pill class="mr-2 pl-4 pr-4" @click="onResetFilters" type="reset" >
           <font-awesome-icon   class="mr-1" />Réinitialiser
@@ -79,7 +91,8 @@ export default {
       totalElements : 0,
       currentPage : 1,
       filters : {
-        name : ''
+        field : 'name',
+        value : ''
       }
     }
   },
@@ -158,7 +171,13 @@ export default {
 
       ];
 
-    }
+    },
+    searchFields(){
+      return [
+        { id: 'name', label: 'Nom' },
+        { id: 'reference', label: 'Reference' }
+      ]
+    },
   },
   methods : {
     getBadge(status){
@@ -217,10 +236,13 @@ export default {
 
     onUpdateList(){
         this.isLoading = true;
+        const name = this.filters.field === 'name' ? this.filters.value : '';
+        const reference = this.filters.field === 'reference' ? this.filters.value : '';
         InstitutionService.getInstitutions(
             this.currentPage,
             this.perPage,
-            this.filters.name
+            name,
+            reference
         ).then(response=>{
         this.itemsList = response.data;
         this.totalElements = parseInt(response.headers['x-total-count']);
@@ -235,7 +257,8 @@ export default {
       this.onUpdateList();
     },
     onResetFilters(){
-      this.filters.name = '';
+      this.filters.field = '';
+      this.filters.value = '';
       this.currentPage = 1;
       this.onUpdateList();
     

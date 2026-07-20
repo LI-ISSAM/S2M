@@ -16,62 +16,7 @@ export default {
   data() {
     return {
       menu_items: [
-        {
-          href: '/home',
-          title: 'Home',
-          icon: {
-            element: 'font-awesome-icon',
-            class: 'p-1 bg-info',
-            attributes: {
-              icon: 'university'
-            }
-            // text: ''
-          },
-        },
-        {
-          href: '/user',
-          title: 'Users Space',
-          icon: {
-            element: 'font-awesome-icon',
-            class: 'p-1 bg-info',
-            attributes: {
-              icon: 'user'
-            }
-            // text: ''
-          },
-          child: [
-            {
-              href: '/user/add',
-              title: 'Add'
-            },
-            {
-              href: '/user/update',
-              title: 'Update'
-            }
-          ]
-        },
-        {
-          href: '/team',
-          title: 'Teams Space',
-          icon: {
-            element: 'font-awesome-icon',
-            class: 'p-1 bg-info',
-            attributes: {
-              icon: 'users'
-            }
-            // text: ''
-          },
-          child: [
-            {
-              href: '/team/add',
-              title: 'Add'
-            },
-            {
-              href: '/team/update',
-              title: 'Update'
-            }
-          ]
-        },
+    
         {
           href:'/institution',
           title:'Institutions Space',
@@ -117,8 +62,118 @@ export default {
       }
     },
     {
+      href :'card',
+          title :'Card Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'credit-card'
+        }
+      }
+    },
+    {
       href :'subscription',
           title :'Subscription Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+    {
+      href :'installmentPlan',
+          title :'Installment Plan Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+    {
+      href :'transaction',
+          title :'Transaction Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+    {
+      href :'reporting',
+          title :'Reporting Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      } 
+    },
+        {
+      href :'merchant',
+          title :'Merchant Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+    {
+      href :'subscription',
+          title :'Subscription Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+    {
+      href :'installmentPlan',
+          title :'Installment Plan Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+    {
+      href :'transaction',
+          title :'Transaction Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+    {
+      href :'reporting',
+          title :'Reporting Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'file-invoice'
+        }
+      }
+    },
+        {
+      href :'installment ',
+          title :'Installment Space',
           icon : {
             element : 'font-awesome-icon',
             class : 'p-1 bg-info',

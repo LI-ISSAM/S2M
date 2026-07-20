@@ -10,9 +10,9 @@ import i18n from './plugins/i18n'
 import router from "@/router";
 // import NxpToast from "vue-nxp-plugin/src/utils/NxpToast";
 // import VueKeycloakJs from 'nxp-keycloak-plugin'
-import {faUsers, faTachometerAlt} from "@fortawesome/free-solid-svg-icons";
+import {faUsers, faTachometerAlt, faStore, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {library} from "@fortawesome/fontawesome-svg-core";
-library.add(faUsers, faTachometerAlt)
+library.add(faUsers, faTachometerAlt, faStore, faPlus)
 Vue.config.productionTip = false
 
 Vue.use(NxpUiLibrary,store);

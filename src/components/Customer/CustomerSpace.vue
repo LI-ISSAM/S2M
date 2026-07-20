@@ -14,28 +14,39 @@
 
     </div>
 
-     <b-card bg-variant="light" class="mb-3">
-    <b-row class="align-items-end">
-      <b-col sm="8">
-        <nxp-input
-            label="Nom :"
-            v-model="filters.name"
-            id="search-name"
-            type="text"
-            placeholder="Entrez le nom du client"
-            @keyup.enter="onSearch"
-        />
-      </b-col>
-      <b-col sm="4" class="d-flex justify-content-end">
-        <nxp-button color="danger" pill class="mr-2 pl-4 pr-4" @click="onResetFilters" type="reset" >
-          <font-awesome-icon   class="mr-1" />Réinitialiser
-        </nxp-button>
-        <nxp-button variant="info" pill @click="onSearch" class="pl-4 pr-4" type="search">
-          <font-awesome-icon class="mr-1" />Rechercher
-        </nxp-button>
-      </b-col>
-    </b-row>
-  </b-card>
+ <b-card bg-variant="light" class="mb-3">
+  <b-row class="align-items-end">
+    <b-col sm="3">
+      <nxp-input
+          label="Rechercher par :"
+          v-model="filters.field"
+          id="search-field"
+          type="select"
+          :options="searchFields"
+          valueField="id"
+          textField="label"
+      />
+    </b-col>
+    <b-col sm="5">
+      <nxp-input
+          :label="filters.field === 'email' ? 'Email :' : 'Nom :'"
+          v-model="filters.value"
+          id="search-value"
+          type="text"
+          :placeholder="filters.field === 'email' ? 'Entrez l\'email du client' : 'Entrez le nom du client'"
+          @keyup.enter="onSearch"
+      />
+    </b-col>
+    <b-col sm="4" class="d-flex justify-content-end">
+      <nxp-button color="danger" pill class="mr-2 pl-4 pr-4" @click="onResetFilters" type="reset">
+        <font-awesome-icon class="mr-1"/>Réinitialiser
+      </nxp-button>
+      <nxp-button variant="info" pill @click="onSearch" class="pl-4 pr-4" type="search">
+        <font-awesome-icon class="mr-1"/>Rechercher
+      </nxp-button>
+    </b-col>
+  </b-row>
+</b-card>
 
 
     <nxp-table
@@ -79,7 +90,8 @@ export default {
       totalElements : 0,
       currentPage : 1,
       filters : {
-        name : ''
+        field : 'name',
+        value : ''
       }
     }
   },
@@ -139,6 +151,15 @@ export default {
         },
    
       ];
+    },
+    searchFields() {
+      return [
+        { id: 'name', label: 'Nom' },
+        { id: 'email', label: 'Email' }
+      ]
+    },
+    place(){
+      return "Selectioner un champ pour la recherche"
     },
     rowActions() {
       return [{
@@ -213,10 +234,13 @@ export default {
 
     onUpdateList(){
         this.isLoading = true;
+        const name = this.filters.field === 'name' ? this.filters.value : '';
+        const email = this.filters.field === 'email' ? this.filters.value : '';
         CustomerService.getCustomers(
             this.currentPage,
             this.perPage,
-            this.filters.name
+            name,
+            email
         ).then(response=>{
         this.itemsList = response.data;
         this.totalElements = parseInt(response.headers['x-total-count']);
@@ -231,7 +255,8 @@ export default {
       this.onUpdateList();
     },
     onResetFilters(){
-      this.filters.name = '';
+      this.filters.field = 'name';
+      this.filters.value = '';
       this.currentPage = 1;
       this.onUpdateList();
     

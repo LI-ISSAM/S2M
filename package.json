@@ -9,13 +9,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.0",
+    "axios": "0.21.1",
     "core-js": "3.6.5",
     "nxp-audit-trail-ui-plugin": "0.3.41",
     "nxp-keycloak-plugin": "0.2.0",
     "vue": "2.6.13",
     "vue-nxp-plugin": "0.4.3",
     "vue-router": "3.5.2",
-    "axios": "0.21.1",
     "vuex-persistedstate": "4.0.0-beta.1"
   },
   "devDependencies": {
