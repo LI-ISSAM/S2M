@@ -357,7 +357,7 @@ export default {
 getCustomers(){
   CustomerService.getCustomers(1, 1000, '').then(response=>{
     this.customers = response.data.map(c => ({ id: c.id, label: c.fullName }));
-    this.customerEmails = response.data.map(c => ({ id: c.id, label: c.contact.email }));
+    this.customerEmails = response.data.map(c => ({ id: c.id, label: c.email }));
   })
 },
     getPrograms(){
@@ -392,8 +392,22 @@ getCustomers(){
         let allowedSubBins = eligibility.allowedSubBins || [];
         allowedSubBins = allowedSubBins.map(b => typeof b === 'object' ? b.id : b);
 
-        const ageOk = Number(customer.age) >= Number(minAge) && Number(customer.age) <= Number(maxAge);
-        const salaryOk = Number(customer.salary) >= Number(minSalary);
+const birthDate = new Date(customer.birthDate);
+const today = new Date();
+
+let age = today.getFullYear() - birthDate.getFullYear();
+
+const monthDiff = today.getMonth() - birthDate.getMonth();
+
+if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+) {
+    age--;
+}
+
+const ageOk = age >= minAge && age <= maxAge;       
+ const salaryOk = Number(customer.salary) >= Number(minSalary);
         const subBinOk = allowedSubBins.length === 0 || allowedSubBins.includes(customer.subBin);
         const eligible = ageOk && salaryOk && subBinOk;
 

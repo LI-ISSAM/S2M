@@ -9,7 +9,7 @@
 
       <nxp-button 
       pill @click="$router.push('customer/add')">
-        <font-awesome-icon icon="plus" class="mr-1"/>Ajouter un nouveau
+        <font-awesome-icon icon="plus" class="mr-1"/>Add New
       </nxp-button>
 
     </div>
@@ -18,7 +18,7 @@
   <b-row class="align-items-end">
     <b-col sm="3">
       <nxp-input
-          label="Rechercher par :"
+          label="Search by :"
           v-model="filters.field"
           id="search-field"
           type="select"
@@ -29,25 +29,24 @@
     </b-col>
     <b-col sm="5">
       <nxp-input
-          :label="filters.field === 'email' ? 'Email :' : 'Nom :'"
+          :label="searchLabel"
           v-model="filters.value"
           id="search-value"
           type="text"
-          :placeholder="filters.field === 'email' ? 'Entrez l\'email du client' : 'Entrez le nom du client'"
+          :placeholder="searchPlaceholder"
           @keyup.enter="onSearch"
       />
     </b-col>
     <b-col sm="4" class="d-flex justify-content-end">
       <nxp-button color="danger" pill class="mr-2 pl-4 pr-4" @click="onResetFilters" type="reset">
-        <font-awesome-icon class="mr-1"/>Réinitialiser
+        <font-awesome-icon class="mr-1"/>Reset
       </nxp-button>
       <nxp-button variant="info" pill @click="onSearch" class="pl-4 pr-4" type="search">
-        <font-awesome-icon class="mr-1"/>Rechercher
+        <font-awesome-icon class="mr-1"/>Search
       </nxp-button>
     </b-col>
   </b-row>
 </b-card>
-
 
     <nxp-table
         :fields="fields"
@@ -66,7 +65,12 @@
         :displayedHeaders="true"
         :showHeadersWhenFilters="true">
       >
-      <template #cell(subBin)="data">
+      <template #cell(status)="data">
+        <b-badge :variant="statusVariant(data.value)">
+          {{ data.value }}
+        </b-badge>
+      </template>
+      <template #cell(vipCategory)="data">
         <b-badge variant="info">
           {{ data.value }}
         </b-badge>
@@ -90,7 +94,7 @@ export default {
       totalElements : 0,
       currentPage : 1,
       filters : {
-        field : 'name',
+        field : 'lastName',
         value : ''
       }
     }
@@ -108,39 +112,62 @@ export default {
           selected: true
         },
         {
-               key: 'photo',
-          label: 'photo',
+          key: 'identityFile',
+          label: 'Photo',
           selected: true,
           type: 'img'
-
         },
         {
-          key: 'fullName',
-          label: 'Full Name',
+          key: 'clientId',
+          label: 'Client Id',
           sortable: true,
           selected: true
         },
         {
-         key :'contact.email',
-         label:'Email',
-         sortable:true,
-         selected:true
+          key: 'firstName',
+          label: 'First Name',
+          sortable: true,
+          selected: true
         },
         {
-          key: 'age',
-          label: 'Age',
+          key: 'lastName',
+          label: 'Last Name',
+          sortable: true,
+          selected: true
+        },
+        {
+          key: 'email',
+          label: 'Email',
+          sortable: true,
+          selected: true
+        },
+        {
+          key: 'phoneNumber',
+          label: 'Phone',
           selected: true,
           sortable: true
         },
         {
-          key: 'salary',
-          label: 'Salary',
+          key: 'bank',
+          label: 'Bank',
           selected: true,
           sortable: true
         },
         {
-          key: 'subBin',
-          label: 'SubBin',
+          key: 'branch',
+          label: 'Branch',
+          selected: true,
+          sortable: true
+        },
+        {
+          key: 'vipCategory',
+          label: 'VIP Category',
+          selected: true,
+          sortable: true
+        },
+        {
+          key: 'status',
+          label: 'Status',
           selected: true,
           sortable: true
         },
@@ -149,17 +176,29 @@ export default {
           label: 'Actions',
           selected: true
         },
-   
+
       ];
     },
     searchFields() {
       return [
-        { id: 'name', label: 'Nom' },
+        { id: 'lastName', label: 'Last Name' },
         { id: 'email', label: 'Email' }
       ]
     },
+    searchLabel(){
+      const found = this.searchFields.find(f => f.id === this.filters.field);
+      return found ? found.label + ' :' : 'Search :';
+    },
+    searchPlaceholder(){
+      switch (this.filters.field){
+        case 'email':
+          return "Enter customer's email";
+        default:
+          return "Enter customer's last name";
+      }
+    },
     place(){
-      return "Selectioner un champ pour la recherche"
+      return "Select a field for search"
     },
     rowActions() {
       return [{
@@ -189,6 +228,18 @@ export default {
     }
   },
   methods : {
+    statusVariant(status){
+      switch (status){
+        case 'ACTIFS':
+          return 'success';
+        case 'INACTIFS':
+          return 'secondary';
+        case 'BLOQUE':
+          return 'danger';
+        default:
+          return 'info';
+      }
+    },
     showView($event){
       let customer = $event.item;
       let view = $event.view;
@@ -234,12 +285,12 @@ export default {
 
     onUpdateList(){
         this.isLoading = true;
-        const name = this.filters.field === 'name' ? this.filters.value : '';
+        const lastName = this.filters.field === 'lastName' ? this.filters.value : '';
         const email = this.filters.field === 'email' ? this.filters.value : '';
         CustomerService.getCustomers(
             this.currentPage,
             this.perPage,
-            name,
+            lastName,
             email
         ).then(response=>{
         this.itemsList = response.data;
@@ -255,7 +306,7 @@ export default {
       this.onUpdateList();
     },
     onResetFilters(){
-      this.filters.field = 'name';
+      this.filters.field = 'lastName';
       this.filters.value = '';
       this.currentPage = 1;
       this.onUpdateList();
@@ -272,5 +323,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

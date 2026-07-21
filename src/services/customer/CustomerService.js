@@ -1,15 +1,15 @@
 import axios from 'axios'
 
 export default {
-    getCustomers(page = 1 , limit = 4 , name = '',email='') {
+    getCustomers(page = 1 , limit = 4 ,lastName='',email='') {
 
         const params = {
             _page : page,
             _limit : limit
         };
 
-        if(name){
-            params.name_like = name;
+        if(lastName){
+            params.lastName_like = lastName;
         }
         if(email){
             params.email_like = email;
