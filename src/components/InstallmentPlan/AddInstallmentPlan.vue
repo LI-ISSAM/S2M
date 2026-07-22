@@ -30,7 +30,7 @@
                      v-model="installmentPlan.customerId"
                      id="customerId"
                      type="multiselect"
-                     :options="customers"
+                     :options="customerOptions  "
                      track-by="id"
                      label-key="label"
                      :multiple="false"
@@ -43,6 +43,26 @@
                      :validation-msg="$v.installmentPlan.customerId.$error ? 'Please Select a Customer' : ''"
                      @blur="$v.installmentPlan.customerId.$touch()"
           />
+
+          <nxp-input class="col-6"
+                     label="Email * :"
+                     v-model="installmentPlan.customerEmail"
+                     id="customerEmail"
+                     type="multiselect"
+                     :options="customerEmailOptions"
+                     track-by="id"
+                     label-key="label"
+                     :multiple="false"
+                     :searchable="true"
+                     :close-on-select="true"
+                     :allow-empty="true"
+                     :show-labels="false"
+                     placeholder="Rechercher un Email..."
+                     :state="$v.installmentPlan.customerEmail.$error ? false : null"
+                     :validation-msg="$v.installmentPlan.customerEmail.$error ? 'Please Select a Email ' : ''"
+                     @blur="$v.installmentPlan.customerEmail.$touch()"
+          />
+
 
           <nxp-input class="col-6"
                      label="Offer :"
@@ -119,12 +139,16 @@
     <template #recapitulatif>
       <b-row>
         <b-col sm="12">
-          <h5><font-awesome-icon icon="calendar-days" class="mr-2"/>Informations générales</h5>
+          <h5><font-awesome-icon icon="list" class="mr-2"/>Informations générales</h5>
           <hr>
         </b-col>
         <b-col sm="6">
           <label class="font-weight-bold">Client :</label>
           <p>{{ installmentPlan.customerId ? installmentPlan.customerId.label : '-' }}</p>
+        </b-col>
+        <b-col sm="6">
+          <label class="font-weight-bold">Email :</label>
+          <p>{{ installmentPlan.customerEmail ? installmentPlan.customerEmail.label : '-' }}</p>
         </b-col>
         <b-col sm="6">
           <label class="font-weight-bold">Offre :</label>
@@ -148,7 +172,7 @@
         </b-col>
 
         <b-col sm="12" v-if="installmentSchedule.length">
-          <h5 class="mt-3"><font-awesome-icon icon="list-check" class="mr-2"/>Échéancier prévisionnel</h5>
+          <h5 class="mt-3"><font-awesome-icon icon="clipboard" class="mr-2"/>Échéancier prévisionnel</h5>
           <hr>
           <b-table small striped
                    :items="installmentSchedule"
@@ -175,6 +199,7 @@ export default {
   validations :{
     installmentPlan : {
       customerId : { required },
+      customerEmail : { required },
       totalAmount : { required, minValue : minValue(0) },
       numberOfInstallments : { required, minValue : minValue(1) },
       startDate : { required },
@@ -183,6 +208,7 @@ export default {
   },
   data(){
     return {
+      syncingCustomer : false, // évite la boucle infinie entre customerId et customerEmail
       tabs : [
         { name: 'general', title: 'General', icon: 'ti ti-help', beforeChange: ()=>this.validateGeneral() },
         { name: 'recapitulatif', title: 'Recapitulatif', icon: 'ti ti-clipboard' }
@@ -190,9 +216,7 @@ export default {
       offers : [
         {id: '', label: 'Select Offer'}
       ],
-      customers : [
-        {},
-      ],
+      customers : [], // plus de {} vide qui polluait les options au premier rendu
       scheduleFields : [
         { key: 'number', label: '#' },
         { key: 'dueDate', label: 'Date d\'échéance' },
@@ -207,6 +231,7 @@ export default {
       ],
       installmentPlan : {
         customerId : null,
+        customerEmail : null,
         offerId : null,
         totalAmount : '',
         numberOfInstallments : '',
@@ -244,6 +269,12 @@ export default {
         });
       }
       return schedule;
+    },
+    customerOptions(){
+      return this.customers.map(c => ({ id: c.id, label: c.fullName || c.name }));
+    },
+    customerEmailOptions(){
+      return this.customers.map(c => ({ id: c.id, label: c.email }));
     }
   },
   mounted() {
@@ -259,7 +290,7 @@ export default {
     },
     getCustomers(){
       CustomerService.getCustomers(1, 1000, '').then(response=>{
-        const list = response.data.map(c => ({ id: c.id, label: c.fullName || c.name }));
+        const list = response.data.map(c => ({ id: c.id, fullName: c.fullName || c.name, email: c.email }));
         this.customers = [...list];
       })
     },
@@ -285,6 +316,7 @@ export default {
     },
     onReset(){
       this.installmentPlan.customerId = null;
+      this.installmentPlan.customerEmail = null;
       this.installmentPlan.offerId = null;
       this.installmentPlan.totalAmount = '';
       this.installmentPlan.numberOfInstallments = '';
@@ -310,6 +342,25 @@ export default {
         return false;
       }
       return true;
+    }
+  },
+  watch: {
+    'installmentPlan.customerId'(customer) {
+      if (this.syncingCustomer) return;
+      this.syncingCustomer = true;
+      this.installmentPlan.customerEmail = customer
+        ? this.customerEmailOptions.find(e => e.id === customer.id) || null
+        : null;
+      this.syncingCustomer = false;
+    },
+
+    'installmentPlan.customerEmail'(email) {
+      if (this.syncingCustomer) return;
+      this.syncingCustomer = true;
+      this.installmentPlan.customerId = email
+        ? this.customerOptions.find(c => c.id === email.id) || null
+        : null;
+      this.syncingCustomer = false;
     }
   }
 }

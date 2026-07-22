@@ -20,7 +20,8 @@ export default {
                     .get(process.env.VUE_APP_INIT_BACKEND_URL+'merchants',{
                         params : params
                     })
-                    .then(list => resolve(list)).catch(err => reject(err))
+                    .then(list => resolve(list)).catch(err =>
+                     reject(err.response.data))
             })
     },
 
@@ -41,7 +42,8 @@ export default {
             (resolve, reject) => {
                 axios
                     .get(process.env.VUE_APP_INIT_BACKEND_URL +'merchants'+'/' + merchantId)
-                    .then(response => resolve(response)).catch(err => reject(err))
+                    .then(response => resolve(response)).catch(err => 
+                     reject(err.response.data))
 
             })
     },

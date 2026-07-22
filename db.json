@@ -1222,15 +1222,6 @@
       "type": "ECOMMERCE",
       "status": "ACTIVE",
       "id": 1
-    },
-    {
-      "name": "‪Issam Litimi‬‏dwedwedwedoroorfefe",
-      "reference": "xxx",
-      "mccCode": "3232",
-      "institutionId": 6,
-      "type": "RETAIL",
-      "status": "PENDING",
-      "id": 2
     }
   ],
   "installmentPlans": [

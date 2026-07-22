@@ -25,14 +25,12 @@
     <template #general>
       <div class="row">
 
-   
-
           <nxp-input class="col-6"
                      label="Customer * :"
                      v-model="installmentPlan.customerId"
                      id="customerId"
                      type="multiselect"
-                     :options="customers"
+                     :options="customerOptions"
                      track-by="id"
                      label-key="label"
                      :multiple="false"
@@ -44,6 +42,25 @@
                      :state="$v.installmentPlan.customerId.$error ? false : null"
                      :validation-msg="$v.installmentPlan.customerId.$error ? 'Please Select a Customer' : ''"
                      @blur="$v.installmentPlan.customerId.$touch()"
+          />
+
+          <nxp-input class="col-6"
+                     label="Email * :"
+                     v-model="installmentPlan.customerEmail"
+                     id="customerEmail"
+                     type="multiselect"
+                     :options="customerEmailOptions"
+                     track-by="id"
+                     label-key="label"
+                     :multiple="false"
+                     :searchable="true"
+                     :close-on-select="true"
+                     :allow-empty="true"
+                     :show-labels="false"
+                     placeholder="Rechercher un Email..."
+                     :state="$v.installmentPlan.customerEmail.$error ? false : null"
+                     :validation-msg="$v.installmentPlan.customerEmail.$error ? 'Please Select a Email ' : ''"
+                     @blur="$v.installmentPlan.customerEmail.$touch()"
           />
 
           <nxp-input class="col-6"
@@ -121,16 +138,17 @@
     <template #recapitulatif>
       <b-row>
         <b-col sm="12">
-          <h5><font-awesome-icon icon="calendar-days" class="mr-2"/>Informations générales</h5>
+          <h5><font-awesome-icon icon="list" class="mr-2"/>Informations générales</h5>
           <hr>
         </b-col>
-        <b-col sm="6">
-          <label class="font-weight-bold">Plan Id :</label>
-          <p>{{ installmentPlan.planId || '-' }}</p>
-        </b-col>
+ 
         <b-col sm="6">
           <label class="font-weight-bold">Client :</label>
           <p>{{ installmentPlan.customerId ? installmentPlan.customerId.label : '-' }}</p>
+        </b-col>
+        <b-col sm="6">
+          <label class="font-weight-bold">Email :</label>
+          <p>{{ installmentPlan.customerEmail ? installmentPlan.customerEmail.label : '-' }}</p>
         </b-col>
         <b-col sm="6">
           <label class="font-weight-bold">Offre :</label>
@@ -154,7 +172,7 @@
         </b-col>
 
         <b-col sm="12" v-if="installmentSchedule.length">
-          <h5 class="mt-3"><font-awesome-icon icon="list-check" class="mr-2"/>Échéancier prévisionnel</h5>
+          <h5 class="mt-3"><font-awesome-icon icon="clipboard" class="mr-2"/>Échéancier prévisionnel</h5>
           <hr>
           <b-table small striped
                    :items="installmentSchedule"
@@ -168,7 +186,6 @@
   </nxp-main-container>
 </div>
 </template>
-
 <script>
 import NxpToast from 'vue-nxp-plugin/src/utils/NxpToast'
 import {required, minValue} from 'vuelidate/lib/validators'
@@ -181,6 +198,7 @@ export default {
   validations :{
     installmentPlan : {
       customerId : { required },
+      customerEmail : { required },
       totalAmount : { required, minValue : minValue(0) },
       numberOfInstallments : { required, minValue : minValue(1) },
       startDate : { required },
@@ -190,6 +208,8 @@ export default {
   data(){
     return {
       installmentPlanId : this.$route.query.installmentPlanId,
+      syncingCustomer : false, // évite la boucle infinie entre customerId et customerEmail
+      loaded : false,          // évite que les watchers n'écrasent les valeurs chargées depuis l'API avant que le plan soit prêt
       tabs : [
         { name: 'general', title: 'General', icon: 'ti ti-help', beforeChange: ()=>this.validateGeneral() },
         { name: 'recapitulatif', title: 'Recapitulatif', icon: 'ti ti-clipboard' }
@@ -197,9 +217,7 @@ export default {
       offers : [
         {id: '', label: 'Select Offer'}
       ],
-      customers : [
-        {id: '', label: 'Select Customer'}
-      ],
+      customers : [], // objets bruts {id, fullName, email} — les options sont dérivées via computed
       scheduleFields : [
         { key: 'number', label: '#' },
         { key: 'dueDate', label: 'Date d\'échéance' },
@@ -215,6 +233,7 @@ export default {
       installmentPlan : {
         planId : '',
         customerId : null,
+        customerEmail : null,
         offerId : null,
         totalAmount : '',
         numberOfInstallments : '',
@@ -252,6 +271,12 @@ export default {
         });
       }
       return schedule;
+    },
+    customerOptions(){
+      return this.customers.map(c => ({ id: c.id, label: c.fullName || c.name }));
+    },
+    customerEmailOptions(){
+      return this.customers.map(c => ({ id: c.id, label: c.email }));
     }
   },
   beforeMount() {
@@ -268,8 +293,7 @@ export default {
     },
     getCustomers(){
       return CustomerService.getCustomers(1, 1000, '').then(response=>{
-        const list = response.data.map(c => ({ id: c.id, label: c.fullName || c.name }));
-        this.customers = [{id: '', label: 'Select Customer'}, ...list];
+        this.customers = response.data.map(c => ({ id: c.id, fullName: c.fullName || c.name, email: c.email }));
       })
     },
     getInstallmentPlan(){
@@ -282,12 +306,21 @@ export default {
         }
 
         if (this.installmentPlan.customerId && typeof this.installmentPlan.customerId !== 'object') {
-          const found = this.customers.find(c => String(c.id) === String(this.installmentPlan.customerId));
+          const found = this.customerOptions.find(c => String(c.id) === String(this.installmentPlan.customerId));
           this.installmentPlan.customerId = found || null;
         }
+
+        // customerEmail vient du backend en snapshot (CST_EMAIL) ; on l'affiche tel quel,
+        // sans le recalculer depuis customerEmailOptions, pour rester fidèle à la valeur figée en base.
+        if (this.installmentPlan.customerEmail && typeof this.installmentPlan.customerEmail !== 'object') {
+          this.installmentPlan.customerEmail = { id: this.installmentPlan.customerId ? this.installmentPlan.customerId.id : '', label: this.installmentPlan.customerEmail };
+        }
+
+        this.$nextTick(() => { this.loaded = true; });
       })
     },
     onReset(){
+      this.loaded = false;
       this.getInstallmentPlan()
     },
     onComplete(){
@@ -300,7 +333,9 @@ export default {
         ...this.installmentPlan,
         customerId : this.installmentPlan.customerId ? this.installmentPlan.customerId.id : '',
         offerId : this.installmentPlan.offerId ? this.installmentPlan.offerId.id : ''
+        // customerEmail volontairement omis : le backend ne le modifie jamais après création (CST_EMAIL updatable=false)
       };
+      delete payload.customerEmail;
       // eslint-disable-next-line no-unused-vars
       InstallmentPlanService.updateInstallmentPlan(payload).then(response=>{
         NxpToast.toastSuccess('Installment Plan Updated Successfully')
@@ -328,6 +363,25 @@ export default {
         return false;
       }
       return true;
+    }
+  },
+  watch: {
+    'installmentPlan.customerId'(customer) {
+      if (this.syncingCustomer || !this.loaded) return;
+      this.syncingCustomer = true;
+      this.installmentPlan.customerEmail = customer
+        ? this.customerEmailOptions.find(e => e.id === customer.id) || null
+        : null;
+      this.syncingCustomer = false;
+    },
+
+    'installmentPlan.customerEmail'(email) {
+      if (this.syncingCustomer || !this.loaded) return;
+      this.syncingCustomer = true;
+      this.installmentPlan.customerId = email
+        ? this.customerOptions.find(c => c.id === email.id) || null
+        : null;
+      this.syncingCustomer = false;
     }
   }
 }

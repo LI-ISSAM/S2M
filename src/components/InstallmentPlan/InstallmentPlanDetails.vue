@@ -23,7 +23,7 @@
     <template #recapitulatif>
       <b-row>
         <b-col sm="12">
-          <h5><font-awesome-icon icon="calendar-days" class="mr-2"/>Informations générales</h5>
+          <h5><font-awesome-icon icon="list" class="mr-2"/>Informations générales</h5>
           <hr>
         </b-col>
     
@@ -31,6 +31,10 @@
           <label class="font-weight-bold">Client :</label>
           <p>{{ getCustomerLabel(installmentPlan.customerId) }}</p>
         </b-col>
+        <b-col sm="6">
+          <label class="font-weight-bold">Email :</label>
+<p>{{ installmentPlan.customerEmail }}</p>      
+  </b-col>
         <b-col sm="6">
           <label class="font-weight-bold">Offre :</label>
           <p>{{ getOfferLabel(installmentPlan.offerId) }}</p>
@@ -53,7 +57,7 @@
         </b-col>
 
         <b-col sm="12" v-if="installmentSchedule.length">
-          <h5 class="mt-3"><font-awesome-icon icon="list-check" class="mr-2"/>Échéancier prévisionnel</h5>
+          <h5 class="mt-3"><font-awesome-icon icon="clipboard" class="mr-2"/>Échéancier prévisionnel</h5>
           <hr>
           <b-table small striped
                    :items="installmentSchedule"
@@ -95,6 +99,8 @@ export default {
       installmentPlan : {
         planId : '',
         customerId : '',
+        customerEmail :  '',
+
         offerId : '',
         totalAmount : '',
         numberOfInstallments : '',

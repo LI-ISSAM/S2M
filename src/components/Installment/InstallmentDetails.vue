@@ -23,7 +23,7 @@
     <template #recapitulatif>
       <b-row>
         <b-col sm="12">
-          <h5><font-awesome-icon icon="calendar-days" class="mr-2"/>Informations générales</h5>
+          <h5><font-awesome-icon icon="list" class="mr-2"/>Informations générales</h5>
           <hr>
         </b-col>
         <b-col sm="6">

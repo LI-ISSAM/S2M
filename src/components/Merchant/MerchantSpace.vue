@@ -124,6 +124,12 @@ export default {
         { key: "id", label: "id", sortable: true, selected: true },
         { key: "name", label: "name", sortable: true, selected: true },
         {
+          key: "corporateName",
+          label: "corporate name",
+          sortable: true,
+          selected: true,
+        },
+        {
           key: "reference",
           label: "reference",
           sortable: true,
@@ -137,6 +143,13 @@ export default {
           sortable: true,
         },
         { key: "type", label: "type", selected: true, sortable: true },
+        { key: "branch", label: "branch", sortable: true, selected: true },
+        {
+          key: "paymentMode",
+          label: "payment method",
+          sortable: true,
+          selected: true,
+        },
         { key: "status", label: "status", selected: true, sortable: true },
         { key: "actions", label: "actions", selected: true },
       ];
