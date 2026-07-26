@@ -303,6 +303,7 @@ export default {
       const payload = {
         ...this.installmentPlan,
         customerId : this.installmentPlan.customerId ? this.installmentPlan.customerId.id : '',
+        customerEmail : this.installmentPlan.customerEmail ? this.installmentPlan.customerEmail.label : '',
         offerId : this.installmentPlan.offerId ? this.installmentPlan.offerId.id : ''
       };
       // eslint-disable-next-line no-unused-vars

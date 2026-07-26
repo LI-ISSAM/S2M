@@ -1077,7 +1077,6 @@ export default {
           {title:'', firstName:'', middleName:'', lastName:'', function:'', birthDate:'', location:''}
         ],
 
-        // ---------- Merchant Parameters ----------
         mccGroup : '',
         merchantGroup : '',
         merchantProgram : '',
@@ -1115,7 +1114,6 @@ export default {
           {commission:'', effectiveDate:''}
         ],
 
-        // ---------- Address ----------
         addresses : [
           {addressType:'', address:'', address2:'', city:'', phone:'', fax:''}
         ],
@@ -1303,7 +1301,6 @@ export default {
       this.merchant.commissions.splice(index, 1);
     },
 
-    // ---------- Address ----------
     addAddress(){
       this.merchant.addresses.push({addressType:'', address:'', address2:'', city:'', phone:'', fax:''});
     },

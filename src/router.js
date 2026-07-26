@@ -62,6 +62,29 @@ import CardSpace from "./components/Card/CardSpace.vue";
 import UpdateCard from "./components/Card/UpdateCard.vue";
 import CardDetails from "./components/Card/CardDetails.vue";
 
+import AddOperation from "./components/Operation/AddOperation.vue";
+import OperationContainer from "./components/Operation/OperationContainer.vue";
+import OperationSpace from "./components/Operation/OperationSpace.vue";
+import UpdateOperation from "./components/Operation/UpdateOperation.vue";
+import OperationDetails from "./components/Operation/OperationDetails.vue";
+
+import AddFreezingInquiry from "./components/FreezingInquiry/AddFreezingInquiry.vue";
+import FreezingInquiryContainer from "./components/FreezingInquiry/FreezingInquiryContainer.vue";
+import FreezingInquirySpace from "./components/FreezingInquiry/FreezingInquirySpace.vue";
+import UpdateFreezingInquiry from "./components/FreezingInquiry/UpdateFreezingInquiry.vue";
+import FreezingInquiryDetails from "./components/FreezingInquiry/FreezingInquiryDetails.vue";
+
+import AddRescheduleInquiry from "./components/RescheduleInquiry/AddRescheduleInquiry.vue";
+import RescheduleInquiryContainer from "./components/RescheduleInquiry/RescheduleInquiryContainer.vue";
+import RescheduleInquirySpace from "./components/RescheduleInquiry/RescheduleInquirySpace.vue";
+import UpdateRescheduleInquiry from "./components/RescheduleInquiry/UpdateRescheduleInquiry.vue";
+import RescheduleInquiryDetails from "./components/RescheduleInquiry/RescheduleInquiryDetails.vue";
+
+import AddForceClosureInquiry from "./components/ForceClosureInquiry/AddForceClosureInquiry.vue";
+import ForceClosureInquiryContainer from "./components/ForceClosureInquiry/ForceClosureInquiryContainer.vue";
+import ForceClosureInquirySpace from "./components/ForceClosureInquiry/ForceClosureInquirySpace.vue";
+import UpdateForceClosureInquiry from "./components/ForceClosureInquiry/UpdateForceClosureInquiry.vue";
+import ForceClosureInquiryDetails from "./components/ForceClosureInquiry/ForceClosureInquiryDetails.vue";
 Vue.use(Router);
 const router = new Router({
   mode: "history",
@@ -361,6 +384,91 @@ const router = new Router({
           component: CardDetails,
         },
       ],
+    },
+    {
+        path : "/operation",component : OperationContainer,
+        meta : {
+          requiresAuth : true
+        },
+        children : [
+          {
+            path : "/",component : OperationSpace
+            
+          },
+          {
+            path : "add",component : AddOperation
+          },
+          {
+            path : "update",component : UpdateOperation
+          },
+          {
+            path : "details",component : OperationDetails
+          }
+        ]
+    },
+    {
+      path : "/freezingInquiry",component : FreezingInquiryContainer,
+      meta : {
+        requiresAuth : true
+      },
+      children : [
+        {
+          path : "/",component : FreezingInquirySpace
+          
+        },
+        {
+          path : "add",component : AddFreezingInquiry
+        },
+        {
+          path : "update",component : UpdateFreezingInquiry
+        },
+        {
+          path : "details",component : FreezingInquiryDetails
+        }
+      ]
+    },
+    {
+      path : "/rescheduleInquiry",component : RescheduleInquiryContainer,
+      meta : {
+        requiresAuth : true
+      },
+      children : [
+        {
+          path : "/",component : RescheduleInquirySpace
+          
+        },
+        {
+          path : "add",component : AddRescheduleInquiry
+        },
+        {
+          path : "update",component : UpdateRescheduleInquiry
+        },
+        {
+          path : "details",component : RescheduleInquiryDetails
+        }
+      ]
+    },
+    {
+      path : "/forceClosureInquiry",component : ForceClosureInquiryContainer,
+      meta : {
+        requiresAuth : true
+      },
+      children : [
+        {
+          path : "/",component : ForceClosureInquirySpace
+          
+        },
+        {
+          path : "add",component : AddForceClosureInquiry
+        },
+        {
+          path : "update",component : UpdateForceClosureInquiry
+        },
+        {
+          path : "details",component : ForceClosureInquiryDetails
+        }
+      ]
+
     },
     {
       path: "/audit-trail",

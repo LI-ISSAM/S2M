@@ -279,7 +279,6 @@ export default {
         // ---------- Merchant Owners ----------
         owners : [],
 
-        // ---------- Merchant Parameters ----------
         mccGroup : '',
         merchantGroup : '',
         merchantProgram : '',
@@ -307,7 +306,6 @@ export default {
         membershipFees : [],
         commissions : [],
 
-        // ---------- Address ----------
         addresses : [],
 
         // ---------- Merchant Statement ----------

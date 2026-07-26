@@ -182,6 +182,51 @@ export default {
         }
       }
     },
+    {
+      href :'operation',
+          title :'Operation Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'exchange-alt'
+        }
+      }
+    },
+    {
+      href :'freezingInquiry',
+          title :'Freezing Inquiry Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'snowflake'
+        }
+      }
+    },
+    {
+      href :'rescheduleInquiry',
+          title :'Reschedule Inquiry Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'tv'
+        }
+      }
+    },
+    {
+      href :'forceClosureInquiry',
+          title :'Force Closure Inquiry Space',
+          icon : {
+            element : 'font-awesome-icon',
+            class : 'p-1 bg-info',
+            attributes : {
+              icon : 'unlock-alt'
+        }
+      }
+    },
+  
   
 
       ]

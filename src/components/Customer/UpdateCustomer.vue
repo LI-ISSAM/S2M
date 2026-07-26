@@ -1278,7 +1278,6 @@ export default {
         salary : '',
         riskLevel : '',
 
-        // 4. Address
         addresses : [],
 
         // 5. Account
@@ -1390,7 +1389,6 @@ export default {
       return true;
     },
 
-    // ---------- Address ----------
     addAddress(){
       this.customer.addresses.push({addressType:'', address:'', address2:'', city:'', phone:'', fax:''});
     },

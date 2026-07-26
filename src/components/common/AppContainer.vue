@@ -311,6 +311,91 @@ export default {
 
 
         },
+         {
+          href:'',
+          title:'Operation', 
+          icon:{
+            element:'font-awesome-icon',
+            class:'p-1 bg-info',
+            attributes:{
+              icon:'exchange-alt'
+            }
+          },
+          child:[
+            {
+              href:'/operation',
+              title:'Operations',
+              icon :{
+                  element:'font-awesome-icon',
+                  class:"text-info bg-transparent",
+                  attributes:{
+                      icon:'exchange-alt'
+              }
+            }
+            },
+            {
+              href:'/operation/add',
+              title:'Add Operation',
+              icon :{
+                  element:'font-awesome-icon',
+                  class:"text-info bg-transparent",
+                  attributes:{
+                      icon:'plus'
+              }
+            }
+            },
+         
+          ]
+
+
+        },
+        {
+          href : "",
+          title : "Inquiry",
+          icon : {
+            element : "font-awesome-icon",
+            class : "p-1 bg-info",
+            attributes : {
+              icon : "search"
+        }
+      },
+          child : [
+            {
+              href : "/freezingInquiry",
+              title : "Freezing Inquiry",
+              icon : {
+                element : "font-awesome-icon",
+                class : "text-info bg-transparent",
+                attributes : {
+                  icon : "snowflake"
+                }
+              }
+            },
+            {
+              href : "/forceClosureInquiry",
+              title : "Force Closure Inquiry",
+              icon : {
+                element : "font-awesome-icon",
+                class : "text-info bg-transparent",
+                attributes : {
+                  icon : "unlock-alt"
+                }
+              },
+            },
+              {
+                href : "/rescheduleInquiry",
+                title : "Reschedule Inquiry",
+                icon : {
+                  element : "font-awesome-icon",
+                  class : "text-info bg-transparent",
+                  attributes : {
+                    icon : "tv"
+                  }
+                }
+              }
+            
+          ]
+        }
       
       
       ],

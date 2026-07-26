@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default {
-    getInstallmentPlans(page = 1, limit = 4, customerName = '', offerName = '') {
+    getInstallmentPlans(page = 1, limit = 4, customerName = '', offerName = '', customerId = '', offerId = '') {
 
         const params = {
             _page : page,
@@ -16,6 +16,16 @@ export default {
         if (offerName) {
             // Nécessite que la Specification backend joigne vers Offer.name
             params.offerName_like = offerName;
+        }
+
+        if (customerId) {
+            // Filtre exact côté backend (InstallmentPlanSpecifications.hasCustomerId)
+            params.customerId = customerId;
+        }
+
+        if (offerId) {
+            // Filtre exact côté backend (InstallmentPlanSpecifications.hasOfferId)
+            params.offerId = offerId;
         }
 
         return new Promise(

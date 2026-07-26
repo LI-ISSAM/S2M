@@ -197,7 +197,6 @@ export default {
         netIncome : '',
         riskLevel : '',
 
-        // 4. Address
         addresses : [],
 
         // 5. Account

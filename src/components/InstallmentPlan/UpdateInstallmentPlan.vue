@@ -333,7 +333,6 @@ export default {
         ...this.installmentPlan,
         customerId : this.installmentPlan.customerId ? this.installmentPlan.customerId.id : '',
         offerId : this.installmentPlan.offerId ? this.installmentPlan.offerId.id : ''
-        // customerEmail volontairement omis : le backend ne le modifie jamais après création (CST_EMAIL updatable=false)
       };
       delete payload.customerEmail;
       // eslint-disable-next-line no-unused-vars
