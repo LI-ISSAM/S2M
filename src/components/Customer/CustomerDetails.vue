@@ -128,6 +128,11 @@
           </b-table>
         </b-col>
       </b-row>
+      <b-col sm="12" class="mt-3">
+  <h5><font-awesome-icon icon="shield-halved" class="mr-2"/>Analyse de risque</h5>
+  <hr>
+  <risk-score-widget :customer-id="customer.id" />
+</b-col>
 
       <div class="d-flex justify-content-end mt-3">
         <nxp-button color="danger" pill @click="$router.push('/customer')">
@@ -141,9 +146,13 @@
 
 <script>
 import CustomerService from "@/services/customer/CustomerService";
+import RiskScoreWidget from "@/components/shared/RiskScoreWidget.vue";
 
 export default {
   name: "CustomerDetails",
+  components: {
+    RiskScoreWidget
+  },
   data(){
     return {
       customerId : this.$route.query.customerId,

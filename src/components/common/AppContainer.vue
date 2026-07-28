@@ -7,9 +7,9 @@
     :pill="true"
     :menu_items="menu_items"
     @change_lang="lang = $event"
-    connectedUser="Litimi Issam"
+    :connectedUser="connectedUserName"
+    @signOut="signOut"
   >
-    <!-- :connectedUser="$keycloak.fullName" @signOut="$keycloak.logoutFn" -->
     <template #sidebar-header>
       <img alt="Logo" class="py-3 app-logo" src="@/assets/logo.png" />
     </template>
@@ -20,8 +20,17 @@
 </template>
 
 <script>
+import { getUser, logout } from "@/services/auth";
+
 export default {
   name: "AppContainer",
+    props: {
+
+    connectedUserName: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       menu_items: [
@@ -402,10 +411,17 @@ export default {
     };
   },
 
+  async created (){
+    const user = await getUser();
+    this.connectedUserName = user ? (user.name || user.nickname || user.email) : "";
+  },
   methods: {
     changeLang(newLang) {
       this.$store.commit("updateLocale", newLang);
     },
+    signOut(){
+      logout();
+    }
   },
   computed: {
     minimize() {
@@ -421,7 +437,8 @@ export default {
       },
     },
   },
-};
+
+}
 </script>
 
 <style>
