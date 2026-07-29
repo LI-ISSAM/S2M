@@ -59,7 +59,8 @@
         @pageChanged="currentPage = $event"
         @showView="showView($event)"
         @updateList="onUpdateList"
-        :displayedHeaders="true"
+        :export_items="['all-csv','all-pdf','current-csv','current-pdf']"
+        @export="exportData"
         :showHeadersWhenFilters="true">
       >
       <template #cell(merchantId)="data">
@@ -172,6 +173,55 @@ export default {
         this.merchantsMap = map;
       })
     },
+     exportData(event) {
+
+        console.log(event);
+
+        switch(event.type){
+
+            case 'all-csv':
+                this.downloadCsv();
+                break;
+            case 'all-pdf':
+                this.downloadPdf();
+                break;
+
+            case 'current-csv':
+                this.downloadCsv();
+                break;
+
+            case 'current-pdf':
+                this.downloadPdf();
+                break;
+        }
+
+    },
+
+     downloadCsv() {
+        OperationService.exportCsv(this.reference, this.email, this.programName).then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'operations.csv');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        });
+    },
+    downloadPdf() {
+        OperationService.exportPdf(this.reference, this.email, this.programName).then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'operations.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        });
+    },
+    
     getPrograms(){
       return ProgramService.getPrograms(1, 1000, '').then(response=>{
         const map = {};

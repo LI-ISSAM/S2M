@@ -66,5 +66,27 @@ export default {
                     .then(resp => resolve(resp)).catch(err =>
                      reject(err.response.data))
             })
-    }
+    },
+
+    exportCsv(lastName = '', email = '') {
+    const params = {};
+    if (lastName) params.lastName_like = lastName;
+    if (email) params.email_like = email;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'customers/export/csv', {
+        params,
+        responseType: 'blob' 
+    });
+},
+ 
+exportPdf(lastName = '', email = '') {
+    const params = {};
+    if (lastName) params.lastName_like = lastName;
+    if (email) params.email_like = email;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'customers/export/pdf', {
+        params,
+        responseType: 'blob'
+    });
+}
 }

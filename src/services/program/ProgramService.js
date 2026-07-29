@@ -62,5 +62,24 @@ export default {
                     .then(resp => resolve(resp)).catch(err =>
                      reject(err.response.data))
             })
-    }
+    },
+            exportCsv(name = '') {
+    const params = {};
+    if (name) params.name_like = name;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'programs/export/csv', {
+        params,
+        responseType: 'blob' 
+    });
+},
+ 
+exportPdf(name = '') {
+    const params = {};
+    if (name) params.name_like = name;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'programs/export/pdf', {
+        params,
+        responseType: 'blob'
+    });
+}
 }

@@ -66,5 +66,26 @@ export default {
                     .delete(process.env.VUE_APP_INIT_BACKEND_URL +'merchants/'+ id)
                     .then(resp => resolve(resp)).catch(err => reject(err.response.data))
             })
-    }
+    },
+     exportCsv(name = '', reference = '') {
+    const params = {};
+    if (name) params.name_like = name;
+    if (reference) params.reference_like = reference;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'merchants/export/csv', {
+        params,
+        responseType: 'blob' 
+    });
+},
+ 
+exportPdf(name = '', reference = '') {
+    const params = {};
+    if (name) params.name_like = name;
+    if (reference) params.reference_like = reference;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'merchants/export/pdf', {
+        params,
+        responseType: 'blob'
+    });
+}
 }

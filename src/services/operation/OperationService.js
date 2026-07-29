@@ -89,5 +89,29 @@ getDefaultOperation(programId, excludeId = '') {
                     .then(resp => resolve(resp)).catch(err =>   
                      reject(err.response.data))
             })
-    }
+    },
+
+    exportCsv(reference = '', email = '', programName = '') {
+    const params = {};
+    if (reference) params.reference_like = reference;
+    if (email) params.email_like = email;
+    if (programName) params.programName_like = programName;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'operations/export/csv', {
+        params,
+        responseType: 'blob' 
+    });
+},
+ 
+exportPdf(reference = '', email = '', programName = '') {
+    const params = {};
+    if (reference) params.reference_like = reference;
+    if (email) params.email_like = email;
+    if (programName) params.programName_like = programName;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'operations/export/pdf', {
+        params,
+        responseType: 'blob'
+    });
+}
 }

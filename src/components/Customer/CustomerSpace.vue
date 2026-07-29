@@ -63,6 +63,9 @@
         @showView="showView($event)"
         @updateList="onUpdateList"
         :displayedHeaders="true"
+        :exportItems="export_items"
+        :export_items="['all-csv','all-pdf','current-csv','current-pdf']"
+        @export="exportData"
         :showHeadersWhenFilters="true">
       >
       <template #cell(status)="data">
@@ -87,6 +90,7 @@ export default {
   name: "CustomerSpace",
   data(){
     return {
+  
       isLoading : true,
       itemsList : [],
       perPage : 4,
@@ -240,6 +244,7 @@ export default {
           return 'info';
       }
     },
+  
     showView($event){
       let customer = $event.item;
       let view = $event.view;
@@ -254,6 +259,54 @@ export default {
           this.confirmDelete(customer)
           break;
       }
+    },
+     exportData(event) {
+
+        console.log(event);
+
+        switch(event.type){
+
+            case 'all-csv':
+                this.downloadCsv();
+                break;
+            case 'all-pdf':
+                this.downloadPdf();
+                break;
+
+            case 'current-csv':
+                this.downloadCsv();
+                break;
+
+            case 'current-pdf':
+                this.downloadPdf();
+                break;
+        }
+
+    },
+
+     downloadCsv() {
+        CustomerService.exportCsv(this.filters.value, this.email).then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'customers.csv');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        });
+    },
+    downloadPdf() {
+        CustomerService.exportPdf(this.filters.value, this.email).then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'customers.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        });
     },
 
     confirmDelete(customer) {

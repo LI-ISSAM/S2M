@@ -64,5 +64,27 @@ export default {
                     .delete(process.env.VUE_APP_INIT_BACKEND_URL +'cards/'+ id)
                     .then(resp => resolve(resp)).catch(err => reject(err))
             })
-    }
+    },
+
+    exportCsv(cardNumber = '', customerName = '') {
+    const params = {};
+    if (cardNumber) params.cardNumber_like = cardNumber;
+    if (customerName) params.customerName_like = customerName;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'cards/export/csv', {
+        params,
+        responseType: 'blob' 
+    });
+},
+ 
+exportPdf(cardNumber = '', customerName = '') {
+    const params = {};
+    if (cardNumber) params.cardNumber_like = cardNumber;
+    if (customerName) params.customerName_like = customerName;
+ 
+    return axios.get(process.env.VUE_APP_INIT_BACKEND_URL + 'cards/export/pdf', {
+        params,
+        responseType: 'blob'
+    });
+}
 }
