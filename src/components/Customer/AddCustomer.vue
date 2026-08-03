@@ -23,20 +23,54 @@
                    @complete="onComplete"
   >
 
-    <!-- ================= 1. GENERAL INFO (Customer Data) ================= -->
-    <template #generalInfo>
-      <b-row>
-        <b-col sm="6">
-          <nxp-input label="Bank * :"
-                     v-model="customer.bank"
-                     id="bank"
-                     type="text"
-                     placeholder="Entrer la banque"
-                     :state="$v.customer.bank.$error ? false : null"
-                     :validation-msg="$v.customer.bank.$error ? 'Banque est obligatoire' : ''"
-                     @blur="$v.customer.bank.$touch()"
-          />
-        </b-col>
+<template #generalInfo>
+  <b-row>
+    <b-col sm="12" class="mb-3">
+      <b-card bg-variant="light">
+        <b-row class="align-items-end">
+          <b-col sm="5">
+            <b-form-group label="Scanner une pièce d'identité (CIN, passeport) :" label-for="identityScan">
+              <b-form-file
+                  id="identityScan"
+                  v-model="scanFile"
+                  accept="image/*"
+                  placeholder="Choisissez un fichier ou déposez-le ici..."
+                  drop-placeholder="Déposez le fichier ici..."
+              />
+            </b-form-group>
+          </b-col>
+          <b-col sm="3">
+            <nxp-button
+                variant="info"
+                pill
+                :disabled="!scanFile || scanningIdentity"
+                @click="scanIdentity">
+              <b-spinner small v-if="scanningIdentity" class="mr-1"/>
+              <font-awesome-icon icon="magnifying-glass" class="mr-1" v-else/>
+              {{ scanningIdentity ? 'Analyse...' : 'Scanner et remplir' }}
+            </nxp-button>
+          </b-col>
+          <b-col sm="4" v-if="scanConfidence">
+            <b-alert show :variant="confidenceVariant" class="mb-0 py-2">
+              Fiabilité de l'extraction : <strong>{{ scanConfidence }}</strong>
+              — vérifiez les champs avant de valider.
+            </b-alert>
+          </b-col>
+        </b-row>
+      </b-card>
+    </b-col>
+
+    <b-col sm="6">
+      <nxp-input label="Bank * :"
+                 v-model="customer.bank"
+                 id="bank"
+                 type="text"
+                 placeholder="Entrer la banque"
+                 :state="$v.customer.bank.$error ? false : null"
+                 :validation-msg="$v.customer.bank.$error ? 'Banque est obligatoire' : ''"
+                 @blur="$v.customer.bank.$touch()"
+      />
+    </b-col>
         <b-col sm="6">
           <nxp-input label="Branch * :"
                      v-model="customer.branch"
@@ -495,16 +529,7 @@
                      placeholder="Sélectionner un niveau de risque"
           />
         </b-col>
-                <b-col sm="6">
-  <nxp-input
-      label="Salary :"
-      v-model="customer.salary"
-      id="salary"
-      type="number"
-      placeholder="0.00"
-      :minValue="0"
-  />
-</b-col>
+
       </b-row>
     </template>
 
@@ -831,10 +856,7 @@
         <b-col sm="6"><label class="font-weight-bold">Position :</label><p>{{ customer.position || '-' }}</p></b-col>
         <b-col sm="6"><label class="font-weight-bold">Gross Income :</label><p>{{ customer.grossIncome || '-' }}</p></b-col>
         <b-col sm="6"><label class="font-weight-bold">Net Income :</label><p>{{ customer.netIncome || '-' }}</p></b-col>
-        <b-col sm="6">
-    <label class="font-weight-bold">Salary :</label>
-    <p>{{ customer.salary || '-' }}</p>
-</b-col>
+   
         <b-col sm="6"><label class="font-weight-bold">Sub-Bin :</label><p>{{ customer.subBin || '-' }}</p></b-col>
         <b-col sm="6"><label class="font-weight-bold">Risk Level :</label><p>{{ customer.riskLevel || '-' }}</p></b-col>
 
@@ -906,6 +928,7 @@
 import NxpToast from 'vue-nxp-plugin/src/utils/NxpToast'
 import {required, email} from 'vuelidate/lib/validators'
 import CustomerService from "@/services/customer/CustomerService";
+import KycExtractionService from "@/services/kycExtraction/KycExtractionService";
 
 export default {
   name: "AddCustomer",
@@ -978,6 +1001,14 @@ export default {
           icon : 'ti ti-clipboard'
         }
       ],
+
+      // ---------- Scan KYC ----------
+      // "scanFile" (au lieu de "identityFile") pour ne pas le confondre
+      // avec customer.identityFile (la photo/document final rattaché à la fiche).
+      // Rempli directement par b-form-file via v-model (retourne un vrai objet File).
+      scanFile : null,
+      scanningIdentity : false,
+      scanConfidence : '',
 
       // ---------- select options ----------
       vipCategoryOptions : [
@@ -1277,7 +1308,6 @@ export default {
         employeeName : '',
         position : '',
         grossIncome : '',
-        salary : '',
         netIncome : '',
         riskLevel : '',
 
@@ -1306,6 +1336,11 @@ export default {
     fullName(){
       return [this.customer.firstName, this.customer.middleName, this.customer.lastName]
         .filter(Boolean).join(' ');
+    },
+    confidenceVariant(){
+      if (this.scanConfidence === 'high') return 'success';
+      if (this.scanConfidence === 'medium') return 'warning';
+      return 'danger';
     }
   },
   watch : {
@@ -1319,6 +1354,8 @@ export default {
   },
   methods : {
     onReset(){
+      this.scanFile = null;
+      this.scanConfidence = '';
       this.customer.addresses = [{addressType:'', address:'', address2:'', city:'', phone:'', fax:''}];
       this.customer.accounts = [{mxpAccount:'', bankAccount:'', creationDate:'', currency:'',
         accountType:'', status:'', statusDate:'', branch: this.customer.branch || ''}];
@@ -1327,6 +1364,102 @@ export default {
       this.customer.routings = [{cardNumber:'', mxpAccount:'', bankAccount:''}];
       this.customer.links = [{cardNumber:'', mxpAccount:'', bankAccount:'', checkbook:'NON'}];
       this.$v.$reset();
+    },
+
+    // Redimensionne l'image côté navigateur avant l'envoi au backend : les captures
+    // d'écran / photos de téléphone peuvent être très volumineuses et font ramer
+    // inutilement l'inférence du modèle vision (Ollama tourne en CPU pur ici).
+    // On limite la largeur à maxWidth (défaut 1024px) et on réencode en JPEG qualité 0.85.
+    resizeImage(file, maxWidth = 1024){
+      return new Promise((resolve, reject) => {
+        const objectUrl = URL.createObjectURL(file);
+        const img = new Image();
+
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+
+          // Si l'image est déjà plus petite que la largeur cible, inutile de l'agrandir
+          const scale = Math.min(1, maxWidth / img.width);
+          const targetWidth = Math.round(img.width * scale);
+          const targetHeight = Math.round(img.height * scale);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+          canvas.getContext('2d').drawImage(img, 0, 0, targetWidth, targetHeight);
+
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              reject(new Error("Échec du redimensionnement de l'image"));
+              return;
+            }
+            const resizedFile = new File(
+                [blob],
+                file.name.replace(/\.[^.]+$/, '') + '.jpg',
+                { type: 'image/jpeg' }
+            );
+            resolve(resizedFile);
+          }, 'image/jpeg', 0.85);
+        };
+
+        img.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          reject(new Error("Impossible de charger l'image sélectionnée"));
+        };
+
+        img.src = objectUrl;
+      });
+    },
+
+    async scanIdentity(){
+      if (!this.scanFile) {
+        NxpToast.toastError('Veuillez sélectionner un fichier avant de scanner');
+        return;
+      }
+      this.scanningIdentity = true;
+      this.scanConfidence = '';
+
+      // Avertit l'agent si l'analyse traîne (modèle vision en CPU = parfois lent)
+      const slowWarningId = setTimeout(() => {
+        if (this.scanningIdentity) {
+          NxpToast.toastError("L'analyse prend plus de temps que prévu, merci de patienter...");
+        }
+      }, 15000);
+
+      let fileToSend = this.scanFile;
+      try {
+        fileToSend = await this.resizeImage(this.scanFile, 1024);
+      } catch (resizeErr) {
+        // Si le redimensionnement échoue pour une raison quelconque, on retombe
+        // sur le fichier original plutôt que de bloquer complètement le scan.
+        fileToSend = this.scanFile;
+      }
+
+      KycExtractionService.scanIdentityDocument(fileToSend).then(response => {
+        clearTimeout(slowWarningId);
+        const fields = response.data;
+        this.scanningIdentity = false;
+        this.scanConfidence = fields.confidence || '';
+
+        // On ne remplit que les champs non vides renvoyés par l'IA — on n'écrase
+        // jamais une valeur déjà saisie manuellement par l'agent avant le scan.
+        if (fields.firstName) this.customer.firstName = fields.firstName;
+        if (fields.middleName) this.customer.middleName = fields.middleName;
+        if (fields.lastName) this.customer.lastName = fields.lastName;
+        if (fields.birthDate) this.customer.birthDate = fields.birthDate;
+        if (fields.birthPlace) this.customer.birthPlace = fields.birthPlace;
+        if (fields.primaryIdType) this.customer.primaryIdType = fields.primaryIdType;
+        if (fields.primaryId) this.customer.primaryId = fields.primaryId;
+        if (fields.gender) this.customer.gender = fields.gender;
+        if (fields.nationality) this.customer.nationality = fields.nationality;
+
+        NxpToast.toastSuccess('Champs remplis automatiquement depuis le document scanné');
+      }).catch(err => {
+        clearTimeout(slowWarningId);
+        this.scanningIdentity = false;
+        const message = err && err.message ? err.message : 'Erreur lors du scan du document';
+        NxpToast.toastError(message);
+      });
     },
 
     onComplete(){

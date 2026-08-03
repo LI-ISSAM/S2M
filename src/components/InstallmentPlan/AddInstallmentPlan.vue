@@ -179,13 +179,7 @@
                    :fields="scheduleFields">
           </b-table>
         </b-col>
-<b-col sm="12" v-if="installmentPlan.customerId">
-  <program-recommendation-widget
-      :customer-id="installmentPlan.customerId.id || installmentPlan.customerId"
-      :amount="installmentPlan.totalAmount"
-      @select="onProgramSelected"
-  />
-</b-col>
+
 
       </b-row>
     </template>
@@ -201,13 +195,10 @@ import {required, minValue} from 'vuelidate/lib/validators'
 import InstallmentPlanService from "@/services/installmentPlan/installmentPlanService";
 import OfferService from "@/services/offer/OfferService";
 import CustomerService from "@/services/customer/CustomerService";
-import ProgramRecommendationWidget from "@/components/shared/ProgramRecommendationWidget.vue";
 
 export default {
   name: "AddInstallmentPlan",
-  components : {
-    ProgramRecommendationWidget
-  },
+
   validations :{
     installmentPlan : {
       customerId : { required },
@@ -295,13 +286,6 @@ export default {
   },
   methods : {
 
-    onProgramSelected(programId){
-      const found = this.programs.find(p => p.programId === programId);
-      if (found){
-        this.installmentPlan.programId = found;
-        NxpToast.toastSuccess('Programme sélectionné: ' + found.label);
-      } 
-    },
 
     getOffers(){
       OfferService.getOffers(1, 1000, '').then(response=>{

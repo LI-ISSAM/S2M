@@ -1,12 +1,10 @@
 <template>
-    <router-view></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
 export default {
-    name:"ProgramContainer"
-}
+  name: "ProgramContainer",
+};
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

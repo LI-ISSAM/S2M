@@ -74,8 +74,8 @@
 
             <b-col sm="12">
               <h5>
-                <font-awesome-icon icon="tachometer-alt" class="mr-2" />Limites de
-                transaction
+                <font-awesome-icon icon="tachometer-alt" class="mr-2" />Limites
+                de transaction
               </h5>
               <hr />
             </b-col>

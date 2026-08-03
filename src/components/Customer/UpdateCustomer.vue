@@ -495,16 +495,7 @@
                      placeholder="Sélectionner un niveau de risque"
           />
         </b-col>
-                          <b-col sm="6">
-  <nxp-input
-      label="Salary :"
-      v-model="customer.salary"
-      id="salary"
-      type="number"
-      placeholder="0.00"
-      :minValue="0"
-  />
-</b-col>
+
       </b-row>
     </template>
 
@@ -831,7 +822,6 @@
         <b-col sm="6"><label class="font-weight-bold">Position :</label><p>{{ customer.position || '-' }}</p></b-col>
         <b-col sm="6"><label class="font-weight-bold">Gross Income :</label><p>{{ customer.grossIncome || '-' }}</p></b-col>
         <b-col sm="6"><label class="font-weight-bold">Net Income :</label><p>{{ customer.netIncome || '-' }}</p></b-col>
-        <b-col sm="6"><label class="font-weight-bold">Salary :</label><p>{{ customer.salary || '-' }}</p></b-col>
         <b-col sm="6"><label class="font-weight-bold">Risk Level :</label><p>{{ customer.riskLevel || '-' }}</p></b-col>
 
         <!-- 4. Address -->
@@ -1275,7 +1265,6 @@ export default {
         position : '',
         grossIncome : '',
         netIncome : '',
-        salary : '',
         riskLevel : '',
 
         addresses : [],

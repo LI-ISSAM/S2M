@@ -77,7 +77,7 @@
         @showView="showView($event)"
         @updateList="onUpdateList"
         :displayedHeaders="true"
-          :export_items="['all-csv','all-pdf','current-csv','current-pdf']"
+        :export_items="['all-csv', 'all-pdf', 'current-csv', 'current-pdf']"
         @export="exportData"
         :showHeadersWhenFilters="true"
       >
@@ -156,12 +156,11 @@ export default {
         { key: "actions", label: "actions", selected: true },
       ];
     },
-    searchFields(){
-      return[
-      {id : "name" , label :"Nom"},
-      {id : "reference" , label : "Reference"}
-      
-  ]
+    searchFields() {
+      return [
+        { id: "name", label: "Nom" },
+        { id: "reference", label: "Reference" },
+      ];
     },
     rowActions() {
       return [
@@ -217,51 +216,54 @@ export default {
       }
     },
     exportData(event) {
+      console.log(event);
 
-        console.log(event);
+      switch (event.type) {
+        case "all-csv":
+          this.downloadCsv();
+          break;
+        case "all-pdf":
+          this.downloadPdf();
+          break;
 
-        switch(event.type){
+        case "current-csv":
+          this.downloadCsv();
+          break;
 
-            case 'all-csv':
-                this.downloadCsv();
-                break;
-            case 'all-pdf':
-                this.downloadPdf();
-                break;
-
-            case 'current-csv':
-                this.downloadCsv();
-                break;
-
-            case 'current-pdf':
-                this.downloadPdf();
-                break;
-        }
-
+        case "current-pdf":
+          this.downloadPdf();
+          break;
+      }
     },
-         downloadCsv() {
-        MerchantService.exportCsv(this.filters.value, this.email).then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'merchants.csv');
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        });
+    downloadCsv() {
+      MerchantService.exportCsv(this.filters.value, this.email).then(
+        (response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "merchants.csv");
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(url);
+        },
+      );
     },
     downloadPdf() {
-        MerchantService.exportPdf(this.filters.value, this.email).then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'merchants.pdf');
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        });
+      MerchantService.exportPdf(this.filters.value, this.email).then(
+        (response) => {
+          const url = window.URL.createObjectURL(
+            new Blob([response.data], { type: "application/pdf" }),
+          );
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "merchants.pdf");
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(url);
+        },
+      );
     },
     showView($event) {
       let merchant = $event.item;
@@ -290,12 +292,13 @@ export default {
     onUpdateList() {
       this.isLoading = true;
       const name = this.filters.field === "name" ? this.filters.value : "";
-      const reference = this.filters.field === "reference" ? this.filters.value : "";
+      const reference =
+        this.filters.field === "reference" ? this.filters.value : "";
       MerchantService.getMerchants(
         this.currentPage,
         this.perPage,
         name,
-        reference
+        reference,
       )
         .then((response) => {
           this.itemsList = response.data;

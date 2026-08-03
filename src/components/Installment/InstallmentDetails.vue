@@ -1,178 +1,213 @@
 <template>
-<div>
+  <div>
+    <nxp-bread-crumb
+      id="bread-crumb"
+      :items="[
+        { text: 'installments', to: '/installment' },
+        { text: 'details' },
+      ]"
+      class="mt-0"
+    />
 
-  <nxp-bread-crumb id="bread-crumb" :items="[{text: 'installments', to: '/installment'},{text: 'details'}]" class="mt-0"/>
-
-  <nxp-main-container icon="tv" title="Installment Details" body-bg-variant="white">
-  <nxp-form-wizard   :start-index="0"
-                   class="mx-4 "
-                   color="#17a2b8"
-                   shape="tab"
-                   colorSubmit="primary"
-                   subtitle=""
-                   title=""
-                   colorClose="danger"
-                   :pill="true"
-                   :buttonIcon="true"
-                   cancelButton="close"
-                   @cancel="onComplete"
-                   @complete="onComplete"
-                   :tabs="tabs"
-  >
-
-    <template #recapitulatif>
-      <b-row>
-        <b-col sm="12">
-          <h5><font-awesome-icon icon="list" class="mr-2"/>Informations générales</h5>
-          <hr>
-        </b-col>
-        <b-col sm="6">
-          <label class="font-weight-bold">Nom du client :</label>
-          <p>{{ getCustomerName(installment.customerId) }}</p>
-        </b-col>
-        <b-col sm="6">
-          <label class="font-weight-bold">Email du client :</label>
-          <p>{{ getCustomerEmail(installment.customerId) }}</p>
-        </b-col>
-        <b-col sm="6">
-          <label class="font-weight-bold">Date d'échéance :</label>
-          <p>{{ installment.dueDate || '-' }}</p>
-        </b-col>
-        <b-col sm="6">
-          <label class="font-weight-bold">Montant :</label>
-          <p>{{ installment.amount || '-' }}</p>
-        </b-col>
-        <b-col sm="6">
-          <label class="font-weight-bold">Statut :</label>
-          <p>
-            <b-badge :variant="getBadge(installment.status)">{{ installment.status || '-' }}</b-badge>
-          </p>
-        </b-col>
-
-        <b-col sm="12" v-if="planSchedule.length">
-          <h5 class="mt-3"><font-awesome-icon icon="calendar-days" class="mr-2"/>Suivi de paiement</h5>
-          <hr>
+    <nxp-main-container
+      icon="tv"
+      title="Installment Details"
+      body-bg-variant="white"
+    >
+      <nxp-form-wizard
+        :start-index="0"
+        class="mx-4"
+        color="#17a2b8"
+        shape="tab"
+        colorSubmit="primary"
+        subtitle=""
+        title=""
+        colorClose="danger"
+        :pill="true"
+        :buttonIcon="true"
+        cancelButton="close"
+        @cancel="onComplete"
+        @complete="onComplete"
+        :tabs="tabs"
+      >
+        <template #recapitulatif>
           <b-row>
-            <b-col
-                v-for="month in monthlyStatus"
-                :key="month.number"
-                cols="6" sm="4" md="3" lg="2"
-                class="mb-3"
-            >
-              <div class="month-tile text-center p-2" :class="'border-' + month.variant">
-                <div class="font-weight-bold">{{ month.label }}</div>
-                <b-badge :variant="month.variant" class="mt-1">
-                  {{ month.paidLabel }}
-                </b-badge>
-                <div v-if="!month.isPaid" class="mt-1">
-                  <b-button size="sm" variant="outline-success"
-                            :disabled="markingMonth === month.number"
-                            @click="markMonthPaid(month)">
-                    <font-awesome-icon icon="check" class="mr-1"/>
-                    {{ markingMonth === month.number ? '...' : 'Marquer payé' }}
-                  </b-button>
-                </div>
-              </div>
+            <b-col sm="12">
+              <h5>
+                <font-awesome-icon icon="list" class="mr-2" />Informations
+                générales
+              </h5>
+              <hr />
+            </b-col>
+            <b-col sm="6">
+              <label class="font-weight-bold">Nom du client :</label>
+              <p>{{ getCustomerName(installment.customerId) }}</p>
+            </b-col>
+            <b-col sm="6">
+              <label class="font-weight-bold">Email du client :</label>
+              <p>{{ getCustomerEmail(installment.customerId) }}</p>
+            </b-col>
+            <b-col sm="6">
+              <label class="font-weight-bold">Date d'échéance :</label>
+              <p>{{ installment.dueDate || "-" }}</p>
+            </b-col>
+            <b-col sm="6">
+              <label class="font-weight-bold">Montant :</label>
+              <p>{{ installment.amount || "-" }}</p>
+            </b-col>
+            <b-col sm="6">
+              <label class="font-weight-bold">Statut :</label>
+              <p>
+                <b-badge :variant="getBadge(installment.status)">{{
+                  installment.status || "-"
+                }}</b-badge>
+              </p>
+            </b-col>
+
+            <b-col sm="12" v-if="planSchedule.length">
+              <h5 class="mt-3">
+                <font-awesome-icon icon="calendar-days" class="mr-2" />Suivi de
+                paiement
+              </h5>
+              <hr />
+              <b-row>
+                <b-col
+                  v-for="month in monthlyStatus"
+                  :key="month.number"
+                  cols="6"
+                  sm="4"
+                  md="3"
+                  lg="2"
+                  class="mb-3"
+                >
+                  <div
+                    class="month-tile text-center p-2"
+                    :class="'border-' + month.variant"
+                  >
+                    <div class="font-weight-bold">{{ month.label }}</div>
+                    <b-badge :variant="month.variant" class="mt-1">
+                      {{ month.paidLabel }}
+                    </b-badge>
+                    <div v-if="!month.isPaid" class="mt-1">
+                      <b-button
+                        size="sm"
+                        variant="outline-success"
+                        :disabled="markingMonth === month.number"
+                        @click="markMonthPaid(month)"
+                      >
+                        <font-awesome-icon icon="check" class="mr-1" />
+                        {{
+                          markingMonth === month.number ? "..." : "Marquer payé"
+                        }}
+                      </b-button>
+                    </div>
+                  </div>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
-        </b-col>
-      </b-row>
-    </template>
-
-  </nxp-form-wizard>
-  </nxp-main-container>
-</div>
+        </template>
+      </nxp-form-wizard>
+    </nxp-main-container>
+  </div>
 </template>
 
 <script>
-import NxpToast from 'vue-nxp-plugin/src/utils/NxpToast'
+import NxpToast from "vue-nxp-plugin/src/utils/NxpToast";
 import InstallmentService from "@/services/installment/InstallmentService";
 import InstallmentPlanService from "@/services/installmentPlan/installmentPlanService";
 import CustomerService from "@/services/customer/CustomerService";
 
 export default {
   name: "InstallmentDetails",
-  data(){
+  data() {
     return {
-      installmentId : this.$route.query.installmentId,
-      tabs : [
-        { name : 'recapitulatif', title :'Recapitulatif', icon : 'ti ti-clipboard' }
+      installmentId: this.$route.query.installmentId,
+      tabs: [
+        {
+          name: "recapitulatif",
+          title: "Recapitulatif",
+          icon: "ti ti-clipboard",
+        },
       ],
-      customersMap : {},
-      installment : {
-        customerId : '',
-        dueDate : '',
-        amount : '',
-        status : ''
+      customersMap: {},
+      installment: {
+        customerId: "",
+        dueDate: "",
+        amount: "",
+        status: "",
       },
-      customerInstallments : [],
-      planSchedule : [],
-      markingMonth : null
-    }
+      customerInstallments: [],
+      planSchedule: [],
+      markingMonth: null,
+    };
   },
-  computed : {
+  computed: {
     monthlyStatus() {
-      return this.planSchedule.map(entry => {
-        const match = this.customerInstallments.find(i => {
+      return this.planSchedule.map((entry) => {
+        const match = this.customerInstallments.find((i) => {
           if (!i.dueDate) return false;
           const d = new Date(i.dueDate);
           return d.getMonth() === entry.month && d.getFullYear() === entry.year;
         });
 
-        let paidLabel = 'En attente';
-        let variant = 'light';
+        let paidLabel = "En attente";
+        let variant = "light";
         let isPaid = false;
         if (match) {
-          if (match.status === 'PAID') {
-            paidLabel = 'Payé';
-            variant = 'success';
+          if (match.status === "PAID") {
+            paidLabel = "Payé";
+            variant = "success";
             isPaid = true;
           } else {
-            paidLabel = 'Non payé';
-            variant = match.status === 'LATE' ? 'danger' : 'warning';
+            paidLabel = "Non payé";
+            variant = match.status === "LATE" ? "danger" : "warning";
           }
         }
 
         return {
-          number : entry.number,
-          month : entry.month,
-          year : entry.year,
-          label : entry.label,
-          amount : entry.amount,
+          number: entry.number,
+          month: entry.month,
+          year: entry.year,
+          label: entry.label,
+          amount: entry.amount,
           paidLabel,
           variant,
-          isPaid
+          isPaid,
         };
       });
-    }
+    },
   },
   beforeMount() {
-    this.getCustomers()
-    this.getInstallment()
+    this.getCustomers();
+    this.getInstallment();
   },
-  methods : {
-    getCustomers(){
-      CustomerService.getCustomers(1, 1000, '', '').then(response=>{
+  methods: {
+    getCustomers() {
+      CustomerService.getCustomers(1, 1000, "", "").then((response) => {
         const map = {};
-        (response.data || []).forEach(c => {
-          map[c.id] = { fullName: c.fullName, email: c.contact ? c.contact.email : (c.email || '') };
+        (response.data || []).forEach((c) => {
+          map[c.id] = {
+            fullName: c.fullName,
+            email: c.contact ? c.contact.email : c.email || "",
+          };
         });
         this.customersMap = map;
-      })
+      });
     },
-    getCustomerName(id){
-      return this.customersMap[id] ? this.customersMap[id].fullName : '-';
+    getCustomerName(id) {
+      return this.customersMap[id] ? this.customersMap[id].fullName : "-";
     },
-    getCustomerEmail(id){
-      return this.customersMap[id] ? this.customersMap[id].email : '-';
+    getCustomerEmail(id) {
+      return this.customersMap[id] ? this.customersMap[id].email : "-";
     },
-    getInstallment(){
-      InstallmentService.getInstallment(this.installmentId).then(response=>{
+    getInstallment() {
+      InstallmentService.getInstallment(this.installmentId).then((response) => {
         this.installment = response.data;
         this.loadCalendar();
-      })
+      });
     },
-    buildSchedule(plan){
+    buildSchedule(plan) {
       const total = parseFloat(plan.totalAmount);
       const count = parseInt(plan.numberOfInstallments, 10);
       if (!total || !count || count <= 0 || !plan.startDate) return [];
@@ -182,34 +217,51 @@ export default {
       const start = new Date(plan.startDate);
       if (isNaN(start.getTime())) return [];
 
-      const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+      const monthNames = [
+        "Janvier",
+        "Février",
+        "Mars",
+        "Avril",
+        "Mai",
+        "Juin",
+        "Juillet",
+        "Août",
+        "Septembre",
+        "Octobre",
+        "Novembre",
+        "Décembre",
+      ];
       const schedule = [];
-      for (let i = 0; i < count; i++){
+      for (let i = 0; i < count; i++) {
         const due = new Date(start);
         due.setMonth(due.getMonth() + i);
-        const amount = (i === count - 1) ? (baseAmount + remainder) : baseAmount;
+        const amount = i === count - 1 ? baseAmount + remainder : baseAmount;
         schedule.push({
-          number : i + 1,
-          month : due.getMonth(),
-          year : due.getFullYear(),
-          label : monthNames[due.getMonth()] + ' ' + due.getFullYear(),
-          amount : amount.toFixed(2)
+          number: i + 1,
+          month: due.getMonth(),
+          year: due.getFullYear(),
+          label: monthNames[due.getMonth()] + " " + due.getFullYear(),
+          amount: amount.toFixed(2),
         });
       }
       return schedule;
     },
-    loadCalendar(){
+    loadCalendar() {
       if (!this.installment.customerId) return;
       Promise.all([
-        InstallmentService.getInstallmentsByCustomer(this.installment.customerId),
-        InstallmentPlanService.getInstallmentPlans(1, 1000, '', '')
-      ]).then(([installmentsResponse, plansResponse])=>{
+        InstallmentService.getInstallmentsByCustomer(
+          this.installment.customerId,
+        ),
+        InstallmentPlanService.getInstallmentPlans(1, 1000, "", ""),
+      ]).then(([installmentsResponse, plansResponse]) => {
         this.customerInstallments = installmentsResponse.data || [];
-        const plan = (plansResponse.data || []).find(p => String(p.customerId) === String(this.installment.customerId));
+        const plan = (plansResponse.data || []).find(
+          (p) => String(p.customerId) === String(this.installment.customerId),
+        );
         this.planSchedule = plan ? this.buildSchedule(plan) : [];
-      })
+      });
     },
-    markMonthPaid(month){
+    markMonthPaid(month) {
       if (month.isPaid || this.markingMonth) return;
       this.markingMonth = month.number;
 
@@ -217,7 +269,7 @@ export default {
       // Si oui, il faut la METTRE À JOUR (pas en créer une nouvelle), sinon on
       // obtient des doublons pour le même mois. Le backend interdit d'ailleurs
       // désormais la création d'un doublon (CIT_005).
-      const existing = this.customerInstallments.find(i => {
+      const existing = this.customerInstallments.find((i) => {
         if (!i.dueDate) return false;
         const d = new Date(i.dueDate);
         return d.getMonth() === month.month && d.getFullYear() === month.year;
@@ -232,48 +284,59 @@ export default {
       };
       const onError = (err) => {
         this.markingMonth = null;
-        const message = err && err.message ? err.message : 'Erreur lors du marquage du paiement';
+        const message =
+          err && err.message
+            ? err.message
+            : "Erreur lors du marquage du paiement";
         NxpToast.toastError(message);
       };
 
       if (existing) {
         const payload = {
-          id : existing.id,
-          customerId : this.installment.customerId,
-          dueDate : existing.dueDate,
-          amount : existing.amount,
-          status : 'PAID'
+          id: existing.id,
+          customerId: this.installment.customerId,
+          dueDate: existing.dueDate,
+          amount: existing.amount,
+          status: "PAID",
         };
         InstallmentService.updateInstallment(payload)
-            .then(() => afterSuccess(`${month.label} marqué comme payé`))
-            .catch(onError);
+          .then(() => afterSuccess(`${month.label} marqué comme payé`))
+          .catch(onError);
       } else {
-        const dueDate = `${month.year}-${String(month.month + 1).padStart(2, '0')}-01`;
+        const dueDate = `${month.year}-${String(month.month + 1).padStart(
+          2,
+          "0",
+        )}-01`;
         const payload = {
-          customerId : this.installment.customerId,
-          dueDate : dueDate,
-          amount : month.amount,
-          status : 'PAID'
+          customerId: this.installment.customerId,
+          dueDate: dueDate,
+          amount: month.amount,
+          status: "PAID",
         };
         InstallmentService.addInstallment(payload)
-            .then(() => afterSuccess(`${month.label} marqué comme payé`))
-            .catch(onError);
+          .then(() => afterSuccess(`${month.label} marqué comme payé`))
+          .catch(onError);
       }
     },
-    onComplete(){
-      this.$router.push('/installment')
+    onComplete() {
+      this.$router.push("/installment");
     },
-    getBadge(status){
-      switch (status){
-        case 'PAID' : return 'success'
-        case 'PENDING' : return 'warning'
-        case 'LATE' : return 'danger'
-        case 'CANCELLED' : return 'secondary'
-        default : return 'light'
+    getBadge(status) {
+      switch (status) {
+        case "PAID":
+          return "success";
+        case "PENDING":
+          return "warning";
+        case "LATE":
+          return "danger";
+        case "CANCELLED":
+          return "secondary";
+        default:
+          return "light";
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

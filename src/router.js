@@ -4,7 +4,6 @@ import Home from "@/components/Home";
 import UserSpace from "@/components/User/UserSpace";
 import AddUser from "@/components/User/AddUser";
 import UpdateUser from "@/components/User/UpdateUser";
-// import NxpToast from "vue-nxp-plugin/src/utils/NxpToast";
 import TeamSpace from "@/components/Team/TeamSpace";
 import AddTeam from "@/components/Team/AddTeam";
 import UpdateTeam from "@/components/Team/UpdateTeam";
@@ -340,25 +339,29 @@ const router = new Router({
     },
 
     {
-        path: "/installment",component : InstallmentContainer,
-        meta : {
-          requiresAuth : true
+      path: "/installment",
+      component: InstallmentContainer,
+      meta: {
+        requiresAuth: true,
+      },
+      children: [
+        {
+          path: "/",
+          component: InstallmentSpace,
         },
-        children : [
-          {
-            path : "/",component : InstallmentSpace
-
-          },
-          {
-            path : "add",component : AddInstallment
-          },
-          {
-            path : "update",component : UpdateInstallment
-          },
-          {
-            path : "details",component : InstallmentDetails
-          }
-        ]
+        {
+          path: "add",
+          component: AddInstallment,
+        },
+        {
+          path: "update",
+          component: UpdateInstallment,
+        },
+        {
+          path: "details",
+          component: InstallmentDetails,
+        },
+      ],
     },
     {
       path: "/card",
@@ -386,89 +389,104 @@ const router = new Router({
       ],
     },
     {
-        path : "/operation",component : OperationContainer,
-        meta : {
-          requiresAuth : true
+      path: "/operation",
+      component: OperationContainer,
+      meta: {
+        requiresAuth: true,
+      },
+      children: [
+        {
+          path: "/",
+          component: OperationSpace,
         },
-        children : [
-          {
-            path : "/",component : OperationSpace
-            
-          },
-          {
-            path : "add",component : AddOperation
-          },
-          {
-            path : "update",component : UpdateOperation
-          },
-          {
-            path : "details",component : OperationDetails
-          }
-        ]
+        {
+          path: "add",
+          component: AddOperation,
+        },
+        {
+          path: "update",
+          component: UpdateOperation,
+        },
+        {
+          path: "details",
+          component: OperationDetails,
+        },
+      ],
     },
     {
-      path : "/freezingInquiry",component : FreezingInquiryContainer,
-      meta : {
-        requiresAuth : true
+      path: "/freezingInquiry",
+      component: FreezingInquiryContainer,
+      meta: {
+        requiresAuth: true,
       },
-      children : [
+      children: [
         {
-          path : "/",component : FreezingInquirySpace
-          
+          path: "/",
+          component: FreezingInquirySpace,
         },
         {
-          path : "add",component : AddFreezingInquiry
+          path: "add",
+          component: AddFreezingInquiry,
         },
         {
-          path : "update",component : UpdateFreezingInquiry
+          path: "update",
+          component: UpdateFreezingInquiry,
         },
         {
-          path : "details",component : FreezingInquiryDetails
-        }
-      ]
+          path: "details",
+          component: FreezingInquiryDetails,
+        },
+      ],
     },
     {
-      path : "/rescheduleInquiry",component : RescheduleInquiryContainer,
-      meta : {
-        requiresAuth : true
+      path: "/rescheduleInquiry",
+      component: RescheduleInquiryContainer,
+      meta: {
+        requiresAuth: true,
       },
-      children : [
+      children: [
         {
-          path : "/",component : RescheduleInquirySpace
-          
+          path: "/",
+          component: RescheduleInquirySpace,
         },
         {
-          path : "add",component : AddRescheduleInquiry
+          path: "add",
+          component: AddRescheduleInquiry,
         },
         {
-          path : "update",component : UpdateRescheduleInquiry
+          path: "update",
+          component: UpdateRescheduleInquiry,
         },
         {
-          path : "details",component : RescheduleInquiryDetails
-        }
-      ]
+          path: "details",
+          component: RescheduleInquiryDetails,
+        },
+      ],
     },
     {
-      path : "/forceClosureInquiry",component : ForceClosureInquiryContainer,
-      meta : {
-        requiresAuth : true
+      path: "/forceClosureInquiry",
+      component: ForceClosureInquiryContainer,
+      meta: {
+        requiresAuth: true,
       },
-      children : [
+      children: [
         {
-          path : "/",component : ForceClosureInquirySpace
-          
+          path: "/",
+          component: ForceClosureInquirySpace,
         },
         {
-          path : "add",component : AddForceClosureInquiry
+          path: "add",
+          component: AddForceClosureInquiry,
         },
         {
-          path : "update",component : UpdateForceClosureInquiry
+          path: "update",
+          component: UpdateForceClosureInquiry,
         },
         {
-          path : "details",component : ForceClosureInquiryDetails
-        }
-      ]
-
+          path: "details",
+          component: ForceClosureInquiryDetails,
+        },
+      ],
     },
     {
       path: "/audit-trail",

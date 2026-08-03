@@ -1,12 +1,10 @@
 <template>
-    <router-view></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
 export default {
-    name:"OperationContainer"
-}
+  name: "OperationContainer",
+};
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

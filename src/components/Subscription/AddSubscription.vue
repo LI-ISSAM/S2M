@@ -64,6 +64,14 @@
                       @blur="$v.subscription.customerEmail.$touch()"
           />
 
+    
+          <b-col sm="12" v-if="subscription.customerId">
+            <program-recommendation-widget
+                :customer-id="subscription.customerId.id"
+                @select="onProgramRecommended"
+            />
+          </b-col>
+
           <nxp-input class="col-6"
                      label="Program * :"
                      v-model="subscription.programId"
@@ -77,7 +85,7 @@
                      :close-on-select="true"
                      :allow-empty="true"
                      :show-labels="false"
-                     placeholder="Rechercher un programme..."
+                     placeholder="Sélectionné automatiquement par l'IA, modifiable si besoin..."
                      :state="$v.subscription.programId.$error ? false : null"
                      :validation-msg="$v.subscription.programId.$error ? 'Please Select a Program' : ''"
                      @blur="$v.subscription.programId.$touch()"
@@ -147,10 +155,10 @@
           </p>
         </b-col>
         <b-col sm="4">
-          <label class="font-weight-bold">Salaire :</label>
+          <label class="font-weight-bold">Gross Income :</label>
           <p>
-            <font-awesome-icon :icon="eligibilityReport.salaryOk ? 'check' : 'times'" :class="eligibilityReport.salaryOk ? 'text-success' : 'text-danger'"/>
-            {{ eligibilityReport.customerSalary }} (min requis : {{ eligibilityReport.minSalary }})
+            <font-awesome-icon :icon="eligibilityReport.incomeOk ? 'check' : 'times'" :class="eligibilityReport.incomeOk ? 'text-success' : 'text-danger'"/>
+            {{ eligibilityReport.customerIncome }} (min requis : {{ eligibilityReport.minSalary }})
           </p>
         </b-col>
         <b-col sm="4">
@@ -257,9 +265,13 @@ import SubscriptionService from "@/services/subscription/SubscriptionService";
 import CustomerService from "@/services/customer/CustomerService";
 import ProgramService from "@/services/program/ProgramService";
 import OfferService from "@/services/offer/OfferService";
+import ProgramRecommendationWidget from "@/components/shared/ProgramRecommendationWidget.vue";
 
 export default {
   name: "AddSubscription",
+  components : {
+    ProgramRecommendationWidget
+  },
   validations :{
     subscription : {
       customerId : {
@@ -306,6 +318,7 @@ export default {
       customerEmails : [],
       programs : [],
       offers : [],
+
       modes : [
         {id :'', label : 'Select Onboarding Mode'},
         {id: 'WITH_KYC', label: 'Avec KYC'},
@@ -354,6 +367,16 @@ export default {
     }
   },
   methods : {
+    
+    onProgramRecommended(programId){
+      const found = this.programs.find(p => String(p.id) === String(programId));
+      if (found){
+        this.subscription.programId = found;
+        NxpToast.toastSuccess('Programme recommandé sélectionné : ' + found.label);
+      } else {
+        NxpToast.toastError("Programme recommandé introuvable dans la liste des programmes.");
+      }
+    },
 getCustomers(){
   CustomerService.getCustomers(1, 1000, '').then(response=>{
     this.customers = response.data.map(c => ({ id: c.id, label: c.fullName }));
@@ -407,14 +430,14 @@ if (
 }
 
 const ageOk = age >= minAge && age <= maxAge;       
- const salaryOk = Number(customer.salary) >= Number(minSalary);
+ const incomeOk = Number(customer.grossIncome) >= Number(minSalary);
         const subBinOk = allowedSubBins.length === 0 || allowedSubBins.includes(customer.subBin);
-        const eligible = ageOk && salaryOk && subBinOk;
+        const eligible = ageOk && incomeOk && subBinOk;
 
         this.eligibilityReport = {
-          ageOk, salaryOk, subBinOk, eligible,
+          ageOk, incomeOk, subBinOk, eligible,
           customerAge : customer.age,
-          customerSalary : customer.salary,
+          customerIncome : customer.grossIncome,
           customerSubBin : customer.subBin,
           minAge, maxAge, minSalary
         };
@@ -470,7 +493,7 @@ const ageOk = age >= minAge && age <= maxAge;
         customerEmail : this.subscription.customerEmail ? this.subscription.customerEmail.label : null,
         eligibility : {
           ageOk : this.eligibilityReport.ageOk,
-          salaryOk : this.eligibilityReport.salaryOk,
+          incomeOk : this.eligibilityReport.incomeOk,
           subBinOk : this.eligibilityReport.subBinOk,
           eligible : this.eligibilityReport.eligible
         }

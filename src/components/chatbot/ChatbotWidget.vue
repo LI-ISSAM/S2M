@@ -1,46 +1,58 @@
 <template>
   <div class="chatbot-widget">
     <b-button
-        variant="primary"
-        class="chatbot-toggle"
-        pill
-        @click="isOpen = !isOpen"
+      variant="primary"
+      class="chatbot-toggle"
+      pill
+      @click="isOpen = !isOpen"
     >
       <font-awesome-icon :icon="isOpen ? 'xmark' : 'comment-dots'" />
     </b-button>
 
     <div v-if="isOpen" class="chatbot-panel shadow">
       <div class="chatbot-header">
-        <font-awesome-icon icon="robot" class="mr-2"/>
+        <font-awesome-icon icon="robot" class="mr-2" />
         Assistant S2M
       </div>
 
       <div class="chatbot-messages" ref="messagesContainer">
-        <div v-if="messages.length === 0" class="text-muted small text-center mt-3">
-          Pose-moi une question sur l'état du système, demande-moi un résumé,
-          ou de l'aide pour rédiger un message client.
+        <div
+          v-if="messages.length === 0"
+          class="text-muted small text-center mt-3"
+        >
+          Pose-moi une question sur l'état du système, demande-moi un résumé, ou
+          de l'aide pour rédiger un message client.
         </div>
         <div
-            v-for="(msg, idx) in messages"
-            :key="idx"
-            :class="['chatbot-message', msg.role === 'user' ? 'chatbot-message-user' : 'chatbot-message-assistant']"
+          v-for="(msg, idx) in messages"
+          :key="idx"
+          :class="[
+            'chatbot-message',
+            msg.role === 'user'
+              ? 'chatbot-message-user'
+              : 'chatbot-message-assistant',
+          ]"
         >
           {{ msg.content }}
         </div>
         <div v-if="loading" class="chatbot-message chatbot-message-assistant">
-          <b-spinner small/> en train d'écrire...
+          <b-spinner small /> en train d'écrire...
         </div>
       </div>
 
       <div class="chatbot-input">
         <b-form-input
-            v-model="input"
-            placeholder="Écris ton message..."
-            @keyup.enter="send"
-            :disabled="loading"
+          v-model="input"
+          placeholder="Écris ton message..."
+          @keyup.enter="send"
+          :disabled="loading"
         />
-        <b-button variant="primary" @click="send" :disabled="loading || !input.trim()">
-          <font-awesome-icon icon="paper-plane"/>
+        <b-button
+          variant="primary"
+          @click="send"
+          :disabled="loading || !input.trim()"
+        >
+          <font-awesome-icon icon="paper-plane" />
         </b-button>
       </div>
     </div>
@@ -55,18 +67,18 @@ export default {
   data() {
     return {
       isOpen: false,
-      input: '',
+      input: "",
       loading: false,
-      messages: [] // [{role: 'user'|'assistant', content: '...'}]
-    }
+      messages: [], // [{role: 'user'|'assistant', content: '...'}]
+    };
   },
   methods: {
     send() {
       const text = this.input.trim();
       if (!text || this.loading) return;
 
-      this.messages.push({ role: 'user', content: text });
-      this.input = '';
+      this.messages.push({ role: "user", content: text });
+      this.input = "";
       this.loading = true;
       this.scrollToBottom();
 
@@ -75,25 +87,31 @@ export default {
       const history = this.messages.slice(0, -1);
 
       ChatbotService.ask(text, history)
-          .then(response => {
-            this.messages.push({ role: 'assistant', content: response.data.reply });
-          })
-          .catch(() => {
-            this.messages.push({ role: 'assistant', content: "Désolé, une erreur est survenue." });
-          })
-          .finally(() => {
-            this.loading = false;
-            this.scrollToBottom();
+        .then((response) => {
+          this.messages.push({
+            role: "assistant",
+            content: response.data.reply,
           });
+        })
+        .catch(() => {
+          this.messages.push({
+            role: "assistant",
+            content: "Désolé, une erreur est survenue.",
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+          this.scrollToBottom();
+        });
     },
     scrollToBottom() {
       this.$nextTick(() => {
         const el = this.$refs.messagesContainer;
         if (el) el.scrollTop = el.scrollHeight;
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

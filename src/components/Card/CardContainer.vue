@@ -6,10 +6,8 @@
 
 <script>
 export default {
-  name: "CardContainer"
-}
+  name: "CardContainer",
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

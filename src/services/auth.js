@@ -1,4 +1,4 @@
-import {createAuth0Client} from "@auth0/auth0-spa-js";
+import { createAuth0Client } from "@auth0/auth0-spa-js";
 
 let auth0 = null;
 
@@ -13,7 +13,7 @@ export async function initAuth() {
       // audience: process.env.VUE_APP_AUTH0_AUDIENCE
     },
     cacheLocation: "localstorage", // conserve la session après un refresh de page
-    useRefreshTokens: true
+    useRefreshTokens: true,
   });
 
   // Si on revient d'Auth0 après le login (l'URL contient ?code=...&state=...)
@@ -43,7 +43,7 @@ export async function login() {
 
 export function logout() {
   auth0.logout({
-    logoutParams: { returnTo: window.location.origin }
+    logoutParams: { returnTo: window.location.origin },
   });
 }
 
@@ -52,7 +52,10 @@ export async function getAccessToken() {
     return await auth0.getTokenSilently();
   } catch (e) {
     // Session expirée ou révoquée : on relance le login
-    console.warn("Impossible de récupérer le token, redirection vers le login", e);
+    console.warn(
+      "Impossible de récupérer le token, redirection vers le login",
+      e,
+    );
     await login();
     return null;
   }
