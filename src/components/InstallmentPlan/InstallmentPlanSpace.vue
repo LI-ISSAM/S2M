@@ -8,11 +8,10 @@
       ]"
     />
 
-    <nxp-main-container icon="coins" title="Installment Plan ">
+    <nxp-main-container icon="coins" :title="$t('installment-plan-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('installmentPlan/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter un plan de
-          paiement
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('installment-plan-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -20,7 +19,7 @@
         <b-row class="align-items-end">
           <b-col sm="3">
             <nxp-input
-              label="Rechercher par :"
+              :label="$t('common.searchBy')"
               v-model="filters.field"
               id="search-field"
               type="select"
@@ -31,14 +30,14 @@
           </b-col>
           <b-col sm="5">
             <nxp-input
-              :label="filters.field === 'offer' ? 'Offre :' : 'Client :'"
+              :label="filters.field === 'offer' ? $t('common.offer') + ' :' : $t('common.customer') + ' :'"
               v-model="filters.value"
               id="search-value"
               type="text"
               :placeholder="
                 filters.field === 'offer'
-                  ? 'Entrez le nom de l\'offre'
-                  : 'Entrez le nom du client'
+                  ? $t('common.search') + ' ' + $t('common.offer')
+                  : $t('common.search') + ' ' + $t('common.customer')
               "
               @keyup.enter="onSearch"
             />
@@ -51,7 +50,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -60,7 +59,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -133,40 +132,40 @@ export default {
   computed: {
     fields() {
       return [
-        { key: "id", label: "id", sortable: true, selected: true },
+        { key: "id", label: this.$t('common.id'), sortable: true, selected: true },
         {
           key: "customerId",
-          label: "Customer",
+          label: this.$t('common.customer'),
           selected: true,
           sortable: true,
         },
-        { key: "offerId", label: "Offer", selected: true, sortable: true },
+        { key: "offerId", label: this.$t('common.offer'), selected: true, sortable: true },
         {
           key: "totalAmount",
-          label: "Total Amount",
+          label: this.$t('common.totalAmount'),
           selected: true,
           sortable: true,
         },
         {
           key: "numberOfInstallments",
-          label: "Installments",
+          label: this.$t('common.installments'),
           selected: true,
           sortable: true,
         },
         {
           key: "startDate",
-          label: "Start Date",
+          label: this.$t('common.startDate'),
           selected: true,
           sortable: true,
         },
-        { key: "status", label: "Status", selected: true, sortable: true },
-        { key: "actions", label: "Actions", selected: true },
+        { key: "status", label: this.$t('common.status'), selected: true, sortable: true },
+        { key: "actions", label: this.$t('common.actions'), selected: true },
       ];
     },
     searchFields() {
       return [
-        { id: "customer", label: "Client" },
-        { id: "offer", label: "Offre" },
+        { id: "customer", label: this.$t('common.customer') },
+        { id: "offer", label: this.$t('common.offer') },
       ];
     },
     rowActions() {
@@ -175,14 +174,14 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t('common.details'),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t('common.update'),
           actionEvent: "updateEvent",
         },
         {

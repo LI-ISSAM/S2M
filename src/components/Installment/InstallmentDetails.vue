@@ -11,7 +11,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Installment Details"
+      :title="$t('installment-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard
@@ -34,29 +34,30 @@
           <b-row>
             <b-col sm="12">
               <h5>
-                <font-awesome-icon icon="list" class="mr-2" />Informations
-                générales
+                <font-awesome-icon icon="list" class="mr-2" />{{
+                  $t('common.generalInformation')
+                }}
               </h5>
               <hr />
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Nom du client :</label>
+              <label class="font-weight-bold">{{ $t('common.customer') }} :</label>
               <p>{{ getCustomerName(installment.customerId) }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Email du client :</label>
+              <label class="font-weight-bold">{{ $t('common.email') }} :</label>
               <p>{{ getCustomerEmail(installment.customerId) }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Date d'échéance :</label>
+              <label class="font-weight-bold">{{ $t('common.dueDate') }} :</label>
               <p>{{ installment.dueDate || "-" }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Montant :</label>
+              <label class="font-weight-bold">{{ $t('common.amount') }} :</label>
               <p>{{ installment.amount || "-" }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Statut :</label>
+              <label class="font-weight-bold">{{ $t('common.status') }} :</label>
               <p>
                 <b-badge :variant="getBadge(installment.status)">{{
                   installment.status || "-"
@@ -66,8 +67,9 @@
 
             <b-col sm="12" v-if="planSchedule.length">
               <h5 class="mt-3">
-                <font-awesome-icon icon="calendar-days" class="mr-2" />Suivi de
-                paiement
+                <font-awesome-icon icon="calendar-days" class="mr-2" />{{
+                  $t('common.paymentTracking')
+                }}
               </h5>
               <hr />
               <b-row>
@@ -97,7 +99,9 @@
                       >
                         <font-awesome-icon icon="check" class="mr-1" />
                         {{
-                          markingMonth === month.number ? "..." : "Marquer payé"
+                          markingMonth === month.number
+                            ? "..."
+                            : $t('common.markPaid')
                         }}
                       </b-button>
                     </div>
@@ -126,7 +130,7 @@ export default {
       tabs: [
         {
           name: "recapitulatif",
-          title: "Recapitulatif",
+          title: this.$t('common.summary'),
           icon: "ti ti-clipboard",
         },
       ],
@@ -151,16 +155,16 @@ export default {
           return d.getMonth() === entry.month && d.getFullYear() === entry.year;
         });
 
-        let paidLabel = "En attente";
+        let paidLabel = this.$t('common.pending');
         let variant = "light";
         let isPaid = false;
         if (match) {
           if (match.status === "PAID") {
-            paidLabel = "Payé";
+            paidLabel = this.$t('common.paid');
             variant = "success";
             isPaid = true;
           } else {
-            paidLabel = "Non payé";
+            paidLabel = this.$t('common.notPaid');
             variant = match.status === "LATE" ? "danger" : "warning";
           }
         }

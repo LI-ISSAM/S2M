@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'offers', to: '/offer'},{text: 'add'}]" class="mt-0"/>
 
-  <nxp-main-container icon="plus" title="Add Offer" body-bg-variant="white">
+  <nxp-main-container icon="plus" :title="$t('offer-space.add-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    shape="tab"

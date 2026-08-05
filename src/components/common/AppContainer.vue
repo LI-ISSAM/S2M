@@ -31,24 +31,25 @@ export default {
       default: ""
     }
   },
-  data() {
-    return {
-      menu_items: [
+  computed: {
+    menu_items() {
+      const t = (key) => this.$t(key);
+
+      return [
         {
           href: "/home",
-          title: "Dashboard",
+          title: t("navigation.dashboard"),
           icon: {
             element: "font-awesome-icon",
             class: "p-1 bg-info",
             attributes: {
               icon: "tachometer-alt",
             },
-            // text: ''
           },
         },
         {
           href: "",
-          title: "Customer",
+          title: t("navigation.customer"),
           icon: {
             element: "font-awesome-icon",
             class: "p-1 bg-info",
@@ -59,7 +60,7 @@ export default {
           child: [
             {
               href: "/customer",
-              title: "Customers",
+              title: t("navigation.customers"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -69,19 +70,19 @@ export default {
               },
             },
             {
-              href : "/card",
-              title : "Cards",
-              icon : {
-                element : "font-awesome-icon",
-                class : "text-info bg-transparent",
-                attributes : {
-                  icon : "credit-card"
-            }
-            }
-          },
+              href: "/card",
+              title: t("navigation.cards"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "credit-card",
+                },
+              },
+            },
             {
               href: "/customer/add",
-              title: "Add Customer",
+              title: t("navigation.addCustomer"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -92,48 +93,44 @@ export default {
             },
           ],
         },
-        
-         {
-          href:'',
-          title:'Merchant',
-          icon:{
-            element:'font-awesome-icon',
-            class:'p-1 bg-info',
-            attributes:{
-              icon:'store'
-            }
-          },
-          child:[
-            {
-              href:'/merchant',
-              title:'Merchants',
-              icon :{
-                  element:'font-awesome-icon',
-                  class:"text-info bg-transparent",
-                  attributes:{
-                      icon:'store'
-              }
-            }
-            },
-            {
-              href:'/merchant/add',
-              title:'Add Merchant',
-              icon :{
-                  element:'font-awesome-icon',
-                  class:"text-info bg-transparent",
-                  attributes:{
-                      icon:'plus'
-              }
-            }
-          }
-          ]
-
-
-        },
-
         {
           href: "",
-          title: "Onboarding",
+          title: t("navigation.merchant"),
+          icon: {
+            element: "font-awesome-icon",
+            class: "p-1 bg-info",
+            attributes: {
+              icon: "store",
+            },
+          },
+          child: [
+            {
+              href: "/merchant",
+              title: t("navigation.merchants"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "store",
+                },
+              },
+            },
+            {
+              href: "/merchant/add",
+              title: t("navigation.addMerchant"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "plus",
+                },
+              },
+            },
+          ],
+        },
+        {
+          href: "",
+          title: t("navigation.onboarding"),
           icon: {
             element: "font-awesome-icon",
             class: "p-1 bg-info",
@@ -144,7 +141,7 @@ export default {
           child: [
             {
               href: "/institution",
-              title: "Institutions",
+              title: t("navigation.institutions"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -155,7 +152,7 @@ export default {
             },
             {
               href: "/institution/add",
-              title: "Add Institution",
+              title: t("navigation.addInstitution"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -168,7 +165,7 @@ export default {
         },
         {
           href: "",
-          title: "Program",
+          title: t("navigation.program"),
           icon: {
             element: "font-awesome-icon",
             class: "p-1 bg-info",
@@ -179,7 +176,7 @@ export default {
           child: [
             {
               href: "/program",
-              title: "Programs",
+              title: t("navigation.programs"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -190,7 +187,7 @@ export default {
             },
             {
               href: "/program/add",
-              title: "Add Program",
+              title: t("navigation.addProgram"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -203,7 +200,7 @@ export default {
         },
         {
           href: "",
-          title: "Parametre",
+          title: t("navigation.settings"),
           icon: {
             element: "font-awesome-icon",
             class: "p-1 bg-info",
@@ -214,7 +211,7 @@ export default {
           child: [
             {
               href: "/offer",
-              title: "Offers",
+              title: t("navigation.offers"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -225,7 +222,7 @@ export default {
             },
             {
               href: "/offer/add",
-              title: "Add Offer",
+              title: t("navigation.addOffer"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -236,10 +233,9 @@ export default {
             },
           ],
         },
-
         {
           href: "",
-          title: "Subscription",
+          title: t("navigation.subscription"),
           icon: {
             element: "font-awesome-icon",
             class: "p-1 bg-info",
@@ -250,7 +246,7 @@ export default {
           child: [
             {
               href: "/subscription",
-              title: "Subscriptions",
+              title: t("navigation.subscriptions"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -261,7 +257,7 @@ export default {
             },
             {
               href: "/subscription/add",
-              title: "Add Subscription",
+              title: t("navigation.addSubscription"),
               icon: {
                 element: "font-awesome-icon",
                 class: "text-info bg-transparent",
@@ -272,158 +268,135 @@ export default {
             },
           ],
         },
-       {
-          href:'',
-          title:'Installment Plan ',
-          icon:{
-            element:'font-awesome-icon',
-            class:'p-1 bg-info',
-            attributes:{
-              icon:'clipboard'
-            }
-          },
-          child:[
-            {
-              href:'/installmentPlan',
-              title:'Installment Plans',
-              icon :{
-                  element:'font-awesome-icon',
-                  class:"text-info bg-transparent",
-                  attributes:{
-                      icon:'clipboard'
-              }
-            }
-            },
-            {
-              href:'/installment',
-              title:'Installments',
-              icon :{
-                  element:'font-awesome-icon',
-                  class:"text-info bg-transparent",
-                  attributes:{
-                      icon:'clipboard'
-              }
-            }
-            },
-            {
-              href:'/installmentPlan/add',
-              title:'Add Installment Plan',
-              icon :{
-                  element:'font-awesome-icon',
-                  class:"text-info bg-transparent",
-                  attributes:{
-                      icon:'plus'
-              }
-            }
-          }
-          ]
-
-
-        },
-         {
-          href:'',
-          title:'Operation', 
-          icon:{
-            element:'font-awesome-icon',
-            class:'p-1 bg-info',
-            attributes:{
-              icon:'exchange-alt'
-            }
-          },
-          child:[
-            {
-              href:'/operation',
-              title:'Operations',
-              icon :{
-                  element:'font-awesome-icon',
-                  class:"text-info bg-transparent",
-                  attributes:{
-                      icon:'exchange-alt'
-              }
-            }
-            },
-            {
-              href:'/operation/add',
-              title:'Add Operation',
-              icon :{
-                  element:'font-awesome-icon',
-                  class:"text-info bg-transparent",
-                  attributes:{
-                      icon:'plus'
-              }
-            }
-            },
-         
-          ]
-
-
-        },
         {
-          href : "",
-          title : "Inquiry",
-          icon : {
-            element : "font-awesome-icon",
-            class : "p-1 bg-info",
-            attributes : {
-              icon : "search"
-        }
-      },
-          child : [
-            {
-              href : "/freezingInquiry",
-              title : "Freezing Inquiry",
-              icon : {
-                element : "font-awesome-icon",
-                class : "text-info bg-transparent",
-                attributes : {
-                  icon : "snowflake"
-                }
-              }
+          href: "",
+          title: t("navigation.installmentPlan"),
+          icon: {
+            element: "font-awesome-icon",
+            class: "p-1 bg-info",
+            attributes: {
+              icon: "clipboard",
             },
+          },
+          child: [
             {
-              href : "/forceClosureInquiry",
-              title : "Force Closure Inquiry",
-              icon : {
-                element : "font-awesome-icon",
-                class : "text-info bg-transparent",
-                attributes : {
-                  icon : "unlock-alt"
-                }
+              href: "/installmentPlan",
+              title: t("navigation.installmentPlans"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "clipboard",
+                },
               },
             },
-              {
-                href : "/rescheduleInquiry",
-                title : "Reschedule Inquiry",
-                icon : {
-                  element : "font-awesome-icon",
-                  class : "text-info bg-transparent",
-                  attributes : {
-                    icon : "tv"
-                  }
-                }
-              }
-            
-          ]
-        }
-      
-      
-      ],
-    };
-  },
-
-  async created (){
-    const user = await getUser();
-    this.connectedUserName = user ? (user.name || user.nickname || user.email) : "";
-  },
-  methods: {
-    changeLang(newLang) {
-      this.$store.commit("updateLocale", newLang);
+            {
+              href: "/installment",
+              title: t("navigation.installments"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "clipboard",
+                },
+              },
+            },
+            {
+              href: "/installmentPlan/add",
+              title: t("navigation.addInstallmentPlan"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "plus",
+                },
+              },
+            },
+          ],
+        },
+        {
+          href: "",
+          title: t("navigation.operation"),
+          icon: {
+            element: "font-awesome-icon",
+            class: "p-1 bg-info",
+            attributes: {
+              icon: "exchange-alt",
+            },
+          },
+          child: [
+            {
+              href: "/operation",
+              title: t("navigation.operations"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "exchange-alt",
+                },
+              },
+            },
+            {
+              href: "/operation/add",
+              title: t("navigation.addOperation"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "plus",
+                },
+              },
+            },
+          ],
+        },
+        {
+          href: "",
+          title: t("navigation.inquiry"),
+          icon: {
+            element: "font-awesome-icon",
+            class: "p-1 bg-info",
+            attributes: {
+              icon: "search",
+            },
+          },
+          child: [
+            {
+              href: "/freezingInquiry",
+              title: t("navigation.freezingInquiry"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "snowflake",
+                },
+              },
+            },
+            {
+              href: "/forceClosureInquiry",
+              title: t("navigation.forceClosureInquiry"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "unlock-alt",
+                },
+              },
+            },
+            {
+              href: "/rescheduleInquiry",
+              title: t("navigation.rescheduleInquiry"),
+              icon: {
+                element: "font-awesome-icon",
+                class: "text-info bg-transparent",
+                attributes: {
+                  icon: "tv",
+                },
+              },
+            },
+          ],
+        },
+      ];
     },
-    signOut(){
-      logout();
-    }
-  },
-  computed: {
     minimize() {
       return this.$store.state["nxpPluginStore"].sidebarMinimize;
     },
@@ -436,6 +409,19 @@ export default {
         this.$store.dispatch("changeLocale", newValue);
       },
     },
+  },
+
+  async created (){
+    const user = await getUser();
+    this.connectedUserName = user ? (user.name || user.nickname || user.email) : "";
+  },
+  methods: {
+    changeLang(newLang) {
+      this.$store.dispatch("changeLocale", newLang);
+    },
+    signOut(){
+      logout();
+    }
   },
 
 }

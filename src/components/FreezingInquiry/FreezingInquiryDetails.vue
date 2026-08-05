@@ -11,7 +11,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Freezing Inquiry Details"
+      :title="$t('freezing-inquiry-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard
@@ -37,12 +37,12 @@
                 <font-awesome-icon
                   icon="credit-card"
                   class="mr-2"
-                />Informations générales
+                />{{ $t('common.generalInformation') }}
               </h5>
               <hr />
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Numéro de carte :</label>
+              <label class="font-weight-bold">{{ $t('form.cardNumber') }} :</label>
               <p>{{ freezingInquiry.cardNumber || "-" }}</p>
             </b-col>
             <b-col sm="6">
@@ -55,31 +55,33 @@
                 <font-awesome-icon
                   icon="exchange-alt"
                   class="mr-2"
-                />Transaction
+                />{{ $t('common.transactionDetail') }}
               </h5>
               <hr />
             </b-col>
             <b-col sm="12">
-              <label class="font-weight-bold">Transaction Detail :</label>
+              <label class="font-weight-bold">{{ $t('common.transactionDetail') }} :</label>
               <p>{{ freezingInquiry.transactionDetail || "-" }}</p>
             </b-col>
 
             <b-col sm="12">
               <h5 class="mt-3">
-                <font-awesome-icon icon="snowflake" class="mr-2" />Freezing
+                <font-awesome-icon icon="snowflake" class="mr-2" />{{
+                  $t('common.freezingFee')
+                }}
               </h5>
               <hr />
             </b-col>
             <b-col sm="4">
-              <label class="font-weight-bold">Outstanding Amount :</label>
+              <label class="font-weight-bold">{{ $t('common.outstandingAmount') }} :</label>
               <p>{{ formatAmount(freezingInquiry.outstandingAmount) }}</p>
             </b-col>
             <b-col sm="4">
-              <label class="font-weight-bold">Freezing Fee :</label>
+              <label class="font-weight-bold">{{ $t('common.freezingFee') }} :</label>
               <p>{{ formatAmount(freezingInquiry.freezingFee) }}</p>
             </b-col>
             <b-col sm="4">
-              <label class="font-weight-bold">Freezing Period :</label>
+              <label class="font-weight-bold">{{ $t('common.freezingPeriod') }} :</label>
               <p>
                 {{
                   freezingInquiry.freezingPeriod
@@ -106,7 +108,7 @@ export default {
       tabs: [
         {
           name: "recapitulatif",
-          title: "Recapitulatif",
+          title: this.$t('common.summary'),
           icon: "ti ti-clipboard",
         },
       ],

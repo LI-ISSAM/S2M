@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'institutions', to: '/institution'},{text: 'add'}]" class="mt-0"/>
 
-  <nxp-main-container icon="plus" title="Add Institution" body-bg-variant="white">
+  <nxp-main-container icon="plus" :title="$t('institution-space.add-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    shape="tab"

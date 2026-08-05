@@ -6,7 +6,7 @@
       class="mt-0"
     />
 
-    <nxp-main-container icon="tv" title="Card Details" body-bg-variant="white">
+    <nxp-main-container icon="tv" :title="$t('card-space.details-button')" body-bg-variant="white">
       <nxp-form-wizard
         :start-index="0"
         class="mx-4"

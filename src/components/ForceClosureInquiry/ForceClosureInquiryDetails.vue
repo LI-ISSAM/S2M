@@ -11,7 +11,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Force Closure Inquiry Details"
+      :title="$t('force-closure-inquiry-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard
@@ -37,12 +37,12 @@
                 <font-awesome-icon
                   icon="credit-card"
                   class="mr-2"
-                />Informations générales
+                />{{ $t('common.generalInformation') }}
               </h5>
               <hr />
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Numéro de carte :</label>
+              <label class="font-weight-bold">{{ $t('form.cardNumber') }} :</label>
               <p>{{ forceClosureInquiry.cardNumber || "-" }}</p>
             </b-col>
             <b-col sm="6">
@@ -52,16 +52,18 @@
 
             <b-col sm="12">
               <h5 class="mt-3">
-                <font-awesome-icon icon="wallet" class="mr-2" />Montants
+                <font-awesome-icon icon="wallet" class="mr-2" />{{
+                  $t('common.amount')
+                }}
               </h5>
               <hr />
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Outstanding Amount :</label>
+              <label class="font-weight-bold">{{ $t('common.outstandingAmount') }} :</label>
               <p>{{ formatAmount(forceClosureInquiry.outstandingAmount) }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Force Closure Fee :</label>
+              <label class="font-weight-bold">{{ $t('common.forceClosureFee') }} :</label>
               <p>{{ formatAmount(forceClosureInquiry.forceClosureFee) }}</p>
             </b-col>
           </b-row>
@@ -82,7 +84,7 @@ export default {
       tabs: [
         {
           name: "recapitulatif",
-          title: "Recapitulatif",
+          title: this.$t('common.summary'),
           icon: "ti ti-clipboard",
         },
       ],

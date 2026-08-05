@@ -8,7 +8,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Customer Details"
+      :title="$t('customer-space.details-button')"
       body-bg-variant="white"
     >
       <b-card class="mx-4">

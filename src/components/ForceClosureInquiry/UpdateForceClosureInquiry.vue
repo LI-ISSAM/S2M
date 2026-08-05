@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'force closure inquiry', to: '/forceClosureInquiry'},{text: 'update'}]" class="mt-0"/>
 
-  <nxp-main-container icon="edit" title="Update Force Closure Inquiry" body-bg-variant="white">
+  <nxp-main-container icon="edit" :title="$t('force-closure-inquiry-space.update-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    shape="tab"

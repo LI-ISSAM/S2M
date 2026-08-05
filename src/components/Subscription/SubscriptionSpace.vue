@@ -5,11 +5,10 @@
       :items="[{ text: 'subscriptions', to: '/subscription' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="id-card" title="Subscription ">
+    <nxp-main-container icon="id-card" :title="$t('subscription-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('subscription/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter une nouvelle
-          souscription
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('subscription-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -17,11 +16,11 @@
         <b-row class="align-items-end">
           <b-col sm="8">
             <nxp-input
-              label="Email :"
+              :label="$t('common.email') + ' : '"
               v-model="filters.email"
               id="search-email"
               type="text"
-              placeholder="Rechercher par email de client"
+              :placeholder="$t('common.search') + ' ' + $t('common.email')"
               @keyup.enter="onSearch"
             />
           </b-col>
@@ -33,7 +32,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -42,7 +41,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -130,55 +129,55 @@ export default {
       return [
         {
           key: "id",
-          label: "id",
+          label: this.$t('subscription-space.table-headers.id'),
           sortable: true,
           selected: true,
         },
         {
           key: "customerId",
-          label: "Customer",
+          label: this.$t('subscription-space.table-headers.customerId'),
           selected: true,
           sortable: true,
         },
         {
           key: "customerEmail",
-          label: "Email",
+          label: this.$t('subscription-space.table-headers.customerEmail'),
           selected: true,
           sortable: true,
         },
         {
           key: "programId",
-          label: "Program",
+          label: this.$t('subscription-space.table-headers.programId'),
           selected: true,
           sortable: true,
         },
         {
           key: "offerId",
-          label: "Offer",
+          label: this.$t('subscription-space.table-headers.offerId'),
           selected: true,
           sortable: true,
         },
         {
           key: "mode",
-          label: "Mode",
+          label: this.$t('subscription-space.table-headers.mode'),
           selected: true,
           sortable: true,
         },
         {
           key: "subscriptionDate",
-          label: "Subscription Date",
+          label: this.$t('subscription-space.table-headers.subscriptionDate'),
           selected: true,
           sortable: true,
         },
         {
           key: "status",
-          label: "Status",
+          label: this.$t('subscription-space.table-headers.status'),
           selected: true,
           sortable: true,
         },
         {
           key: "actions",
-          label: "Actions",
+          label: this.$t('subscription-space.table-headers.actions'),
           selected: true,
         },
       ];
@@ -189,21 +188,21 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t('common.details'),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t('common.update'),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t('common.delete'),
           actionEvent: "deleteEvent",
         },
       ];

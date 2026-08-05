@@ -5,11 +5,10 @@
       :items="[{ text: 'offers', to: '/offer' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="tags" title="Offer ">
+    <nxp-main-container icon="tags" :title="$t('offer-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('offer/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter une nouvelle
-          offre
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('offer-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -17,11 +16,11 @@
         <b-row class="align-items-end">
           <b-col sm="8">
             <nxp-input
-              label="Nom :"
+              :label="$t('common.name') + ' : '"
               v-model="filters.name"
               id="search-name"
               type="text"
-              placeholder="Entrez le nom de l'offre"
+              :placeholder="$t('common.search') + ' ' + $t('common.name')"
               @keyup.enter="onSearch"
             />
           </b-col>
@@ -33,7 +32,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -42,7 +41,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -67,7 +66,7 @@
         @export="exportData"
         :showHeadersWhenFilters="true"
       >
-        >
+        
         <template #cell(status)="data">
           <b-badge :variant="getBadge(data.value)">
             {{ data.value }}
@@ -111,44 +110,44 @@ export default {
       return [
         {
           key: "id",
-          label: "id",
+          label: this.$t('offer-space.table-headers.id'),
           sortable: true,
           selected: true,
         },
         {
           key: "name",
-          label: "name",
+          label: this.$t('offer-space.table-headers.name'),
           sortable: true,
           selected: true,
         },
         {
           key: "programId",
-          label: "program",
+          label: this.$t('offer-space.table-headers.programId'),
           selected: true,
           sortable: true,
         },
         {
           key: "numberOfInstallments",
-          label: "installments",
+          label: this.$t('offer-space.table-headers.numberOfInstallments'),
           selected: true,
           sortable: true,
         },
         {
           key: "startDate",
-          label: "start date",
+          label: this.$t('offer-space.table-headers.startDate'),
           selected: true,
           sortable: true,
         },
 
         {
           key: "status",
-          label: "status",
+          label: this.$t('offer-space.table-headers.status'),
           selected: true,
           sortable: true,
         },
         {
           key: "actions",
-          label: "actions",
+          label: this.$t('offer-space.table-headers.actions'),
           selected: true,
         },
       ];
@@ -159,21 +158,21 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t('common.details'),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t('common.update'),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t('common.delete'),
           actionEvent: "deleteEvent",
         },
       ];

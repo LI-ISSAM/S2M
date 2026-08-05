@@ -5,11 +5,10 @@
       :items="[{ text: 'customers', to: '/customer' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="user-friends" title="Customer ">
+    <nxp-main-container icon="user-friends" :title="$t('customer-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('customer/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter un nouveau
-          client
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('customer-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -17,7 +16,7 @@
         <b-row class="align-items-end">
           <b-col sm="3">
             <nxp-input
-              label="Rechercher par :"
+              :label="$t('common.searchBy')"
               v-model="filters.field"
               id="search-field"
               type="select"
@@ -44,7 +43,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -53,7 +52,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -122,93 +121,93 @@ export default {
       return [
         {
           key: "id",
-          label: "id",
+          label: this.$t("customer-space.table-headers.id"),
           sortable: true,
           selected: true,
         },
         {
           key: "identityFile",
-          label: "Photo",
+          label: this.$t("customer-space.table-headers.identityFile"),
           selected: true,
           type: "img",
         },
         {
           key: "clientId",
-          label: "Client Id",
+          label: this.$t("customer-space.table-headers.clientId"),
           sortable: true,
           selected: true,
         },
         {
           key: "firstName",
-          label: "First Name",
+          label: this.$t("customer-space.table-headers.firstName"),
           sortable: true,
           selected: true,
         },
         {
           key: "lastName",
-          label: "Last Name",
+          label: this.$t("customer-space.table-headers.lastName"),
           sortable: true,
           selected: true,
         },
         {
           key: "email",
-          label: "Email",
+          label: this.$t("customer-space.table-headers.email"),
           sortable: true,
           selected: true,
         },
         {
           key: "phoneNumber",
-          label: "Phone",
+          label: this.$t("customer-space.table-headers.phoneNumber"),
           selected: true,
           sortable: true,
         },
         {
           key: "bank",
-          label: "Bank",
+          label: this.$t("customer-space.table-headers.bank"),
           selected: true,
           sortable: true,
         },
         {
           key: "branch",
-          label: "Branch",
+          label: this.$t("customer-space.table-headers.branch"),
           selected: true,
           sortable: true,
         },
         {
           key: "vipCategory",
-          label: "VIP Category",
+          label: this.$t("customer-space.table-headers.vipCategory"),
           selected: true,
           sortable: true,
         },
         {
           key: "status",
-          label: "Status",
+          label: this.$t("customer-space.table-headers.status"),
           selected: true,
           sortable: true,
         },
         {
           key: "actions",
-          label: "Actions",
+          label: this.$t("customer-space.table-headers.actions"),
           selected: true,
         },
       ];
     },
     searchFields() {
       return [
-        { id: "lastName", label: "Last Name" },
-        { id: "email", label: "Email" },
+        { id: "lastName", label: this.$t('customer-space.table-headers.lastName') },
+        { id: "email", label: this.$t('common.email') },
       ];
     },
     searchLabel() {
       const found = this.searchFields.find((f) => f.id === this.filters.field);
-      return found ? found.label + " :" : "Search :";
+      return found ? found.label + " :" : this.$t('common.search') + ' :';
     },
     searchPlaceholder() {
       switch (this.filters.field) {
         case "email":
-          return "Enter customer's email";
+          return this.$t('common.search') + ' ' + this.$t('common.email');
         default:
-          return "Enter customer's last name";
+          return this.$t('common.search') + ' ' + this.$t('customer-space.table-headers.lastName');
       }
     },
     place() {
@@ -220,21 +219,21 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t('common.details'),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t('common.update'),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t('common.delete'),
           actionEvent: "deleteEvent",
         },
       ];

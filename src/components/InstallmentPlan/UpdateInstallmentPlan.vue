@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'installment-plans', to: '/installment-plan'},{text: 'update'}]" class="mt-0"/>
 
-  <nxp-main-container icon="edit" title="Update Installment Plan" body-bg-variant="white">
+  <nxp-main-container icon="edit" :title="$t('installment-plan-space.update-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    shape="tab"

@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'teams', to: '/team'},{text: 'update'}]" class="mt-0"/>
 
-  <nxp-main-container icon="edit" title="Update Team" body-bg-variant="white">
+  <nxp-main-container icon="edit" :title="$t('team-space.update-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    color="#555"

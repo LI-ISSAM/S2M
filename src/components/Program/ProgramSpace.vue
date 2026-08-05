@@ -5,10 +5,10 @@
       :items="[{ text: 'programs', to: '/program' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="folder" title="Program ">
+    <nxp-main-container icon="folder" :title="$t('program-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('program/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter un nouveau
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('program-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -20,7 +20,7 @@
               v-model="filters.name"
               id="search-name"
               type="text"
-              placeholder="Entrez le nom du programme"
+              :placeholder="$t('common.search') + ' ' + $t('common.name')"
               @keyup.enter="onSearch"
             />
           </b-col>
@@ -114,38 +114,37 @@ export default {
       return [
         {
           key: "id",
-          label: "id",
+          label: this.$t("program-space.table-headers.id"),
           sortable: true,
           selected: true,
         },
         {
           key: "name",
-          label: "Name",
+          label: this.$t("program-space.table-headers.name"),
           sortable: true,
           selected: true,
         },
         {
           key: "institutionId",
-          label: "Institution",
-
+          label: this.$t("program-space.table-headers.institutionId"),
           selected: true,
           sortable: true,
         },
         {
           key: "type",
-          label: "Type",
+          label: this.$t("program-space.table-headers.type"),
           selected: true,
           sortable: true,
         },
         {
           key: "status",
-          label: "Status",
+          label: this.$t("program-space.table-headers.status"),
           selected: true,
           sortable: true,
         },
         {
           key: "actions",
-          label: "Actions",
+          label: this.$t("program-space.table-headers.actions"),
           selected: true,
         },
       ];
@@ -156,21 +155,21 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t("common.details"),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t("common.update"),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t("common.delete"),
           actionEvent: "deleteEvent",
         },
       ];

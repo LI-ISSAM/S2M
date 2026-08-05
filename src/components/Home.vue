@@ -1,44 +1,62 @@
 <template>
   <div>
-    <nxp-bread-crumb id="bread-crumb" :items="paths" class="mt-0" />
+    <nxp-bread-crumb
+      id="bread-crumb"
+      :items="paths"
+      class="mt-0"
+    />
 
     <nxp-main-container
       id="dashboard-main-container"
-      title="Dashboard"
+      :title="$t('dashboard.title')"
       icon="tachometer-alt"
     >
       <template #add-button>
         <font-awesome-icon
           class="mt-3"
           icon="sync-alt"
-          style="font-size: 20px; cursor: pointer"
+          style="font-size:20px;cursor:pointer"
           @click="loadCounts"
         />
       </template>
 
       <b-row class="mb-3 mt-3">
+        <!-- Overview -->
         <b-col class="col-7">
           <b-card class="appshadow">
-            <template #header class="bg-light">
+            <template #header>
               <b-col lg="8">
-                <i class="fa fa-stream fa-md mr-4" /> Vue d'ensemble
+                <i class="fa fa-stream fa-md mr-4" />
+                {{ $t("dashboard.overview") }}
               </b-col>
             </template>
+
             <b-card-body>
               <b-row>
-                <b-col class="col-6 my-2" v-for="i in items" :key="i.id">
+                <b-col
+                  v-for="i in items"
+                  :key="i.id"
+                  class="col-6 my-2"
+                >
                   <div :class="`card bg-${i.color} text-white`">
                     <div class="card-body py-4 d-flex justify-content-between">
                       <div>
                         <div class="text-value-lg">
-                          <b-spinner v-if="isLoading" small />
-                          <span v-else>{{ i.header }}</span>
+                          <b-spinner
+                            v-if="isLoading"
+                            small
+                          />
+                          <span v-else>
+                            {{ i.header }}
+                          </span>
                         </div>
+
                         <div>{{ i.text }}</div>
                       </div>
+
                       <font-awesome-icon
-                        class="mx-4 mt-3 fa-lg"
                         :icon="i.icon"
+                        class="mx-4 mt-3 fa-lg"
                       />
                     </div>
                   </div>
@@ -48,89 +66,83 @@
           </b-card>
         </b-col>
 
+        <!-- Quick Access -->
         <b-col class="col-5">
           <b-card class="appshadow">
-            <template #header class="bg-light">
+            <template #header>
               <b-col lg="8">
-                <i class="fa fa-chart-area fa-md mr-4" /> Accès rapides
+                <i class="fa fa-chart-area fa-md mr-4" />
+                {{ $t("dashboard.quickAccess") }}
               </b-col>
             </template>
 
-            <b-card-body class="pt-2 pb-3" style="border-left: 5px solid gray">
-              <b-list-group :flush="true">
-                <b-list-group-item @click="$router.push('/customer')" href="#">
+            <b-card-body
+              class="pt-2 pb-3"
+              style="border-left:5px solid gray"
+            >
+              <b-list-group flush>
+
+                <b-list-group-item @click="$router.push('/customer')">
                   <i class="mr-3 fa fa-user-friends fa-lg" />
-                  <span>Customers</span>
+                  <span>{{ $t("navigation.customers") }}</span>
                 </b-list-group-item>
-                <b-list-group-item @click="$router.push('/program')" href="#">
+
+                <b-list-group-item @click="$router.push('/program')">
                   <i class="mr-3 fa fa-th-large fa-lg" />
-                  <span>Programs</span>
+                  <span>{{ $t("navigation.programs") }}</span>
                 </b-list-group-item>
-                <b-list-group-item
-                  @click="$router.push('/subscription')"
-                  href="#"
-                >
+
+                <b-list-group-item @click="$router.push('/subscription')">
                   <i class="mr-3 fa fa-id-card fa-lg" />
-                  <span>Subscriptions</span>
+                  <span>{{ $t("navigation.subscriptions") }}</span>
                 </b-list-group-item>
-                <b-list-group-item
-                  @click="$router.push('/institution')"
-                  href="#"
-                >
+
+                <b-list-group-item @click="$router.push('/institution')">
                   <i class="mr-3 fa fa-university fa-lg" />
-                  <span>Institutions</span>
+                  <span>{{ $t("navigation.institutions") }}</span>
                 </b-list-group-item>
-                <b-list-group-item @click="$router.push('/offer')" href="#">
+
+                <b-list-group-item @click="$router.push('/offer')">
                   <i class="mr-3 fa fa-tags fa-lg" />
-                  <span>Offers</span>
+                  <span>{{ $t("navigation.offers") }}</span>
                 </b-list-group-item>
+
+                <b-list-group-item @click="$router.push('/merchant')">
+                  <i class="mr-3 fa fa-store fa-lg" />
+                  <span>{{ $t("navigation.merchants") }}</span>
+                </b-list-group-item>
+
+                <b-list-group-item @click="$router.push('/installmentPlan')">
+                  <i class="mr-3 fa fa-calendar-alt fa-lg" />
+                  <span>{{ $t("navigation.installmentPlans") }}</span>
+                </b-list-group-item>
+
+                <b-list-group-item @click="$router.push('/installment')">
+                  <i class="mr-3 fa fa-money-check-alt fa-lg" />
+                  <span>{{ $t("navigation.installments") }}</span>
+                </b-list-group-item>
+
+                <b-list-group-item @click="$router.push('/operation')">
+                  <i class="mr-3 fa fa-exchange-alt fa-lg" />
+                  <span>{{ $t("navigation.operations") }}</span>
+                </b-list-group-item>
+
+                <b-list-group-item @click="$router.push('/forceClosureInquiry')">
+                  <i class="mr-3 fa fa-lock fa-lg" />
+                  <span>{{ $t("navigation.forceClosureInquiry") }}</span>
+                </b-list-group-item>
+
+                <b-list-group-item @click="$router.push('/rescheduleInquiry')">
+                  <i class="mr-3 fa fa-calendar fa-lg" />
+                  <span>{{ $t("navigation.rescheduleInquiry") }}</span>
+                </b-list-group-item>
+
+                <b-list-group-item @click="$router.push('/freezingInquiry')">
+                  <i class="mr-3 fa fa-snowflake fa-lg" />
+                  <span>{{ $t("navigation.freezingInquiry") }}</span>
+                </b-list-group-item>
+
               </b-list-group>
-              <b-list-group-item @click="$router.push('/merchant')" href="#">
-                <i class="mr-3 fa fa-store fa-lg" />
-                <span>Merchants</span>
-              </b-list-group-item>
-
-              <b-list-group-item
-                @click="$router.push('/installmentPlan')"
-                href="#"
-              >
-                <i class="mr-3 fa fa-calendar-alt fa-lg" />
-                <span>Installment Plans</span>
-              </b-list-group-item>
-
-              <b-list-group-item @click="$router.push('/installment')" href="#">
-                <i class="mr-3 fa fa-money-check-alt fa-lg" />
-                <span>Installments</span>
-              </b-list-group-item>
-
-              <b-list-group-item @click="$router.push('/operation')" href="#">
-                <i class="mr-3 fa fa-exchange-alt fa-lg" />
-                <span>Operations</span>
-              </b-list-group-item>
-
-              <b-list-group-item
-                @click="$router.push('/forceClosureInquiry')"
-                href="#"
-              >
-                <i class="mr-3 fa fa-lock fa-lg" />
-                <span>Force Closure Inquiry</span>
-              </b-list-group-item>
-
-              <b-list-group-item
-                @click="$router.push('/rescheduleInquiry')"
-                href="#"
-              >
-                <i class="mr-3 fa fa-desktop fa-lg" />
-                <span>Reschedule Inquiry</span>
-              </b-list-group-item>
-
-              <b-list-group-item
-                @click="$router.push('/freezingInquiry')"
-                href="#"
-              >
-                <i class="mr-3 fa fa-snowflake fa-lg" />
-                <span>Freezing Inquiry</span>
-              </b-list-group-item>
             </b-card-body>
           </b-card>
         </b-col>
@@ -138,7 +150,6 @@
     </nxp-main-container>
   </div>
 </template>
-
 <script>
 import CustomerService from "@/services/customer/CustomerService";
 import ProgramService from "@/services/program/ProgramService";
@@ -155,6 +166,7 @@ import FreezingInquiryService from "@/services/freezingInquiry/FreezingInquirySe
 
 export default {
   name: "Dashboard",
+
   data() {
     return {
       isLoading: true,
@@ -174,104 +186,110 @@ export default {
       },
     };
   },
+
   computed: {
     paths() {
-      return [{ text: "dashboard", to: "/" }, { text: "" }];
+      return [
+        { text: this.$t("dashboard.title"), to: "/" },
+        { text: "" },
+      ];
     },
+
     items() {
       return [
         {
           id: 1,
           color: "info",
           header: this.counts.customers,
-          text: "Customers",
+          text: this.$t("navigation.customers"),
           icon: "user",
         },
         {
           id: 2,
           color: "secondary",
           header: this.counts.programs,
-          text: "Programs",
+          text: this.$t("navigation.programs"),
           icon: "list",
         },
         {
           id: 3,
           color: "secondary",
           header: this.counts.subscriptions,
-          text: "Subscriptions",
+          text: this.$t("navigation.subscriptions"),
           icon: "credit-card",
         },
         {
           id: 4,
           color: "info",
           header: this.counts.institutions,
-          text: "Institutions",
+          text: this.$t("navigation.institutions"),
           icon: "university",
         },
         {
           id: 5,
           color: "secondary",
           header: this.counts.offers,
-          text: "Offers",
-          icon: "cogs",
+          text: this.$t("navigation.offers"),
+          icon: "tags",
         },
         {
           id: 6,
           color: "secondary",
           header: this.counts.merchants,
-          text: "Merchants",
+          text: this.$t("navigation.merchants"),
           icon: "store",
         },
         {
           id: 7,
           color: "info",
           header: this.counts.installmentPlans,
-          text: "Installment Plans",
-          icon: "clipboard",
+          text: this.$t("navigation.installmentPlans"),
+          icon: "calendar-alt",
         },
         {
           id: 8,
           color: "secondary",
           header: this.counts.installments,
-          text: "Installments",
-          icon: "clipboard",
+          text: this.$t("navigation.installments"),
+          icon: "money-check-alt",
         },
         {
           id: 9,
           color: "info",
           header: this.counts.operations,
-          text: "Operations",
+          text: this.$t("navigation.operations"),
           icon: "exchange-alt",
         },
         {
           id: 10,
           color: "secondary",
           header: this.counts.forceClosureInquiries,
-          text: "Force Closure Inquiry",
+          text: this.$t("navigation.forceClosureInquiry"),
           icon: "lock",
         },
         {
           id: 11,
           color: "info",
           header: this.counts.rescheduleInquiries,
-          text: "Reschedule Inquiry",
-          icon: "desktop",
+          text: this.$t("navigation.rescheduleInquiry"),
+          icon: "calendar",
         },
         {
           id: 12,
           color: "secondary",
           header: this.counts.freezingInquiries,
-          text: "Freezing Inquiry",
+          text: this.$t("navigation.freezingInquiry"),
           icon: "snowflake",
         },
       ];
     },
   },
+
   mounted() {
     this.loadCounts();
   },
+
   methods: {
-    // On demande _limit=1 : on ne veut pas la liste, juste le X-Total-Count
     loadCounts() {
       this.isLoading = true;
 
@@ -289,46 +307,37 @@ export default {
         RescheduleInquiryService.getRescheduleInquiries(1, 1, ""),
         FreezingInquiryService.getFreezingInquiries(1, 1, ""),
       ])
-        .then(
-          ([
-            customersRes,
-            programsRes,
-            subscriptionsRes,
-            institutionsRes,
-            offersRes,
-            merchantsRes,
-            installmentPlansRes,
-            installmentsRes,
-            operationsRes,
-            forceClosureInquiriesRes,
-            rescheduleInquiriesRes,
-            freezingInquiriesRes,
-          ]) => {
-            this.counts = {
-              customers: parseInt(customersRes.headers["x-total-count"]) || 0,
-              programs: parseInt(programsRes.headers["x-total-count"]) || 0,
-              subscriptions:
-                parseInt(subscriptionsRes.headers["x-total-count"]) || 0,
-              institutions:
-                parseInt(institutionsRes.headers["x-total-count"]) || 0,
-              offers: parseInt(offersRes.headers["x-total-count"]) || 0,
-              merchants: parseInt(merchantsRes.headers["x-total-count"]) || 0,
-              installmentPlans:
-                parseInt(installmentPlansRes.headers["x-total-count"]) || 0,
-              installments:
-                parseInt(installmentsRes.headers["x-total-count"]) || 0,
-              operations: parseInt(operationsRes.headers["x-total-count"]) || 0,
-              forceClosureInquiries:
-                parseInt(forceClosureInquiriesRes.headers["x-total-count"]) ||
-                0,
-              rescheduleInquiries:
-                parseInt(rescheduleInquiriesRes.headers["x-total-count"]) || 0,
-              freezingInquiries:
-                parseInt(freezingInquiriesRes.headers["x-total-count"]) || 0,
-            };
-            this.isLoading = false;
-          },
-        )
+        .then(([
+          customersRes,
+          programsRes,
+          subscriptionsRes,
+          institutionsRes,
+          offersRes,
+          merchantsRes,
+          installmentPlansRes,
+          installmentsRes,
+          operationsRes,
+          forceClosureInquiriesRes,
+          rescheduleInquiriesRes,
+          freezingInquiriesRes,
+        ]) => {
+          this.counts = {
+            customers: parseInt(customersRes.headers["x-total-count"]) || 0,
+            programs: parseInt(programsRes.headers["x-total-count"]) || 0,
+            subscriptions: parseInt(subscriptionsRes.headers["x-total-count"]) || 0,
+            institutions: parseInt(institutionsRes.headers["x-total-count"]) || 0,
+            offers: parseInt(offersRes.headers["x-total-count"]) || 0,
+            merchants: parseInt(merchantsRes.headers["x-total-count"]) || 0,
+            installmentPlans: parseInt(installmentPlansRes.headers["x-total-count"]) || 0,
+            installments: parseInt(installmentsRes.headers["x-total-count"]) || 0,
+            operations: parseInt(operationsRes.headers["x-total-count"]) || 0,
+            forceClosureInquiries: parseInt(forceClosureInquiriesRes.headers["x-total-count"]) || 0,
+            rescheduleInquiries: parseInt(rescheduleInquiriesRes.headers["x-total-count"]) || 0,
+            freezingInquiries: parseInt(freezingInquiriesRes.headers["x-total-count"]) || 0,
+          };
+
+          this.isLoading = false;
+        })
         .catch(() => {
           this.isLoading = false;
         });
@@ -336,5 +345,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

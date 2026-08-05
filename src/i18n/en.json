@@ -1,33 +1,381 @@
 {
+  "dashboard": {
+  "title": "Dashboard",
+  "overview": "Overview",
+  "quickAccess": "Quick Access"
+},
   "common": {
     "search": "Search",
-    "reset": "Reset"
+    "reset": "Reset",
+    "searchBy": "Search by :",
+    "add": "Add",
+    "addNew": "Add new",
+    "details": "Details",
+    "update": "Update",
+    "delete": "Delete",
+    "actions": "Actions",
+    "status": "Status",
+    "id": "ID",
+    "name": "Name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "bank": "Bank",
+    "branch": "Branch",
+    "reference": "Reference",
+    "type": "Type",
+    "image": "Image",
+    "logo": "Logo",
+    "customer": "Customer",
+    "product": "Product",
+    "operation": "Operation",
+    "program": "Program",
+    "institution": "Institution",
+    "offer": "Offer",
+    "merchant": "Merchant",
+    "team": "Team",
+    "card": "Card",
+    "subscription": "Subscription",
+    "installment": "Installment",
+    "installmentPlan": "Installment Plan",
+    "inquiry": "Inquiry",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "dueDate": "Due Date",
+    "amount": "Amount",
+    "totalAmount": "Total Amount",
+    "installments": "Installments",
+    "startDate": "Start Date",
+    "outstandingAmount": "Outstanding Amount",
+    "forceClosureFee": "Force Closure Fee",
+    "transactionDetail": "Transaction Detail",
+    "freezingFee": "Freezing Fee",
+    "freezingPeriod": "Freezing Period",
+    "rescheduleFee": "Reschedule Fee",
+    "generalInformation": "General information",
+    "summary": "Summary",
+    "pending": "Pending",
+    "paid": "Paid",
+    "notPaid": "Unpaid",
+    "markPaid": "Mark paid",
+    "markAsPaid": "Mark as paid",
+    "estimatedInstallmentAmount": "Estimated amount per installment",
+    "paymentTracking": "Payment tracking",
+    "loadingPaymentTracking": "Loading tracking...",
+    "noCustomerFoundForSearch": "No customer found for this search.",
+    "noPaymentPlanFoundForCustomer": "No payment plan found for this customer.",
+    "customerHasInstallmentThisMonth": "This customer already has an installment for this month",
+    "planDetected": "Plan detected",
+    "selectCustomer": "Select customer",
+    "selectStatus": "Select status",
+    "selectOffer": "Select offer",
+    "selectDueDate": "Select due date",
+    "selectStartDate": "Select start date",
+    "enterAmount": "Enter amount",
+    "enterTotalAmount": "Enter total amount",
+    "enterNumberOfInstallments": "Enter number of installments",
+    "paymentSchedulePreview": "Payment schedule preview",
+    "legacyCustomerWarning": "The customer and due date can no longer be modified after the installment is created. To indicate that the customer is paying next month, mark this installment as PAID: the next month's installment will be generated automatically.",
+    "alreadyPaidWarning": "This installment has already been paid. The next month installment is normally generated automatically, please consult the installment list for this customer.",
+    "installmentMarkedPaid": "Installment marked as paid. The next month installment was generated automatically.",
+    "general": "General"
   },
-  "user-space" : {
+  "form": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "status": "Status",
+    "statusReason": "Status Reason",
+    "statusDate": "Status Date",
+    "nameOnCard": "Name on Card",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "address": "Address",
+    "addAddress": "Add Address",
+    "addOwner": "Add Owner",
+    "addCurrency": "Add Currency",
+    "addAccount": "Add Account",
+    "addRouting": "Add Routing",
+    "addFee": "Add Fee",
+    "addCommission": "Add Commission"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "customer": "Customer",
+    "customers": "Customers",
+    "cards": "Cards",
+    "addCustomer": "Add Customer",
+    "merchant": "Merchant",
+    "merchants": "Merchants",
+    "addMerchant": "Add Merchant",
+    "onboarding": "Onboarding",
+    "institutions": "Institutions",
+    "addInstitution": "Add Institution",
+    "program": "Program",
+    "programs": "Programs",
+    "addProgram": "Add Program",
+    "settings": "Settings",
+    "offers": "Offers",
+    "addOffer": "Add Offer",
+    "subscription": "Subscription",
+    "subscriptions": "Subscriptions",
+    "addSubscription": "Add Subscription",
+    "installmentPlan": "Installment Plan",
+    "installmentPlans": "Installment Plans",
+    "installments": "Installments",
+    "addInstallmentPlan": "Add Installment Plan",
+    "operation": "Operation",
+    "operations": "Operations",
+    "addOperation": "Add Operation",
+    "inquiry": "Inquiry",
+    "freezingInquiry": "Freezing Inquiry",
+    "forceClosureInquiry": "Force Closure Inquiry",
+    "rescheduleInquiry": "Reschedule Inquiry"
+  },
+  "user-space": {
     "title": "Users Space",
-    "table-headers" : {
-      "image" : "Image",
-      "firstName" : "First Name",
-      "lastName" : "Last Name",
-      "status" : "Statut",
-      "id" : "ID",
+    "table-headers": {
+      "image": "Image",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "status": "Status",
+      "id": "ID",
       "actions": "Actions"
     },
-    "add-button" : "ADD user",
-    "update-button" : "Update user",
-    "details-button" : "User details"
+    "add-button": "Add user",
+    "update-button": "Update user",
+    "details-button": "User details"
   },
-  "team-space" : {
+  "team-space": {
     "title": "Teams Space",
-    "table-headers" : {
-      "logo" : "Logo",
-      "name" : "Name",
-      "pseudo" : "Pseudo",
-      "id" : "ID",
+    "table-headers": {
+      "logo": "Logo",
+      "name": "Name",
+      "pseudo": "Pseudo",
+      "id": "ID",
       "actions": "Actions"
     },
-    "add-button" : "ADD New Team"
+    "add-button": "Add team",
+    "update-button": "Update team",
+    "details-button": "Team details"
+  },
+  "customer-space": {
+    "title": "Customers Space",
+    "table-headers": {
+      "identityFile": "Photo",
+      "clientId": "Client ID",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phoneNumber": "Phone",
+      "bank": "Bank",
+      "branch": "Branch",
+      "vipCategory": "VIP Category",
+      "status": "Status",
+      "id": "ID",
+      "actions": "Actions"
+    },
+    "add-button": "Add customer",
+    "update-button": "Update customer",
+    "details-button": "Customer details"
+  },
+  "program-space": {
+    "title": "Programs Space",
+    "table-headers": {
+      "id": "ID",
+      "name": "Name",
+      "institutionId": "Institution",
+      "type": "Type",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "add-button": "Add program",
+    "update-button": "Update program",
+    "details-button": "Program details"
+  },
+  "operation-space": {
+    "title": "Operations Space",
+    "table-headers": {
+      "id": "ID",
+      "pan": "PAN",
+      "issuingBank": "Issuing Bank",
+      "acquiring": "Acquiring",
+      "rrn": "RRN",
+      "merchantId": "Reference",
+      "amount": "Amount",
+      "currency": "Currency",
+      "transactionTime": "Transaction Time",
+      "bnplProgramId": "BNPL Program",
+      "customerEmail": "Customer Email",
+      "numberOfInstallments": "BNPL Option",
+      "stan": "STAN",
+      "actions": "Actions"
+    },
+    "add-button": "Add operation",
+    "update-button": "Update operation",
+    "details-button": "Operation details"
+  },
+  "institution-space": {
+    "title": "Institutions Space",
+    "table-headers": {
+      "id": "ID",
+      "name": "Name",
+      "logo": "Logo",
+      "reference": "Reference",
+      "type": "Type",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "add-button": "Add institution",
+    "update-button": "Update institution",
+    "details-button": "Institution details"
+  },
+  "offer-space": {
+  "title": "Offers Space",
+  "table-headers": {
+    "id": "ID",
+    "name": "Name",
+    "programId": "Program",
+    "numberOfInstallments": "Number of Installments",
+    "startDate": "Start Date",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "add-button": "Add offer",
+  "update-button": "Update offer",
+  "details-button": "Offer details"
+},
+"merchant-space": {
+  "title": "Merchants Space",
+  "table-headers": {
+    "id": "ID",
+    "name": "Name",
+    "corporateName": "Corporate Name",
+    "reference": "Reference",
+    "mccCode": "MCC Code",
+    "institutionId": "Institution",
+    "type": "Type",
+    "branch": "Branch",
+    "paymentMode": "Payment Mode",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "add-button": "Add merchant",
+  "update-button": "Update merchant",
+  "details-button": "Merchant details"
+},
+  "card-space": {
+    "title": "Cards Space",
+    "table-headers": {
+      "id": "ID",
+      "cardNumber": "Card Number",
+      "expiryDate": "Expiry Date",
+      "nameOnCard": "Name on Card",
+      "type": "Type",
+      "status": "Status",
+      "programId": "Program",
+      "customerId": "Customer",
+      "customerEmail": "Customer Email",
+      "branch": "Branch",
+      "actions": "Actions"
+    },
+    "add-button": "Add card",
+    "update-button": "Update card",
+    "details-button": "Card details"
+  },
+  "installment-space": {
+    "title": "Installments Space",
+    "table-headers": {
+      "id": "ID",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "add-button": "Add installment",
+    "update-button": "Update installment",
+    "details-button": "Installment details"
+  },
+  "installment-plan-space": {
+    "title": "Installment Plans Space",
+    "table-headers": {
+      "id": "ID",
+      "name": "Name",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "add-button": "Add installment plan",
+    "update-button": "Update installment plan",
+    "details-button": "Installment plan details"
+  },
+  "subscription-space": {
+    "title": "Subscriptions Space",
+    "table-headers": {
+      "id": "ID",
+      "customerId": "Customer",
+      "customerEmail": "Email",
+      "programId": "Program",
+      "offerId": "Offer",
+      "mode": "Mode",
+      "subscriptionDate": "Subscription Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "add-button": "Add subscription",
+    "update-button": "Update subscription",
+    "details-button": "Subscription details"
+  },
+  "program-recommendation": {
+    "button": "Get AI recommendation",
+    "none": "No eligible program found for this customer",
+    "forAmount": "for this amount",
+    "recommended": "Recommended",
+    "fee": "Fee",
+    "limitPerTransaction": "Limit/transaction",
+    "select": "Select",
+    "selectCustomer": "Select a customer before requesting a recommendation",
+    "recommendationError": "Error while calculating the recommendation"
+  },
+  "force-closure-inquiry-space": {
+    "title": "Force Closure Inquiry Space",
+    "table-headers": {
+      "id": "ID",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "add-button": "Add force closure inquiry",
+    "update-button": "Update force closure inquiry",
+    "details-button": "Force closure inquiry details"
+  },
+  "freezing-inquiry-space": {
+  "title": "Freezing Inquiry Space",
+  "table-headers": {
+    "id": "ID",
+    "cardNumber": "Card Number",
+    "rnn": "RNN",
+    "outstandingAmount": "Outstanding Amount",
+    "transactionDetail": "Transaction Detail",
+    "freezingFee": "Freezing Fee",
+    "freezingPeriod": "Freezing Period",
+    "actions": "Actions"
+  },
+  "add-button": "Add freezing inquiry",
+  "update-button": "Update freezing inquiry",
+  "details-button": "Freezing inquiry details"
+},
+  
+  "reschedule-inquiry-space": {
+    "title": "Reschedule Inquiry Space",
+    "table-headers": {
+      "id": "ID",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "add-button": "Add reschedule inquiry",
+    "update-button": "Update reschedule inquiry",
+    "details-button": "Reschedule inquiry details"
   }
-
 }
 

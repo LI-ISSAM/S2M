@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'programs', to: '/program'},{text: 'update'}]" class="mt-0"/>
 
-  <nxp-main-container icon="edit" title="Update Program" body-bg-variant="white">
+  <nxp-main-container icon="edit" :title="$t('program-space.update-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    color="#17a2b8"

@@ -8,11 +8,10 @@
       ]"
     />
 
-    <nxp-main-container icon="calendar" title="Reschedule Inquiry">
+    <nxp-main-container icon="calendar" :title="$t('reschedule-inquiry-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('rescheduleInquiry/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter une nouvelle
-          demande
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('reschedule-inquiry-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -20,7 +19,7 @@
         <b-row class="align-items-end">
           <b-col sm="3">
             <nxp-input
-              label="Rechercher par :"
+              :label="$t('common.searchBy')"
               v-model="filters.field"
               id="search-field"
               type="select"
@@ -31,14 +30,14 @@
           </b-col>
           <b-col sm="5">
             <nxp-input
-              :label="filters.field === 'rnn' ? 'RNN :' : 'Numéro de carte :'"
+              :label="filters.field === 'rnn' ? 'RNN :' : $t('form.cardNumber') + ' :'"
               v-model="filters.value"
               id="search-value"
               type="text"
               :placeholder="
                 filters.field === 'rnn'
-                  ? 'Entrez le RNN'
-                  : 'Entrez le numéro de carte'
+                  ? $t('common.search') + ' RNN'
+                  : $t('common.search') + ' ' + $t('form.cardNumber')
               "
               @keyup.enter="onSearch"
             />
@@ -51,7 +50,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -60,7 +59,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -129,37 +128,37 @@ export default {
   computed: {
     fields() {
       return [
-        { key: "id", label: "id", sortable: true, selected: true },
+        { key: "id", label: this.$t('common.id'), sortable: true, selected: true },
         {
           key: "cardNumber",
-          label: "Card Number",
+          label: this.$t('form.cardNumber'),
           sortable: true,
           selected: true,
         },
         { key: "rnn", label: "RNN", selected: true, sortable: true },
         {
           key: "transactionDetail",
-          label: "Transaction Detail",
+          label: this.$t('common.transactionDetail'),
           selected: true,
         },
         {
           key: "rescheduleFee",
-          label: "Reschedule Fee",
+          label: this.$t('common.rescheduleFee'),
           selected: true,
           sortable: true,
         },
         {
           key: "outstandingAmount",
-          label: "Outstanding Amount",
+          label: this.$t('common.outstandingAmount'),
           selected: true,
           sortable: true,
         },
-        { key: "actions", label: "Actions", selected: true },
+        { key: "actions", label: this.$t('common.actions'), selected: true },
       ];
     },
     searchFields() {
       return [
-        { id: "cardNumber", label: "Numéro de carte" },
+        { id: "cardNumber", label: this.$t('form.cardNumber') },
         { id: "rnn", label: "RNN" },
       ];
     },
@@ -169,14 +168,14 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t('common.details'),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t('common.update'),
           actionEvent: "updateEvent",
         },
         {

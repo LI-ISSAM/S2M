@@ -5,10 +5,10 @@
       :items="[{ text: 'operations', to: '/operation' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="exchange-alt" title="Operation ">
+    <nxp-main-container icon="exchange-alt" :title="$t('operation-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('operation/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter une opération
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('operation-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -16,7 +16,7 @@
         <b-row class="align-items-end">
           <b-col sm="3">
             <nxp-input
-              label="Rechercher par :"
+              :label="$t('common.searchBy')"
               v-model="filters.field"
               id="search-field"
               type="select"
@@ -43,7 +43,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -52,7 +52,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -135,82 +135,82 @@ export default {
   computed: {
     fields() {
       return [
-        { key: "id", label: "id", sortable: true, selected: true },
-        { key: "pan", label: "PAN", selected: true, sortable: true },
+        { key: "id", label: this.$t("operation-space.table-headers.id"), sortable: true, selected: true },
+        { key: "pan", label: this.$t("operation-space.table-headers.pan"), selected: true, sortable: true },
         {
           key: "issuingBank",
-          label: "Issuing Bank",
+          label: this.$t("operation-space.table-headers.issuingBank"),
           selected: true,
           sortable: true,
         },
         {
           key: "acquiring",
-          label: "Acquiring",
+          label: this.$t("operation-space.table-headers.acquiring"),
           selected: true,
           sortable: true,
         },
-        { key: "rrn", label: "RRN", selected: true, sortable: true },
+        { key: "rrn", label: this.$t("operation-space.table-headers.rrn"), selected: true, sortable: true },
         {
           key: "merchantId",
-          label: "Reference",
+          label: this.$t("operation-space.table-headers.merchantId"),
           selected: true,
           sortable: true,
         },
-        { key: "amount", label: "Amount", selected: true, sortable: true },
-        { key: "currency", label: "Currency", selected: true, sortable: true },
+        { key: "amount", label: this.$t("operation-space.table-headers.amount"), selected: true, sortable: true },
+        { key: "currency", label: this.$t("operation-space.table-headers.currency"), selected: true, sortable: true },
         {
           key: "transactionTime",
-          label: "Transaction Time",
+          label: this.$t("operation-space.table-headers.transactionTime"),
           selected: true,
           sortable: true,
         },
         {
           key: "bnplProgramId",
-          label: "BNPL Program",
+          label: this.$t("operation-space.table-headers.bnplProgramId"),
           selected: true,
           sortable: true,
         },
         {
           key: "customerEmail",
-          label: "Customer Email",
+          label: this.$t("operation-space.table-headers.customerEmail"),
           selected: true,
           sortable: true,
         },
         {
           key: "numberOfInstallments",
-          label: "BNPL Option",
+          label: this.$t("operation-space.table-headers.numberOfInstallments"),
           selected: true,
           sortable: true,
         },
-        { key: "stan", label: "STAN", selected: true, sortable: true },
-        { key: "actions", label: "Actions", selected: true },
+        { key: "stan", label: this.$t("operation-space.table-headers.stan"), selected: true, sortable: true },
+        { key: "actions", label: this.$t("operation-space.table-headers.actions"), selected: true },
       ];
     },
     searchFields() {
       return [
-        { id: "reference", label: "Reference (Merchant)" },
-        { id: "email", label: "Email Client" },
-        { id: "program", label: "Nom du Programme" },
+        { id: "reference", label: this.$t('operation-space.table-headers.merchantId') },
+        { id: "email", label: this.$t('operation-space.table-headers.customerEmail') },
+        { id: "program", label: this.$t('operation-space.table-headers.bnplProgramId') },
       ];
     },
     searchLabel() {
       switch (this.filters.field) {
         case "email":
-          return "Email :";
+          return this.$t('operation-space.table-headers.customerEmail') + ' :';
         case "program":
-          return "Programme :";
+          return this.$t('operation-space.table-headers.bnplProgramId') + ' :';
         default:
-          return "Reference :";
+          return this.$t('operation-space.table-headers.merchantId') + ' :';
       }
     },
     searchPlaceholder() {
       switch (this.filters.field) {
         case "email":
-          return "Entrez l'email du client";
+          return this.$t('common.search') + ' ' + this.$t('operation-space.table-headers.customerEmail');
         case "program":
-          return "Entrez le nom du programme";
+          return this.$t('common.search') + ' ' + this.$t('operation-space.table-headers.bnplProgramId');
         default:
-          return "Entrez la référence du commerçant";
+          return this.$t('common.search') + ' ' + this.$t('operation-space.table-headers.merchantId');
       }
     },
     rowActions() {
@@ -219,21 +219,21 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t("common.details"),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t("common.update"),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t("common.delete"),
           actionEvent: "deleteEvent",
         },
       ];

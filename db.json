@@ -1235,14 +1235,14 @@
   ],
   "freezingInquiries": [
     {
+      "id": 1,
       "cardId": 1,
       "cardNumber": "4242424242424242",
       "rnn": "43443",
       "transactionDetail": "dwedew",
       "outstandingAmount": "2",
       "freezingFee": "34",
-      "freezingPeriod": "30",
-      "id": 1
+      "freezingPeriod": "30"
     }
   ],
   "forceClosureInquiries": [

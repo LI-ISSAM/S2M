@@ -5,10 +5,10 @@
       :items="[{ text: 'institutions', to: '/institution' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="university" title="Institution ">
+    <nxp-main-container icon="university" :title="$t('institution-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('institution/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter un nouveau
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('institution-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -16,7 +16,7 @@
         <b-row class="align-items-end">
           <b-col sm="3">
             <nxp-input
-              label="Rechercher par :"
+              :label="$t('common.searchBy')"
               v-model="filters.field"
               id="search-field"
               type="select"
@@ -28,14 +28,18 @@
           </b-col>
           <b-col sm="5">
             <nxp-input
-              :label="filters.field === 'name' ? 'Nom :' : 'Reference :'"
+              :label="
+                filters.field === 'name'
+                  ? $t('common.name') + ' :'
+                  : $t('common.reference') + ' :'
+              "
               v-model="filters.value"
               id="search-value"
               type="text"
               :placeholder="
                 filters.field === 'name'
-                  ? 'Entrez le nom de l\'institution'
-                  : 'Entrez la référence de l\'institution'
+                  ? $t('common.search') + ' ' + $t('common.name')
+                  : $t('common.search') + ' ' + $t('common.reference')
               "
               @keyup.enter="onSearch"
             />
@@ -48,7 +52,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -57,7 +61,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -120,43 +124,43 @@ export default {
       return [
         {
           key: "id",
-          label: "id",
+          label: this.$t("institution-space.table-headers.id"),
           sortable: true,
           selected: true,
         },
         {
           key: "logo",
-          label: "logo",
+          label: this.$t("institution-space.table-headers.logo"),
           selected: true,
           type: "img",
         },
         {
           key: "name",
-          label: "name",
+          label: this.$t("institution-space.table-headers.name"),
           sortable: true,
           selected: true,
         },
         {
           key: "reference",
-          label: "reference",
+          label: this.$t("institution-space.table-headers.reference"),
           selected: true,
           sortable: true,
         },
         {
           key: "type",
-          label: "type",
+          label: this.$t("institution-space.table-headers.type"),
           selected: true,
           sortable: true,
         },
         {
           key: "status",
-          label: "status",
+          label: this.$t("institution-space.table-headers.status"),
           selected: true,
           sortable: true,
         },
         {
           key: "actions",
-          label: "actions",
+          label: this.$t("institution-space.table-headers.actions"),
           selected: true,
         },
       ];
@@ -167,29 +171,29 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t("common.details"),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t("common.update"),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t("common.delete"),
           actionEvent: "deleteEvent",
         },
       ];
     },
     searchFields() {
       return [
-        { id: "name", label: "Nom" },
-        { id: "reference", label: "Reference" },
+        { id: "name", label: this.$t('common.name') },
+        { id: "reference", label: this.$t('common.reference') },
       ];
     },
   },

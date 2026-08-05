@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'reschedule inquiry', to: '/rescheduleInquiry'},{text: 'add'}]" class="mt-0"/>
 
-  <nxp-main-container icon="plus" title="Add Reschedule Inquiry" body-bg-variant="white">
+  <nxp-main-container icon="plus" :title="$t('reschedule-inquiry-space.add-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    shape="tab"

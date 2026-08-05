@@ -11,7 +11,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Installment Plan Details"
+      :title="$t('installment-plan-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard
@@ -34,45 +34,47 @@
           <b-row>
             <b-col sm="12">
               <h5>
-                <font-awesome-icon icon="list" class="mr-2" />Informations
-                générales
+                <font-awesome-icon icon="list" class="mr-2" />{{
+                  $t('common.generalInformation')
+                }}
               </h5>
               <hr />
             </b-col>
 
             <b-col sm="6">
-              <label class="font-weight-bold">Client :</label>
+              <label class="font-weight-bold">{{ $t('common.customer') }} :</label>
               <p>{{ getCustomerLabel(installmentPlan.customerId) }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Email :</label>
+              <label class="font-weight-bold">{{ $t('common.email') }} :</label>
               <p>{{ installmentPlan.customerEmail }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Offre :</label>
+              <label class="font-weight-bold">{{ $t('common.offer') }} :</label>
               <p>{{ getOfferLabel(installmentPlan.offerId) }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Montant total :</label>
+              <label class="font-weight-bold">{{ $t('common.totalAmount') }} :</label>
               <p>{{ installmentPlan.totalAmount || "-" }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Nombre d'échéances :</label>
+              <label class="font-weight-bold">{{ $t('common.installments') }} :</label>
               <p>{{ installmentPlan.numberOfInstallments || "-" }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Date de début :</label>
+              <label class="font-weight-bold">{{ $t('common.startDate') }} :</label>
               <p>{{ installmentPlan.startDate || "-" }}</p>
             </b-col>
             <b-col sm="6">
-              <label class="font-weight-bold">Statut :</label>
+              <label class="font-weight-bold">{{ $t('common.status') }} :</label>
               <p>{{ installmentPlan.status || "-" }}</p>
             </b-col>
 
             <b-col sm="12" v-if="installmentSchedule.length">
               <h5 class="mt-3">
-                <font-awesome-icon icon="clipboard" class="mr-2" />Échéancier
-                prévisionnel
+                <font-awesome-icon icon="clipboard" class="mr-2" />{{
+                  $t('common.paymentSchedulePreview')
+                }}
               </h5>
               <hr />
               <b-table
@@ -103,16 +105,16 @@ export default {
       tabs: [
         {
           name: "recapitulatif",
-          title: "Recapitulatif",
+          title: this.$t('common.summary'),
           icon: "ti ti-clipboard",
         },
       ],
-      offers: [{ id: "", label: "Select Offer" }],
-      customers: [{ id: "", label: "Select Customer" }],
+      offers: [{ id: "", label: this.$t('common.selectOffer') }],
+      customers: [{ id: "", label: this.$t('common.selectCustomer') }],
       scheduleFields: [
         { key: "number", label: "#" },
-        { key: "dueDate", label: "Date d'échéance" },
-        { key: "amount", label: "Montant" },
+        { key: "dueDate", label: this.$t('common.dueDate') },
+        { key: "amount", label: this.$t('common.amount') },
       ],
       installmentPlan: {
         planId: "",
@@ -162,7 +164,7 @@ export default {
     getOffers() {
       OfferService.getOffers(1, 1000, "").then((response) => {
         const list = response.data.map((o) => ({ id: o.id, label: o.name }));
-        this.offers = [{ id: "", label: "Select Offer" }, ...list];
+        this.offers = [{ id: "", label: this.$t('common.selectOffer') }, ...list];
       });
     },
     getCustomers() {
@@ -171,7 +173,7 @@ export default {
           id: c.id,
           label: c.fullName || c.name,
         }));
-        this.customers = [{ id: "", label: "Select Customer" }, ...list];
+        this.customers = [{ id: "", label: this.$t('common.selectCustomer') }, ...list];
       });
     },
     getInstallmentPlan() {

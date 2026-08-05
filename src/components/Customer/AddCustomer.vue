@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'customers', to: '/customer'},{text: 'add'}]" class="mt-0"/>
 
-  <nxp-main-container icon="plus" title="Add Customer" body-bg-variant="white">
+  <nxp-main-container icon="plus" :title="$t('customer-space.add-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    color="#17a2b8"
@@ -537,7 +537,7 @@
     <template #address>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addAddress">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Address
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addAddress') }}
         </b-button>
       </div>
       <b-table :items="customer.addresses" :fields="addressFields" bordered responsive small>
@@ -603,7 +603,7 @@
       </b-row>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addAccount">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Account
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addAccount') }}
         </b-button>
       </div>
       <b-table :items="customer.accounts" :fields="accountFields" bordered responsive small>
@@ -735,7 +735,7 @@
     <template #routing>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addRouting">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Routing
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addRouting') }}
         </b-button>
       </div>
       <b-table :items="customer.routings" :fields="routingFields" bordered responsive small>

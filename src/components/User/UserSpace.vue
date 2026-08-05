@@ -110,21 +110,21 @@ export default {
         key:'details',
         icon:'eye',
         class:'text-secondary',
-        label:'Details',
+        label:this.$t('common.details'),
         actionEvent:'detailsEvent'
       },
       {
           key:'update',
           icon:'pencil-alt',
           class:'text-warning',
-          label:'Update',
+          label:this.$t('common.update'),
           actionEvent:'updateEvent'
       },
         {
           key:'delete',
           icon:'trash-alt',
           class:'bg-danger text-white',
-          label:'Delete',
+          label:this.$t('common.delete'),
           actionEvent:'deleteEvent'
         }
 

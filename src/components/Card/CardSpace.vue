@@ -5,11 +5,10 @@
       :items="[{ text: 'cards', to: '/card' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="credit-card" title="Card ">
+    <nxp-main-container icon="credit-card" :title="$t('card-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('card/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter une nouvelle
-          carte
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('card-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -17,7 +16,7 @@
         <b-row class="align-items-end">
           <b-col sm="3">
             <nxp-input
-              label="Rechercher par :"
+              :label="$t('common.searchBy')"
               v-model="filters.field"
               id="search-field"
               type="select"
@@ -29,15 +28,17 @@
           <b-col sm="5">
             <nxp-input
               :label="
-                filters.field === 'customer' ? 'Client :' : 'Numéro de carte :'
+                filters.field === 'customer'
+                  ? $t('common.customer') + ' :'
+                  : $t('form.cardNumber') + ' :'
               "
               v-model="filters.value"
               id="search-value"
               type="text"
               :placeholder="
                 filters.field === 'customer'
-                  ? 'Entrez le nom du client'
-                  : 'Entrez le numéro de carte'
+                  ? $t('common.search') + ' ' + $t('common.customer')
+                  : $t('common.search') + ' ' + $t('form.cardNumber')
               "
               @keyup.enter="onSearch"
             />
@@ -50,7 +51,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -59,7 +60,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -138,43 +139,43 @@ export default {
   computed: {
     fields() {
       return [
-        { key: "id", label: "id", sortable: true, selected: true },
+        { key: "id", label: this.$t("card-space.table-headers.id"), sortable: true, selected: true },
         {
           key: "cardNumber",
-          label: "Card Number",
+          label: this.$t("card-space.table-headers.cardNumber"),
           sortable: true,
           selected: true,
         },
         {
           key: "expiryDate",
-          label: "Expiry Date",
+          label: this.$t("card-space.table-headers.expiryDate"),
           selected: true,
           sortable: true,
         },
         {
           key: "nameOnCard",
-          label: "Name On Card",
+          label: this.$t("card-space.table-headers.nameOnCard"),
           selected: true,
           sortable: true,
         },
-        { key: "type", label: "Type", selected: true, sortable: true },
-        { key: "status", label: "Status", selected: true, sortable: true },
-        { key: "programId", label: "Program", selected: true, sortable: true },
+        { key: "type", label: this.$t("card-space.table-headers.type"), selected: true, sortable: true },
+        { key: "status", label: this.$t("card-space.table-headers.status"), selected: true, sortable: true },
+        { key: "programId", label: this.$t("card-space.table-headers.programId"), selected: true, sortable: true },
         {
           key: "customerId",
-          label: "Customer",
+          label: this.$t("card-space.table-headers.customerId"),
           selected: true,
           sortable: true,
         },
-        { key: "customerEmail", label: "Email", selected: true },
-        { key: "branch", label: "Branch", selected: true, sortable: true },
-        { key: "actions", label: "Actions", selected: true },
+        { key: "customerEmail", label: this.$t("card-space.table-headers.customerEmail"), selected: true },
+        { key: "branch", label: this.$t("card-space.table-headers.branch"), selected: true, sortable: true },
+        { key: "actions", label: this.$t("card-space.table-headers.actions"), selected: true },
       ];
     },
     searchFields() {
       return [
-        { id: "cardNumber", label: "Numéro de carte" },
-        { id: "customer", label: "Client" },
+        { id: "cardNumber", label: this.$t('form.cardNumber') },
+        { id: "customer", label: this.$t('common.customer') },
       ];
     },
     rowActions() {
@@ -183,21 +184,21 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t("common.details"),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t("common.update"),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t("common.delete"),
           actionEvent: "deleteEvent",
         },
       ];

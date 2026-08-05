@@ -3,12 +3,12 @@
  
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'teams', to: '/team'},{text: ''}]" class="mt-0"/>
 
-  <nxp-main-container icon="users" title="Team Space">
+  <nxp-main-container icon="users" :title="$t('team-space.title')">
 
     <div slot="add-button" class="my-1 mr-1">
 
       <nxp-button outline="true" pill @click="$router.push('team/add')">
-        <font-awesome-icon icon="plus" class="mr-1"/>Add Team
+        <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('team-space.add-button') }}
       </nxp-button>
 
     </div>
@@ -62,32 +62,32 @@ export default {
       return [
         {
           key: 'id',
-          label: 'id',
+          label: this.$t('team-space.table-headers.id'),
           sortable: true,
           selected: true
         },
         {
           key: 'logo',
-          label: 'logo',
+          label: this.$t('team-space.table-headers.logo'),
           selected: true,
           type: 'img'
         },
         {
           key: 'name',
-          label: 'name',
+          label: this.$t('team-space.table-headers.name'),
           sortable: true,
           selected: true
         },
         {
           key: 'pseudo',
-          label: 'pseudo',
+          label: this.$t('team-space.table-headers.pseudo'),
           selected: true,
           sortable: true,
 
         },
         {
           key: 'actions',
-          label: 'actions',
+          label: this.$t('team-space.table-headers.actions'),
           selected: true
         }
       ];
@@ -97,21 +97,21 @@ export default {
         key:'details',
         icon:'tv',
         class:'text-secondary',
-        label:'Details',
+        label:this.$t('common.details'),
         actionEvent:'detailsEvent'
       },
         {
           key:'update',
           icon:'pencil-alt',
           class:'text-warning',
-          label:'Update',
+          label:this.$t('common.update'),
           actionEvent:'updateEvent'
         },
         {
           key:'delete',
           icon:'trash-alt',
           class:'text-danger',
-          label:'Delete',
+          label:this.$t('common.delete'),
           actionEvent:'deleteEvent'
         }
 

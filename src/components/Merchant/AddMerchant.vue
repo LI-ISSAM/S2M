@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'merchants', to: '/merchant'},{text: 'add'}]" class="mt-0"/>
 
-  <nxp-main-container icon="plus" title="Add Merchant" body-bg-variant="white">
+  <nxp-main-container icon="plus" :title="$t('merchant-space.add-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    shape="tab"
@@ -287,7 +287,7 @@
     <template #merchantOwners>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addOwner">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Owner
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addOwner') }}
         </b-button>
       </div>
       <b-table :items="merchant.owners" :fields="ownerFields" bordered responsive small>
@@ -429,7 +429,7 @@
       </b-row>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addCurrencySupported">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Currency
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addCurrency') }}
         </b-button>
       </div>
       <b-table :items="merchant.currencySupported" :fields="currencySupportedFields" bordered responsive small>
@@ -455,7 +455,7 @@
     <template #account>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addAccount">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Account
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addAccount') }}
         </b-button>
       </div>
       <b-table :items="merchant.accounts" :fields="accountFields" bordered responsive small>
@@ -520,7 +520,7 @@
       </b-row>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addAccountRouting">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Routing
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addRouting') }}
         </b-button>
       </div>
       <b-table :items="merchant.accountRoutings" :fields="accountRoutingFields" bordered responsive small>
@@ -543,7 +543,7 @@
       <h6 class="font-weight-bold">MemberShip Fees</h6>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addMembershipFee">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Fee
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addFee') }}
         </b-button>
       </div>
       <b-table :items="merchant.membershipFees" :fields="membershipFeeFields" bordered responsive small class="mb-4">
@@ -577,7 +577,7 @@
       <h6 class="font-weight-bold">Commission</h6>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addCommission">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Commission
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addCommission') }}
         </b-button>
       </div>
       <b-table :items="merchant.commissions" :fields="commissionFields" bordered responsive small>
@@ -600,7 +600,7 @@
     <template #address>
       <div class="d-flex justify-content-end mb-2">
         <b-button size="sm" variant="info" @click="addAddress">
-          <font-awesome-icon icon="plus" class="mr-1"/>Add Address
+          <font-awesome-icon icon="plus" class="mr-1"/>{{ $t('form.addAddress') }}
         </b-button>
       </div>
       <b-table :items="merchant.addresses" :fields="addressFields" bordered responsive small>

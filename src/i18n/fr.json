@@ -1,36 +1,379 @@
 {
+  "dashboard": {
+  "title": "Tableau de bord",
+  "overview": "Vue d'ensemble",
+  "quickAccess": "Accès rapides"
+},
   "common": {
     "search": "Rechercher",
-    "reset": "Réinitialiser"
+    "reset": "Réinitialiser",
+    "searchBy": "Rechercher par :",
+    "add": "Ajouter",
+    "addNew": "Ajouter un nouveau",
+    "details": "Détails",
+    "update": "Modifier",
+    "delete": "Supprimer",
+    "actions": "Actions",
+    "status": "Statut",
+    "id": "ID",
+    "name": "Nom",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "bank": "Banque",
+    "branch": "Agence",
+    "reference": "Référence",
+    "type": "Type",
+    "image": "Image",
+    "logo": "Logo",
+    "customer": "Client",
+    "product": "Produit",
+    "operation": "Opération",
+    "program": "Programme",
+    "institution": "Institution",
+    "offer": "Offre",
+    "merchant": "Commerçant",
+    "team": "Équipe",
+    "card": "Carte",
+    "subscription": "Abonnement",
+    "installment": "Échéance",
+    "installmentPlan": "Plan d'échéance",
+    "inquiry": "Demande",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "dueDate": "Date d'échéance",
+    "amount": "Montant",
+    "totalAmount": "Montant total",
+    "installments": "Échéances",
+    "startDate": "Date de début",
+    "outstandingAmount": "Montant restant",
+    "forceClosureFee": "Frais de fermeture forcée",
+    "transactionDetail": "Détail de transaction",
+    "freezingFee": "Frais de gel",
+    "freezingPeriod": "Période de gel",
+    "rescheduleFee": "Frais de reprogrammation",
+    "generalInformation": "Informations générales",
+    "summary": "Récapitulatif",
+    "pending": "En attente",
+    "paid": "Payé",
+    "notPaid": "Non payé",
+    "markPaid": "Marquer payé",
+    "markAsPaid": "Marquer comme payé",
+    "estimatedInstallmentAmount": "Montant estimé par échéance",
+    "paymentTracking": "Suivi de paiement",
+    "loadingPaymentTracking": "Chargement du suivi...",
+    "noCustomerFoundForSearch": "Aucun client trouvé pour cette recherche.",
+    "noPaymentPlanFoundForCustomer": "Aucun plan de paiement trouvé pour ce client.",
+    "customerHasInstallmentThisMonth": "Ce client possède déjà une échéance pour ce mois",
+    "planDetected": "Plan détecté",
+    "selectCustomer": "Sélectionner un client",
+    "selectStatus": "Sélectionner un statut",
+    "selectOffer": "Sélectionner une offre",
+    "selectDueDate": "Sélectionner une date d'échéance",
+    "selectStartDate": "Sélectionner une date de début",
+    "enterAmount": "Saisir un montant",
+    "enterTotalAmount": "Saisir un montant total",
+    "enterNumberOfInstallments": "Saisir un nombre d'échéances",
+    "paymentSchedulePreview": "Échéancier prévisionnel",
+    "legacyCustomerWarning": "Le client et la date d'échéance ne sont plus modifiables une fois l'échéance créée. Pour indiquer que le client paie le mois suivant, marquez cette échéance comme PAID : l'échéance du mois suivant sera générée automatiquement.",
+    "alreadyPaidWarning": "Cette échéance a déjà été payée. Le mois suivant a normalement été généré automatiquement, consultez la liste des échéances de ce client.",
+    "installmentMarkedPaid": "Échéance marquée payée. Le mois suivant a été généré automatiquement.",
+    "general": "Général"
   },
-  "user-space" : {
+  "form": {
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "status": "Statut",
+    "statusReason": "Motif du statut",
+    "statusDate": "Date du statut",
+    "nameOnCard": "Nom sur la carte",
+    "cardNumber": "Numéro de carte",
+    "expiryDate": "Date d'expiration",
+    "address": "Adresse",
+    "addAddress": "Ajouter une adresse",
+    "addOwner": "Ajouter un propriétaire",
+    "addCurrency": "Ajouter une devise",
+    "addAccount": "Ajouter un compte",
+    "addRouting": "Ajouter un routage",
+    "addFee": "Ajouter des frais",
+    "addCommission": "Ajouter une commission"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "customer": "Client",
+    "customers": "Clients",
+    "cards": "Cartes",
+    "addCustomer": "Ajouter un client",
+    "merchant": "Commerçant",
+    "merchants": "Commerçants",
+    "addMerchant": "Ajouter un commerçant",
+    "onboarding": "Onboarding",
+    "institutions": "Institutions",
+    "addInstitution": "Ajouter une institution",
+    "program": "Programme",
+    "programs": "Programmes",
+    "addProgram": "Ajouter un programme",
+    "settings": "Paramètres",
+    "offers": "Offres",
+    "addOffer": "Ajouter une offre",
+    "subscription": "Abonnement",
+    "subscriptions": "Abonnements",
+    "addSubscription": "Ajouter un abonnement",
+    "installmentPlan": "Plan d'échéance",
+    "installmentPlans": "Plans d'échéance",
+    "installments": "Échéances",
+    "addInstallmentPlan": "Ajouter un plan d'échéance",
+    "operation": "Opération",
+    "operations": "Opérations",
+    "addOperation": "Ajouter une opération",
+    "inquiry": "Demande",
+    "freezingInquiry": "Demande de gel",
+    "forceClosureInquiry": "Fermeture forcée",
+    "rescheduleInquiry": "Reprogrammation"
+  },
+  "user-space": {
     "title": "Espace Utilisateur",
-    "table-headers" : {
-      "image" : "Image",
-      "firstName" : "Prénom",
-      "lastName" : "Nom",
-      "status" : "Statut",
-      "id" : "ID",
+    "table-headers": {
+      "image": "Image",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "status": "Statut",
+      "id": "ID",
       "actions": "Actions"
     },
-    "add-button" : "Ajouter un utilisateur",
-    "update-button" : "Modifier un utilisateur",
-    "details-button" : "Détails d'un utilisateur"
+    "add-button": "Ajouter un utilisateur",
+    "update-button": "Modifier un utilisateur",
+    "details-button": "Détails d'un utilisateur"
   },
-  "team-space" : {
-    "title": "Espace Equipe",
-    "table-headers" : {
-      "logo" : "Logo",
-      "name" : "Nom",
-      "pseudo" : "Pseudo",
-      "id" : "ID",
+  "team-space": {
+    "title": "Espace Équipe",
+    "table-headers": {
+      "logo": "Logo",
+      "name": "Nom",
+      "pseudo": "Pseudo",
+      "id": "ID",
       "actions": "Actions"
     },
-    "add-button" : "Ajouter une equipe"
-
+    "add-button": "Ajouter une équipe",
+    "update-button": "Modifier une équipe",
+    "details-button": "Détails d'une équipe"
+  },
+  "customer-space": {
+    "title": "Espace Client",
+    "table-headers": {
+      "identityFile": "Photo",
+      "clientId": "ID Client",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "phoneNumber": "Téléphone",
+      "bank": "Banque",
+      "branch": "Agence",
+      "vipCategory": "Catégorie VIP",
+      "status": "Statut",
+      "id": "ID",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter un client",
+    "update-button": "Modifier un client",
+    "details-button": "Détails d'un client"
+  },
+  "program-space": {
+    "title": "Espace Programme",
+    "table-headers": {
+      "id": "ID",
+      "name": "Nom",
+      "institutionId": "Institution",
+      "type": "Type",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter un programme",
+    "update-button": "Modifier un programme",
+    "details-button": "Détails d'un programme"
+  },
+  "operation-space": {
+    "title": "Espace Opération",
+    "table-headers": {
+      "id": "ID",
+      "pan": "PAN",
+      "issuingBank": "Banque émettrice",
+      "acquiring": "Acquéreur",
+      "rrn": "RRN",
+      "merchantId": "Référence",
+      "amount": "Montant",
+      "currency": "Devise",
+      "transactionTime": "Heure de transaction",
+      "bnplProgramId": "Programme BNPL",
+      "customerEmail": "Email client",
+      "numberOfInstallments": "Option BNPL",
+      "stan": "STAN",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter une opération",
+    "update-button": "Modifier une opération",
+    "details-button": "Détails d'une opération"
+  },
+  "institution-space": {
+    "title": "Espace Institution",
+    "table-headers": {
+      "id": "ID",
+      "name": "Nom",
+      "logo": "Logo",
+      "reference": "Référence",
+      "type": "Type",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter une institution",
+    "update-button": "Modifier une institution",
+    "details-button": "Détails d'une institution"
+  },
+  "offer-space": {
+  "title": "Espace Offre",
+  "table-headers": {
+    "id": "ID",
+    "name": "Nom",
+    "programId": "Programme",
+    "numberOfInstallments": "Nombre d'échéances",
+    "startDate": "Date de début",
+    "status": "Statut",
+    "actions": "Actions"
+  },
+  "add-button": "Ajouter une offre",
+  "update-button": "Modifier une offre",
+  "details-button": "Détails d'une offre"
+},
+  "merchant-space": {
+  "title": "Espace Commerçant",
+  "table-headers": {
+    "id": "ID",
+    "name": "Nom",
+    "corporateName": "Raison sociale",
+    "reference": "Référence",
+    "mccCode": "Code MCC",
+    "institutionId": "Institution",
+    "type": "Type",
+    "branch": "Agence",
+    "paymentMode": "Mode de paiement",
+    "status": "Statut",
+    "actions": "Actions"
+  },
+  "add-button": "Ajouter un commerçant",
+  "update-button": "Modifier un commerçant",
+  "details-button": "Détails d'un commerçant"
+},
+  "card-space": {
+    "title": "Espace Carte",
+    "table-headers": {
+      "id": "ID",
+      "cardNumber": "Numéro de carte",
+      "expiryDate": "Date d'expiration",
+      "nameOnCard": "Nom sur la carte",
+      "type": "Type",
+      "status": "Statut",
+      "programId": "Programme",
+      "customerId": "Client",
+      "customerEmail": "Email client",
+      "branch": "Agence",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter une carte",
+    "update-button": "Modifier une carte",
+    "details-button": "Détails d'une carte"
+  },
+  "installment-space": {
+    "title": "Espace Échéance",
+    "table-headers": {
+      "id": "ID",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter une échéance",
+    "update-button": "Modifier une échéance",
+    "details-button": "Détails d'une échéance"
+  },
+  "installment-plan-space": {
+    "title": "Espace Plan d'échéance",
+    "table-headers": {
+      "id": "ID",
+      "name": "Nom",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter un plan d'échéance",
+    "update-button": "Modifier un plan d'échéance",
+    "details-button": "Détails d'un plan d'échéance"
+  },
+  "subscription-space": {
+    "title": "Espace Abonnement",
+    "table-headers": {
+      "id": "ID",
+      "customerId": "Client",
+      "customerEmail": "Email",
+      "programId": "Programme",
+      "offerId": "Offre",
+      "mode": "Mode",
+      "subscriptionDate": "Date d'abonnement",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter un abonnement",
+    "update-button": "Modifier un abonnement",
+    "details-button": "Détails d'un abonnement"
+  },
+  "program-recommendation": {
+    "button": "Obtenir une recommandation IA",
+    "none": "Aucun programme éligible trouvé pour ce client",
+    "forAmount": "pour ce montant",
+    "recommended": "Recommandé",
+    "fee": "Frais",
+    "limitPerTransaction": "Limite/transaction",
+    "select": "Choisir",
+    "selectCustomer": "Sélectionnez un client avant de demander une recommandation",
+    "recommendationError": "Erreur lors du calcul de la recommandation"
+  },
+  "force-closure-inquiry-space": {
+    "title": "Espace Demande de fermeture forcée",
+    "table-headers": {
+      "id": "ID",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter une demande de fermeture forcée",
+    "update-button": "Modifier une demande de fermeture forcée",
+    "details-button": "Détails d'une demande de fermeture forcée"
+  },
+  "freezingInquiry-space": {
+  "title": "Espace Demande de gel",
+  "table-headers": {
+    "id": "ID",
+    "cardNumber": "Numéro de carte",
+    "rnn": "RNN",
+    "outstandingAmount": "Montant restant",
+    "transactionDetail": "Détail de transaction",
+    "freezingFee": "Frais de gel",
+    "freezingPeriod": "Période de gel",
+    "actions": "Actions"
+  },
+  "add-button": "Ajouter une demande de gel",
+  "update-button": "Modifier une demande de gel",
+  "details-button": "Détails d'une demande de gel"
+},
+  "reschedule-inquiry-space": {
+    "title": "Espace Demande de reprogrammation",
+    "table-headers": {
+      "id": "ID",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "add-button": "Ajouter une demande de reprogrammation",
+    "update-button": "Modifier une demande de reprogrammation",
+    "details-button": "Détails d'une demande de reprogrammation"
   }
 }
-
-
-
-

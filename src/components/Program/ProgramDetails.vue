@@ -8,7 +8,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Program Details"
+      :title="$t('program-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard

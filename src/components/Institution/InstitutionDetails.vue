@@ -11,7 +11,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Institution Details"
+      :title="$t('institution-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard

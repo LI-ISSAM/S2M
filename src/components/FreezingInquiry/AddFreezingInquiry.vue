@@ -3,7 +3,7 @@
 
   <nxp-bread-crumb id="bread-crumb" :items="[{text: 'freezing inquiry', to: '/freezingInquiry'},{text: 'add'}]" class="mt-0"/>
 
-  <nxp-main-container icon="plus" title="Add Freezing Inquiry" body-bg-variant="white">
+  <nxp-main-container icon="plus" :title="$t('freezing-inquiry-space.add-button')" body-bg-variant="white">
   <nxp-form-wizard :start-index="0"
                    class="mx-4"
                    shape="tab"

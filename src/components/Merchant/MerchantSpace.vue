@@ -5,10 +5,10 @@
       :items="[{ text: 'merchants', to: '/merchant' }, { text: '' }]"
     />
 
-    <nxp-main-container icon="store" title="Merchant ">
+    <nxp-main-container icon="store" :title="$t('merchant-space.title')">
       <div slot="add-button" class="my-1 mr-1">
         <nxp-button pill @click="$router.push('merchant/add')">
-          <font-awesome-icon icon="plus" class="mr-1" />Ajouter un commerçant
+          <font-awesome-icon icon="plus" class="mr-1" />{{ $t('merchant-space.add-button') }}
         </nxp-button>
       </div>
 
@@ -16,7 +16,7 @@
         <b-row class="align-items-end">
           <b-col sm="3">
             <nxp-input
-              label="Rechercher par :"
+              :label="$t('common.searchBy')"
               v-model="filters.field"
               id="search-field"
               type="select"
@@ -27,14 +27,18 @@
           </b-col>
           <b-col sm="5">
             <nxp-input
-              :label="filters.field === 'name' ? 'Nom :' : 'Reference :'"
+              :label="
+                filters.field === 'name'
+                  ? $t('common.name') + ' :'
+                  : $t('common.reference') + ' :'
+              "
               v-model="filters.value"
               id="search-value"
               type="text"
               :placeholder="
                 filters.field === 'name'
-                  ? 'Entrez le nom du commerçant'
-                  : 'Entrez la référence du commerçant'
+                  ? $t('common.search') + ' ' + $t('common.name')
+                  : $t('common.search') + ' ' + $t('common.reference')
               "
               @keyup.enter="onSearch"
             />
@@ -47,7 +51,7 @@
               @click="onResetFilters"
               type="reset"
             >
-              <font-awesome-icon class="mr-1" />Réinitialiser
+              <font-awesome-icon class="mr-1" />{{ $t('common.reset') }}
             </nxp-button>
             <nxp-button
               variant="info"
@@ -56,7 +60,7 @@
               class="pl-4 pr-4"
               type="search"
             >
-              <font-awesome-icon class="mr-1" />Rechercher
+              <font-awesome-icon class="mr-1" />{{ $t('common.search') }}
             </nxp-button>
           </b-col>
         </b-row>
@@ -123,43 +127,43 @@ export default {
   computed: {
     fields() {
       return [
-        { key: "id", label: "id", sortable: true, selected: true },
-        { key: "name", label: "name", sortable: true, selected: true },
+        { key: "id", label: this.$t('merchant-space.table-headers.id'), sortable: true, selected: true },
+        { key: "name", label: this.$t('merchant-space.table-headers.name'), sortable: true, selected: true },
         {
           key: "corporateName",
-          label: "corporate name",
+          label: this.$t('merchant-space.table-headers.corporateName'),
           sortable: true,
           selected: true,
         },
         {
           key: "reference",
-          label: "reference",
+          label: this.$t('merchant-space.table-headers.reference'),
           sortable: true,
           selected: true,
         },
-        { key: "mccCode", label: "mcc code", sortable: true, selected: true },
+        { key: "mccCode", label: this.$t('merchant-space.table-headers.mccCode'), sortable: true, selected: true },
         {
           key: "institutionId",
-          label: "institution",
+          label: this.$t('merchant-space.table-headers.institutionId'),
           selected: true,
           sortable: true,
         },
-        { key: "type", label: "type", selected: true, sortable: true },
-        { key: "branch", label: "branch", sortable: true, selected: true },
+        { key: "type", label: this.$t('merchant-space.table-headers.type'), selected: true, sortable: true },
+        { key: "branch", label: this.$t('merchant-space.table-headers.branch'), sortable: true, selected: true },
         {
           key: "paymentMode",
-          label: "payment method",
+          label: this.$t('merchant-space.table-headers.paymentMode'),
           sortable: true,
           selected: true,
         },
-        { key: "status", label: "status", selected: true, sortable: true },
-        { key: "actions", label: "actions", selected: true },
+        { key: "status", label: this.$t('merchant-space.table-headers.status'), selected: true, sortable: true },
+        { key: "actions", label: this.$t('merchant-space.table-headers.actions'), selected: true },
       ];
     },
     searchFields() {
       return [
-        { id: "name", label: "Nom" },
-        { id: "reference", label: "Reference" },
+        { id: "name", label: this.$t('common.name') },
+        { id: "reference", label: this.$t('common.reference') },
       ];
     },
     rowActions() {
@@ -168,21 +172,21 @@ export default {
           key: "details",
           icon: "tv",
           class: "text-secondary",
-          label: "Details",
+          label: this.$t('common.details'),
           actionEvent: "detailsEvent",
         },
         {
           key: "update",
           icon: "pencil-alt",
           class: "text-warning",
-          label: "Update",
+          label: this.$t('common.update'),
           actionEvent: "updateEvent",
         },
         {
           key: "delete",
           icon: "trash-alt",
           class: "text-danger",
-          label: "Delete",
+          label: this.$t('common.delete'),
           actionEvent: "deleteEvent",
         },
       ];

@@ -11,7 +11,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Subscription Details"
+      :title="$t('subscription-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard

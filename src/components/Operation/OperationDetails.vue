@@ -8,7 +8,7 @@
 
     <nxp-main-container
       icon="tv"
-      title="Operation Details"
+      :title="$t('operation-space.details-button')"
       body-bg-variant="white"
     >
       <nxp-form-wizard

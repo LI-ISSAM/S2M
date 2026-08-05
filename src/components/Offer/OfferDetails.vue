@@ -6,7 +6,7 @@
       class="mt-0"
     />
 
-    <nxp-main-container icon="tv" title="Offer Details" body-bg-variant="white">
+    <nxp-main-container icon="tv" :title="$t('offer-space.details-button')" body-bg-variant="white">
       <nxp-form-wizard
         :start-index="0"
         class="mx-4"
